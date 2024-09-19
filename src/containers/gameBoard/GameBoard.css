@@ -1,0 +1,25 @@
+.board{ 
+    display: grid;
+    grid-template-columns: 120px 120px 120px 
+    grid-template-rows: 120px 120px 120px 20px;
+    margin-top: 100px;
+    justify-content: center;
+    }
+
+.boardTyle {
+    background-color: #ff6347;
+    height: 70px;
+    width: 70px;
+}
+
+.square {
+    display: block;
+    background: #fff;
+    border: 1px solid #999;
+    float: center;
+    height: 650px;
+    width: 650px;
+    margin-top: 0px;
+    text-align: center;
+    justify-content: center;
+  }
