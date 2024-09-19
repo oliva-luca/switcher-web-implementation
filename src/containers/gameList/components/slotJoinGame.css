@@ -1,6 +1,6 @@
 #slotPartida{
     display: flex;
-    background-color: chocolate;
+    background-color: #f17252;
     border: 1px solid #bbb;
     border-radius: 100px;
     padding: 6px 16px;
@@ -24,7 +24,7 @@
 }
 
 #botonUnirse{
-    background-color: #4CAF50;
+    background-color: #7eb65b;
     border: none;
     color: white;
     padding: 5px 10px;
@@ -34,4 +34,15 @@
     font-size: 16px;
     margin-left: 10px;
     border-radius: 100px;
+}
+
+#idPartida{
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    color: white;
+    text-align: left;
+    border-radius: 10px;
+    padding: 1px 5px;
+    margin-top: auto;
 }
