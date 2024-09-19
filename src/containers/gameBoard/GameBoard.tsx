@@ -22,16 +22,20 @@ function GameBoard(){
     const handleClick = (event: MouseEvent) => console.log(event);
 
     return (
-        <div className="container text-center board">
-          {items.map((row, rowIndex) => (
-            <div key={rowIndex} className="column boardColumn">
-              {row.map((cell, cellIndex) => (
-                <BoardTyle key={cellIndex} color={cell} />
-              ))}
-            </div>
-          ))}
+      <>
+        <div className="square">
+          <div className="container text-center board">
+            {items.map((row, rowIndex) => (
+              <div key={rowIndex} className="column boardColumn">
+                {row.map((cell, cellIndex) => (
+                  <BoardTyle key={cellIndex} color={cell} />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      );
+      </>
+    );
 }
 
 export default GameBoard;

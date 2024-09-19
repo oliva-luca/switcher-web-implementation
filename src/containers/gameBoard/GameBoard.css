@@ -1,48 +1,67 @@
 .square {
-    background: #95989d ;
-    border: 1px solid #000;
+    background: #92ecd3  ;
+    border: 10px solid #7dd3b3;
     float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
+    height: 504px;
+    width: 504px;
+    border-radius: 10%;
     text-align: center;
-    width: 34px;
+    vertical-align: middle;
 }
 
 .boardColumn {
     display: flex;
+    padding: 3px;
     justify-content: space-evenly; /* Evenly space out tiles */
     width: 100%;                /* Control width of each column */
-  }
+}
 
-.board p {
-    justify-content: center !important;
-    vertical-align: middle I !important;
+.board {
+    vertical-align: middle;
+    justify-content: center ;   
+    vertical-align: middle !important;
 }
 
 .boardTyle {
-    border-color:hsl(0, 0%, 0%) !important;
+    display: flex !important;
+    border: 10px solid;
     height: 70px;
     width: 70px;
     border-radius: 10%;
 }
 
 .red {
-    background-color: #f17252;
+    background-color: #f17252 !important;
+    border: 7px solid #e3634b !important;
+}
+
+.red:hover {
+    background-color: #e3634b !important;
 }
 
 .grn {
-    background-color: #7eb65b;
+    background-color: #7eb65b !important;
+    border: 7px solid #71ab51  !important;
+}
+
+.grn:hover {
+    background-color: #71ab51 !important;
 }
 
 .blu {
-    background-color: #6ec5e1;
+    background-color: #6ec5e1 !important;
+    border: 7px solid #5cadcd !important;
+}
+
+.blu:hover {
+    background-color: #5cadcd !important;
 }
 
 .ylw {
-    background-color: #efd96c;
+    background-color: #efd96c !important;
+    border: 7px solid #e4ca64 !important;
+}
+
+.ylw:hover {
+    background-color: #e4ca64 !important;
 }
