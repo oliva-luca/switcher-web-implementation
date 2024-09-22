@@ -1,11 +1,11 @@
 import { GameList } from './containers/gameList/gameList'
-import './App.css'
+// import './App.css'
 
 function App() {
 
   return (
     <>
-      <h1>El switcher</h1>
+      {/* <h1>El switcher</h1> */}
       {GameList()}
     </>
   )
