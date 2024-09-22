@@ -4,12 +4,12 @@ from enum import Enum
 
 # Tipos de carta de movimiento que hay
 class MovementType(str, Enum):
-    line2 = "line2"
-    line3 = "line3" 
-    diagonal2 = "diagonal2"
-    diagonal3 = "diagonal3"
-    lShape = "lShape"
-    lShapeFlipped = "lShapeFlipped"
+    line2 = "line2"         #dos casillas vecinas en una misma fila/columna
+    line3 = "line3"         #dos casillas en una misma fila/columna separadas por excatamente una casilla 
+    diagonal2 = "diagonal2" #dos casillas vecinas en la misma diagonal
+    diagonal3 = "diagonal3" #dos casillas en la misma diagonal separadas por excatamente una casilla 
+    lShape = "lShape"       #dos casillas a distancia de caballo de ajedrez (con forma de L)
+    lShapeFlipped = "lShapeFlipped" #Igual que el anterior, pero la L está espejada
     # Puedes agregar más figuras aquí
     
 # Estado actual de la carta de movimiento
