@@ -1,34 +1,30 @@
-import { MouseEvent } from "react";
 import "./GameBoard.css"
-import 'bootstrap/dist/css/bootstrap.css'
 
-function BoardTyle({ color }){
-    return (
-        <button className={`btn btn-primary boardTyle `+color}>
-        </button>
-      );
+type BoardTyleProps = {
+  color: string;
+  onClick: () => void;
 }
 
-function GameBoard(){
-    const items: string[][] = [
-        ["red","red","red","red","red","red"],
-        ["blu","blu","blu","blu","blu","blu"],
-        ["grn","grn","grn","grn","grn","grn"],
-        ["ylw","ylw","ylw","ylw","ylw","ylw"],
-        ["red","red","red","red","red","red"],
-        ["red","red","red","red","red","red"]
-    ];
+const BoardTyle = ({ color, onClick }: BoardTyleProps) =>
+    <button className={`boardTyle `+ color} onClick={onClick}></button>
 
-    const handleClick = (event: MouseEvent) => console.log(event);
+type GameBoardProp = {
+  board: string[][];
+};
+
+const GameBoard = ({ board }: GameBoardProp) => {
+
+    const handleClick = (row: number, column: number) => console.log(row+","+column);
 
     return (
       <>
         <div className="square">
           <div className="container text-center board">
-            {items.map((row, rowIndex) => (
-              <div key={rowIndex} className="column boardColumn">
+            {board.map((row, rowIndex) => (
+              <div key={rowIndex} className="column boardColumn" >
                 {row.map((cell, cellIndex) => (
-                  <BoardTyle key={cellIndex} color={cell} />
+                  <BoardTyle key={cellIndex} color={cell} 
+                  onClick={() => handleClick(rowIndex,cellIndex)}/>
                 ))}
               </div>
             ))}

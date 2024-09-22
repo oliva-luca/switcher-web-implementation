@@ -5,8 +5,7 @@
     height: 504px;
     width: 504px;
     border-radius: 10%;
-    text-align: center;
-    vertical-align: middle;
+    align-content: center;
 }
 
 .boardColumn {
@@ -23,6 +22,8 @@
 }
 
 .boardTyle {
+    background-color: #7dd3b3 !important;
+    border: 7px solid #7dd3b3 !important;
     display: flex !important;
     border: 10px solid;
     height: 70px;
@@ -39,6 +40,12 @@
     background-color: #e3634b !important;
 }
 
+.red:active {
+    transform: scale(0.95);
+    background-color: #f97756  !important;
+    border: 7px solid #f97756 !important;
+}
+
 .grn {
     background-color: #7eb65b !important;
     border: 7px solid #71ab51  !important;
@@ -46,6 +53,12 @@
 
 .grn:hover {
     background-color: #71ab51 !important;
+}
+
+.grn:active {
+    transform: scale(0.95);
+    background-color: #87bf62  !important;
+    border: 7px solid #87bf62 !important;
 }
 
 .blu {
@@ -57,6 +70,12 @@
     background-color: #5cadcd !important;
 }
 
+.blu:active {
+    transform: scale(0.95);
+    background-color: #72cfe6  !important;
+    border: 7px solid #72cfe6 !important;
+}
+
 .ylw {
     background-color: #efd96c !important;
     border: 7px solid #e4ca64 !important;
@@ -64,4 +83,10 @@
 
 .ylw:hover {
     background-color: #e4ca64 !important;
+}
+
+.ylw:active {
+    transform: scale(0.95);
+    background-color: #f7e271  !important;
+    border: 7px solid #f7e271 !important;
 }
