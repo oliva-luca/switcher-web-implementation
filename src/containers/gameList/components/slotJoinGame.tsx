@@ -18,6 +18,9 @@ function restoreBackground(e) {
     e.target.style.background = '#7eb65b';
 }
 
+function fullGameButtonColor(e){
+    e.target.style.background = '#9b9b9b';
+}
 
 
 async function joinGame(id: number) {
@@ -36,6 +39,14 @@ async function joinGame(id: number) {
 
 export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps){
 
+    let full;
+    if (currentCapacity >= capacity){
+        full = true;
+    }
+    else{
+        full = false;
+    }
+    
     return (
         <article id='slotPartida'>
 
@@ -46,10 +57,12 @@ export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps)
             <aside id='capacidadPartida'>{currentCapacity}/{capacity}</aside> 
             
             <button id='botonUnirse'
-                    onMouseOver={changeBackground}
-                    onMouseLeave={restoreBackground}
-                    onClick={() => joinGame(id)}
-                    >Unirse</button>
+                    onMouseOver={full ? undefined : changeBackground}
+                    onMouseLeave={full ? undefined : restoreBackground}
+                    onClick={full ? undefined : () => joinGame(id)}
+                    style={{ background: full ? '#9b9b9b' : '#7eb65b', cursor: full ? 'not-allowed' : 'pointer' }}
+                    disabled={full}
+                    >{full ? 'Lleno' : 'Unirse'}</button>
         </article>
     )
 }
