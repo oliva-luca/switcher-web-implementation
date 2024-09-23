@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './createGame.css';
 import axios from 'axios'; // Importar Axios
+import Swal from 'sweetalert2'; // Importar SweetAlert2
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+
+interface GameResponse {
+  id: string;
+  name: string;
+  status: string;
+}
 
 const CreateGame = () => {
   const [name, setName] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
   const [password, setPassword] = useState('');
   const [players, setPlayers] = useState(4);
+  const navigate = useNavigate(); // Usar useNavigate
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -37,20 +46,49 @@ const CreateGame = () => {
     };
 
     const queryString = new URLSearchParams(gameData as any).toString();
+    let createInfo: GameResponse = { id: '-1', name: '', status: '' };
 
     try {
-      // console.log('Creating game:', gameData);
-      const response = await axios.post(`/gamelist?${queryString}`, null, {
+      const response = await axios.post<GameResponse>(`/gamelist?${queryString}`, null, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      console.log('Game created successfully:', response.data);
-      // Puedes manejar la respuesta aquí, por ejemplo, redirigir al usuario o mostrar un mensaje de éxito
+      createInfo = response.data;
+      console.log('Game created successfully:', createInfo);
     } catch (error) {
-      console.error('There was a problem with the POST request:', error);
-      // Puedes manejar el error aquí, por ejemplo, mostrar un mensaje de error al usuario
+      Swal.fire({
+        icon: 'error',
+        title: 'ERROR',
+        text: 'Hubo un problema al crear la partida.',
+      });
+      return; // Salir de la función si hay un error al crear la partida
+    }
+
+    try {
+      console.log('Joining game');
+      const joinData = {
+        player_name : "JugadorCreador",
+      };
+
+      const joinQueryString = new URLSearchParams(joinData as any).toString();
+      const joinResponse = await axios.put(`/gamelist/${createInfo.id}?${joinQueryString}`, null, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Joined game successfully:', joinResponse.data);
+
+      // Redirigir a la ruta /game
+      // navigate('/game');
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'ERROR',
+        text: 'Hubo un problema al unirse a la partida.',
+      });
     }
   };
 
@@ -74,19 +112,19 @@ const CreateGame = () => {
               </div>
             </div>
             <div className="mb-3 row align-items-center block-background">
-                <label htmlFor="type" className="col-sm-4 col-form-label text-end">PARTIDA PRIVADA:</label>
-                <div className="col-sm-8 d-flex align-items-center">
-                    <div className="form-check form-switch">
-                        <input
-                            className="form-check-input custom-switch"
-                            type="checkbox"
-                            role="switch"
-                            id="flexSwitchCheckCheckedDisabled"
-                            checked={isPrivate}
-                            onChange={handleCheckboxChange}
-                        />
-                    </div>
+              <label htmlFor="type" className="col-sm-4 col-form-label text-end">PARTIDA PRIVADA:</label>
+              <div className="col-sm-8 d-flex align-items-center">
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input custom-switch"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckCheckedDisabled"
+                    checked={isPrivate}
+                    onChange={handleCheckboxChange}
+                  />
                 </div>
+              </div>
             </div>
             <div className="mb-3 row align-items-center block-background">
               <label htmlFor="password" className="col-sm-4 col-form-label text-end">CONTRASEÑA:</label>
@@ -118,7 +156,7 @@ const CreateGame = () => {
                 />
               </div>
             </div>
-            <button type="submit" className="btn custom-button w-100">CREAR</button>
+            <button type="submit" className="btn custom-button btn-lg w-100">Crear</button>
           </form>
         </div>
       </div>

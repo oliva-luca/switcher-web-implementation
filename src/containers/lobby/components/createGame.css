@@ -13,6 +13,7 @@
     border-radius: 100px; /* Opcional: para redondear las esquinas */
     margin-bottom: 10px; /* Opcional: para agregar espacio entre los bloques */
     color: white;
+    border: 3px solid white;
 }
 
 .custom-button {
@@ -27,4 +28,9 @@
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 100px;
+}
+
+.custom-button:hover {
+    background-color: #71ab51;
+    color: black;
 }
