@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
+
 import './slotJoinGame.css'
 import axios from 'axios';
 
@@ -34,13 +36,18 @@ async function joinGame(id: number) {
         console.log('Game joined successfully:', response.data);
     } catch (error) {
         console.error('Error joining game:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al unirse al juego. Por favor, inténtalo de nuevo.',
+        });
     }
 }
 
 export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps){
 
     let full;
-    if (currentCapacity >= capacity){
+    if (currentCapacity == capacity){
         full = true;
     }
     else{
