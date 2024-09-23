@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './slotJoinGame.css'
-// import 'bootstrap/dist/css/bootstrap-grid.css'
+import axios from 'axios';
+
 
 export interface GameProps {
     id: number;
@@ -17,6 +18,22 @@ function restoreBackground(e) {
     e.target.style.background = '#7eb65b';
 }
 
+
+
+async function joinGame(id: number) {
+
+    const gameData = {
+        player_name: 'jugador'
+    };
+    const queryString = new URLSearchParams(gameData as any).toString();
+    try {
+        const response = await axios.put(`/gamelist/${id}?${queryString}`);
+        console.log('Game joined successfully:', response.data);
+    } catch (error) {
+        console.error('Error joining game:', error);
+    }
+}
+
 export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps){
 
     return (
@@ -28,9 +45,11 @@ export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps)
             
             <aside id='capacidadPartida'>{currentCapacity}/{capacity}</aside> 
             
-            <button id='botonUnirse'    onMouseOver={changeBackground}
-                                        onMouseLeave={restoreBackground}>
-                                        Unirse</button>
+            <button id='botonUnirse'
+                    onMouseOver={changeBackground}
+                    onMouseLeave={restoreBackground}
+                    onClick={() => joinGame(id)}
+                    >Unirse</button>
         </article>
     )
 }
