@@ -9,10 +9,13 @@ const Form = () => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
 
+    // Funcio que cambia detecta el nuevo nombre
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
 
+    // Funcion que envia el nombre del usuario al servidor, lo almacena el local storage
+    // y envia el jugador al /lobby
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Submit name: ", name);
@@ -42,6 +45,7 @@ const Form = () => {
         
     }
 
+    // Formulario
     return (
     <div className='form-container'>
         <h1>EL SWITCHER</h1>
