@@ -1,0 +1,31 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    height: 50%;
+    padding: 20px;
+    background-color: #92ecd3;
+    border: 10px solid #7dd3b3;
+    border-radius: 20px;
+  }
+
+  .custom-button{
+    background-color: #7eb65b;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 20px 2px;
+    cursor: pointer;
+    border-radius: 100px;
+  }
+
+.custom-button:hover {
+    background-color: #71ab51;
+    color: black;
+}
