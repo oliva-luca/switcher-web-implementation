@@ -47,7 +47,7 @@ async function joinGame(id: number) {
 export function SlotJoinGame({ id, name, currentCapacity, capacity }: GameProps){
 
     let full;
-    if (currentCapacity == capacity){
+    if (currentCapacity >= capacity){
         full = true;
     }
     else{
