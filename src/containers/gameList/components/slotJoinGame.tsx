@@ -20,11 +20,6 @@ function restoreBackground(e) {
     e.target.style.background = '#7eb65b';
 }
 
-function fullGameButtonColor(e){
-    e.target.style.background = '#9b9b9b';
-}
-
-
 async function joinGame(id: number) {
 
     const gameData = {
