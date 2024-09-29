@@ -47,3 +47,12 @@ async def join_game(game_id: int, player_id: int):
         raise HTTPException(status_code=404, detail=str(e))  
     
     
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await manager.broadcast(f"Message text was: {data}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
