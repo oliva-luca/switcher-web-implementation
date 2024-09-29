@@ -1,8 +1,10 @@
-from fastapi import FastAPI
-from operations import Operations
+from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
+from sqlalchemy.exc import NoResultFound
+from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, manager, ConnectionManager
 
 from enum import Enum
 from typing import List
+
 
 
 app= FastAPI()
@@ -17,7 +19,7 @@ async def print_games():
 @app.post("/gamelist")
 async def create_game(name: str, cant_players: int, private: bool, password: str):
     operation = Operations()
-    new_id = operation.create_game(name=name,cant_players=cant_players,private=private,password=password)
+    new_id = await operation.create_game(name=name,cant_players=cant_players,private=private,password=password)
 
     return {
                 'id': new_id,
@@ -30,7 +32,7 @@ async def create_game(name: str, cant_players: int, private: bool, password: str
 async def join_game(game_id: int, player_id: int):
     operation = Operations()
     try:
-        player_id = operation.join_game(game_id=game_id, player_id=player_id)
+        player_id = await operation.join_game(game_id=game_id, player_id=player_id)
 
         return {
                 'id_player ': player_id,

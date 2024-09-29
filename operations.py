@@ -1,9 +1,42 @@
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import NoResultFound
 from models import Game, Player, Tablero, Casilla, engine
+from typing import List
 
+from random import shuffle
+from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
+
+class GameNotFoundError(Exception):
+    pass
+
+class PlayerNotFoundError(Exception):
+    pass
+
+class GameStartedError(Exception):
+    pass
 
 
 Session = sessionmaker(bind = engine)
+
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+manager = ConnectionManager()
+
+
 class Operations: 
 
     def get_games(self):
@@ -16,7 +49,7 @@ class Operations:
         finally:
             session.close()
 
-    def create_game(self,name: str, cant_players: int, private: bool, password: str):
+    async def create_game(self,name: str, cant_players: int, private: bool, password: str):
         # Crear una sesión de la base de datos
         session = Session()
         try:
@@ -37,6 +70,9 @@ class Operations:
             # Refrescar la instancia para obtener el id generado automáticamente
             session.refresh(new_game_entry)
 
+            # Enviar una señal por WebSocket a todos los clientes conectados
+            await manager.broadcast("new game created")
+
             # Devolver el ID y el nombre del juego recién creado
             return new_game_entry.id_partida
 
@@ -45,7 +81,7 @@ class Operations:
             session.close()
 
 
-    def join_game(self,game_id: int, player_id: int):
+    async def join_game(self,game_id: int, player_id: int):
         # Crear una sesión de la base de datos
         session = Session()
         
@@ -70,6 +106,9 @@ class Operations:
 
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
+
+            # Notificar que un jugador se unió
+            await manager.broadcast("player join")
 
             # Devolver respuesta exitosa
             return new_player.id_jugador
