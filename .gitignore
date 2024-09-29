@@ -2,8 +2,6 @@
 .env
 .db
 __pycache__/
-database_development
-database_test
-database_production
+*.sqlite
 .pytest_cache/
 .git

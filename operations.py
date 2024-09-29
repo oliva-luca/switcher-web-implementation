@@ -49,14 +49,14 @@ class Operations:
         finally:
             session.close()
 
-    async def create_game(self,name: str, cant_players: int, private: bool, password: str):
+    async def create_game(self,name: str, cant_jugadores: int, private: bool, password: str):
         # Crear una sesión de la base de datos
         session = Session()
         try:
             # Crear una nueva instancia de Game con el tablero en NULL
             new_game_entry = Game(
                 name=name,
-                cant_jugadores=cant_players,
+                cant_jugadores=cant_jugadores,
                 started=False,
                 is_private=private,
                 password=password,
@@ -117,6 +117,8 @@ class Operations:
             session.close()  # Cerrar la sesión para liberar recursos
     
     def create_player(self, nombre: str):
+
+        print("\n\n\n\nhola\n\n\n\n")
         session = Session()
         try:
             new_player_entry = Player(
