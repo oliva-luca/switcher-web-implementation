@@ -77,19 +77,3 @@ class Operations:
         finally:
             session.close()  # Cerrar la sesión para liberar recursos
             
-    def create_player(self, nombre: str):
-        session = Session()
-        try:
-            new_player_entry = Player(
-                nombre=nombre
-            )
-            session.add(new_player_entry)
-            session.commit()
-            session.refresh(new_player_entry)
-            return {
-                'id': new_player_entry.id_jugador,
-                'name': new_player_entry.nombre,
-                'operation_result': "Successfully created!"
-            }
-        finally:
-            session.close()   
