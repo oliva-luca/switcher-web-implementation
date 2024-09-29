@@ -39,17 +39,18 @@ const CreateGame = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+    // navigate('/game'); // Redirigir a la ruta /game
+    // return;
     const gameData = {
-      name,
-      players,
+      name: name,
+      cant_players: players,
     };
 
     const queryString = new URLSearchParams(gameData as any).toString();
     let createInfo: GameResponse = { id: '-1', name: '', status: '' };
 
     try {
-      const response = await axios.post<GameResponse>(`/gamelist?${queryString}`, null, {
+      const response = await axios.post(`/gamelist?${queryString}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -61,34 +62,44 @@ const CreateGame = () => {
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: 'Hubo un problema al crear la partida.',
+        text: 'Hubo un problema al crear la partida',
       });
-      return; // Salir de la función si hay un error al crear la partida
+      return;
     }
 
     try {
+      const userId = localStorage.getItem('userId');
+      const playerName = userId ? userId.toString() : 'UnknownPlayer';
+      console.log('Player name:', playerName);
       console.log('Joining game');
       const joinData = {
-        player_name : "JugadorCreador",
+        player_name : playerName,
       };
 
       const joinQueryString = new URLSearchParams(joinData as any).toString();
-      const joinResponse = await axios.put(`/gamelist/${createInfo.id}?${joinQueryString}`, null, {
+      const response = await axios.put(`/gamelist/${createInfo.id}?${joinQueryString}`, null, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      console.log('Joined game successfully:', joinResponse.data);
-
+      console.log('Game joined successfully:', response.data);
       // Redirigir a la ruta /game
-      // navigate('/game');
+      navigate('/game');
 
     } catch (error) {
+       //borrar la partida creada con el metodo delete
+      await axios.delete(`/gamelist/${createInfo.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: 'Hubo un problema al unirse a la partida.',
+        text: 'Hubo un problema al unirse a la partida',
       });
+      return;
     }
   };
 
