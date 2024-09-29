@@ -15,7 +15,6 @@ async def print_games():
 
     return operation.get_games()
 
-
 @app.post("/gamelist")
 async def create_game(name: str, cant_jugadores: int, private: bool, password: str):
     operation = Operations()
@@ -51,6 +50,25 @@ async def create_player(nombre: str):
     operation = Operations()
     
     return operation.create_player(nombre=nombre)
+
+@app.put("/gamelist/join/{game_id}")
+async def join_game(game_id: int, player_id: int):
+    operation = Operations()
+    try:
+        player_id = await operation.join_game(game_id=game_id, player_id=player_id)
+
+        return {
+                'id_player ': player_id,
+                'id_partida': game_id,
+                'operation_result': "Successfully joined!"
+            }
+
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))  
+
     
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -61,3 +79,4 @@ async def websocket_endpoint(websocket: WebSocket):
             await manager.broadcast(f"Message text was: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
