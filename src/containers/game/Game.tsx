@@ -1,6 +1,7 @@
 import "./Game.css";
 import "./Game.css";
 import GameBoard from "./components/GameBoard";
+import FigureBoard from "./components/FigureBoard";
 
 function Game() {
   const board: string[][] = [
@@ -15,19 +16,27 @@ function Game() {
   return (
     <>
       <div className="board">
-        <div className="square-cor">00</div>
-        <div className="square-side2">01</div>
-        <div className="square-cor">02</div>
+        <div></div>
+        <div>
+          <FigureBoard pos="top" deck={3} />
+        </div>
+        <div></div>
 
-        <div className="square-side">10</div>
+        <div>
+          <FigureBoard pos="lft" deck={3} />
+        </div>
         <div>
           <GameBoard board={board} />
         </div>
-        <div className="square-side">12</div>
+        <div>
+          <FigureBoard pos="rgt" deck={3} />
+        </div>
 
-        <div className="square-cor">20</div>
-        <div className="square-side2">21</div>
-        <div className="square-cor">22</div>
+        <div></div>
+        <div>
+          <FigureBoard pos="btm" deck={3} />
+        </div>
+        <div></div>
       </div>
     </>
   );

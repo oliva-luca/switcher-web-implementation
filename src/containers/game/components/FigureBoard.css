@@ -1,0 +1,61 @@
+.figureBoard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #92ecd3;
+  border: 10px solid #7dd3b3;
+  float: left;
+  height: 100px;
+  width: 504px;
+  border-radius: 2px;
+  align-content: center;
+  align-items: center;
+}
+
+.figureGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 50px);
+  grid-template-rows: 50px;
+  gap: 6px;
+}
+
+.figureBoardSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #92ecd3;
+  border: 10px solid #7dd3b3;
+  float: left;
+  height: 504px;
+  width: 100px;
+  border-radius: 2%;
+  align-content: center;
+  align-items: center;
+}
+
+.figureGridSide {
+  display: grid;
+  grid-template-columns: repeat(6, 70px);
+  grid-template-rows: repeat(6, 70px);
+  gap: 6px;
+}
+
+.ply1 {
+  background-color: #6ec5e1 !important;
+  border: 7px solid #5cadcd !important;
+}
+
+.ply2 {
+  background-color: #efd96c !important;
+  border: 7px solid #e4ca64 !important;
+}
+
+.ply3 {
+  background-color: #7eb65b !important;
+  border: 7px solid #71ab51 !important;
+}
+
+.ply4 {
+  background-color: #f17252 !important;
+  border: 7px solid #e3634b !important;
+}
