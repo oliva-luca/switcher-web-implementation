@@ -44,8 +44,13 @@ async def join_game(game_id: int, player_id: int):
         raise HTTPException(status_code=404, detail=str(e))
 
     except PlayerNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))  
+        raise HTTPException(status_code=404, detail=str(e))
+        
+@app.post("/",)
+async def create_player(nombre: str):
+    operation = Operations()
     
+    return operation.create_player(nombre=nombre)
     
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
