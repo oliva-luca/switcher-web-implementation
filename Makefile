@@ -11,4 +11,5 @@ run_integration_tests:
 run_end2end_tests:
 	ENVIRONMENT=test python3 populate_test_db.py
 	pytest -m end2end_test -vv
+	rm database_test.sqlite
 	unset ENVIRONMENT

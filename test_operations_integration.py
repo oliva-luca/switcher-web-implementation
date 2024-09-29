@@ -1,4 +1,5 @@
 import pytest
+import asyncio
 from  sqlalchemy.orm import sessionmaker
 from operations import Operations
 from models import Game, engine, Base, Player
@@ -29,11 +30,33 @@ def test_create_player(operation: Operations):
     finally:
         session.close()
     
-    operation.create_player(nombre='player1')
+    operation.create_player('player1')
     
     session = Session()
     try:
         N_players_new = session.query(Player).count()
-        assert N_players_new == N_players + 1
+        assert N_players_new  == N_players + 1
     finally:
         session.close()
+
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_create_game(operation: Operations):
+    session = Session()
+    try:
+        N_games = session.query(Game).count()
+    finally:
+        session.close()
+    
+    await operation.create_game('partida1', 4,True, '12345')
+    
+    session = Session()
+    try:
+        N_games_new = session.query(Game).count()
+        for game in session.query(Game).all():
+            print(game.name)
+        assert N_games_new == N_games + 1
+    finally:
+        session.close()
+

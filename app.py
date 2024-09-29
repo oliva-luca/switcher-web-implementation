@@ -17,9 +17,9 @@ async def print_games():
 
 
 @app.post("/gamelist")
-async def create_game(name: str, cant_players: int, private: bool, password: str):
+async def create_game(name: str, cant_jugadores: int, private: bool, password: str):
     operation = Operations()
-    new_id = await operation.create_game(name=name,cant_players=cant_players,private=private,password=password)
+    new_id = await operation.create_game(name=name,cant_jugadores=cant_jugadores,private=private,password=password)
 
     return {
                 'id': new_id,
