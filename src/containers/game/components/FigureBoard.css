@@ -1,22 +1,14 @@
 .figureBoard {
   display: flex;
   justify-content: center;
+  align-content: center;
   align-items: center;
   background: #92ecd3;
-  border: 10px solid #7dd3b3;
+  border: 7px solid #7dd3b3;
   float: left;
   height: 100px;
   width: 504px;
   border-radius: 2px;
-  align-content: center;
-  align-items: center;
-}
-
-.figureGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 50px);
-  grid-template-rows: 50px;
-  gap: 6px;
 }
 
 .figureBoardSide {
@@ -24,7 +16,7 @@
   justify-content: center;
   align-items: center;
   background: #92ecd3;
-  border: 10px solid #7dd3b3;
+  border: 7px solid #7dd3b3;
   float: left;
   height: 504px;
   width: 100px;
@@ -33,11 +25,48 @@
   align-items: center;
 }
 
-.figureGridSide {
+.figureGridBtm {
   display: grid;
-  grid-template-columns: repeat(6, 70px);
-  grid-template-rows: repeat(6, 70px);
-  gap: 6px;
+  grid-template-columns: 110px repeat(3, 80px);
+  grid-template-rows: 80px;
+  gap: 10px;
+}
+
+.figureGridTop {
+  display: grid;
+  grid-template-columns: repeat(3, 80px) 110px;
+  grid-template-rows: 80px;
+  gap: 10px;
+  justify-items: center;
+}
+
+.figureGridLft {
+  display: grid;
+  grid-template-columns: 80px;
+  grid-template-rows: 110px repeat(3, 80px);
+  gap: 10px;
+}
+
+.figureGridRgt {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 80px) 110px;
+  gap: 10px;
+}
+
+.figureDeck {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #92ecd3;
+  border: 5px solid #7dd3b3;
+  height: 80px;
+  width: 80px;
+  border-radius: 10px;
+  align-content: center;
+  align-items: center;
+  font-size: xx-large;
+  font-weight: bold;
 }
 
 .ply1 {
