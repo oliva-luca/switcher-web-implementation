@@ -76,3 +76,4 @@ class Operations:
 
         finally:
             session.close()  # Cerrar la sesión para liberar recursos
+            

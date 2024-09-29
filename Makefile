@@ -3,8 +3,12 @@ run_unit_tests:
 
 
 run_integration_tests:
-	ENVIRONMENT=test python populate_test_db.py
+	ENVIRONMENT=test python3 populate_test_db.py
 	pytest -m integration_test -vv
 	rm database_test.sqlite
 	unset ENVIRONMENT
 
+run_end2end_tests:
+	ENVIRONMENT=test python3 populate_test_db.py
+	pytest -m end2end_test -vv
+	unset ENVIRONMENT

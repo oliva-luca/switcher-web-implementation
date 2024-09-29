@@ -43,3 +43,5 @@ async def join_game(game_id: int, player_id: int):
 
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))  
+    
+    

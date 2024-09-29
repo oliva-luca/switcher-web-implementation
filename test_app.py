@@ -6,6 +6,9 @@ from app import app
 
 client = TestClient(app)
 
+
+
+#-------------------TESTS FOR GAMELIST-------------------
 @pytest.fixture
 def game_a():
     return{
@@ -62,3 +65,5 @@ def test_get_only_one_game(mock_Get_games, game_a):
     response = client.get("/gamelist")
     assert response.status_code == 200
     assert response.json() == [game_a]
+    
+
