@@ -4,10 +4,10 @@ from enum import Enum as PyEnum
 from sqlalchemy import create_engine, Column, Integer, Boolean, String, ForeignKey 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
-
+from config import DATABASE_FILENAME
 
 # Define el nombre de la base de datos (ej: 'mi_base_de_datos.db')
-DATABASE_FILENAME = 'partidas.db'
+
 
 # Configuración de la base de datos
 engine = create_engine(f'sqlite:///{DATABASE_FILENAME}', echo=True)

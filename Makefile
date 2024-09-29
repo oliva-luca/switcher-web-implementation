@@ -1,0 +1,10 @@
+run_unit_tests:
+	pytest -m "not integration_test and not end2end_test"
+
+
+run_integration_tests:
+	ENVIRONMENT=test python populate_test_db.py
+	pytest -m integration_test -vv
+	rm database_test.sqlite
+	unset ENVIRONMENT
+
