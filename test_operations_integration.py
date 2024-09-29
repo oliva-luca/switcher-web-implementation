@@ -5,12 +5,14 @@ from models import Game, engine, Base
 
 Session = sessionmaker(bind=engine)
 
+
+
 @pytest.fixture
 def operation():
     return Operations()
 
 @pytest.mark.integration_test
-def test_get_games(operation):
+def test_get_games(operation: Operations):
     session = Session()
     try:
         games = operation.get_games()
@@ -18,5 +20,3 @@ def test_get_games(operation):
         assert len(games) == N_games
     finally:
         session.close()
-
-
