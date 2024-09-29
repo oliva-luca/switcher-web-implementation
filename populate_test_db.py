@@ -31,6 +31,8 @@ def load_data_for_test():
     finally:
         session.close() 
     
+    session = Session()
+    
     try:
         if session.query(Player).count() == 0:
             for id_jugador, nombre, in_game, block, turn, id_partida in players:

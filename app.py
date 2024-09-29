@@ -15,7 +15,6 @@ async def print_games():
 
     return operation.get_games()
 
-
 @app.post("/gamelist")
 async def create_game(name: str, cant_jugadores: int, private: bool, password: str):
     operation = Operations()
