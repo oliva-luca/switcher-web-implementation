@@ -94,7 +94,7 @@ class Operations:
             # Verificar si el jugador existe
             new_player = session.query(Player).filter(Player.id_jugador == player_id).first()
             if not new_player:
-                raise PlayerNotFoundError(f"Player with name {player_name} not found.")
+                raise PlayerNotFoundError(f"Player with id {player_id} not found.")
             
             # Asociar el jugador a la partida
             game.players.append(new_player)
@@ -118,7 +118,6 @@ class Operations:
     
     def create_player(self, nombre: str):
 
-        print("\n\n\n\nhola\n\n\n\n")
         session = Session()
         try:
             new_player_entry = Player(
