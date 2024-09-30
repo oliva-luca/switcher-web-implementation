@@ -2,6 +2,7 @@ SHELL := /bin/bash
 
 run_unit_tests:
 	ENVIRONMENT=test pytest -m "not integration_test and not end2end_test"
+	rm database_test.sqlite
 
 run_integration_tests:
 	env ENVIRONMENT=test python3 populate_test_db.py

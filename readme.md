@@ -1,50 +1,43 @@
 # Backend 
 
-## Decisiones con respecto al diseño
+## Como correr el programa
 
-Vamos a trabajar con estructuras que tengan la informacion pertinente de cada tipo que creemos para el uso 
+1. Crear un entorno virtual 
+2. Dentro del proyecto y el entorno creado 
+        
+        pip install -r requirements.txt
 
-Los tipos de las demas variables importantes al juego van a seguir el mismo modelo struct heredado de BaseModel 
+3. Cambiar el ENVIROMENT usado para la bd
 
+        export ENVIROMENT=development
 
-## Endpoints 
+4. Levantar la app 
 
-### Endpoints relacionados a creacion de partida y integracion de usuarios 
+        uvicorn app:app --reload
 
-
-* @app.post(/game) 
-
-* @app.get(/game_list)
-
-* @app.get(/game_list/{game_id})
-
-* @app.post(/user) (query parameter de nombre de usuario)
+5. Si se quiere ejecutar algun pedido ingresar en http://127.0.0.1:8000 
 
 
-* @app.put(/join_game/{game_id}) (query parameter de jugador) post de crear jugador
+## Como correr los tests 
 
+Si por alguna razon ya sea, no estaba en el entorno virtual o alguna otra razon los test fallan, borrar la base de datos llamada database_test.sqlite y correr de nuevo, sino afecta a los demas tests
 
-* @app.put(/leave_game/{game_id}/player/{player_id})
+1. Crear un entorno virtual si es que no se creo antes  
+2. Dentro del proyecto y el entorno creado 
+        
+        pip install -r requirements.txt
 
+3. Para los tests unitarios correr 
 
-### Detalle de cada Endpoint
+        make run_unit_tests
 
+4. Para los test de integracion correr 
 
-@app.post(/game) = Encargado de crear la partida y asignarle el id de partida 
+        make run_integration_tests
 
+5. Para correr los test end to end prender la aplicacion en otra consola y correr 
 
-@app.get(/gamelist) = Obtiene la lista de partidas creadas y no iniciadas
-
-@app.get(/game_list/{game_id}) = Obtiene la informacion de una partida en especifico 
-
-
-@app.post(/user) = Creacion de la estructura que contiene la informacion del usuario, al unirse a la pagina 
-
-
-@app.put(/join_game/{game_id}) = Cambia la informacion de los jugadores placeholder de la partida 
-
-@app.put(/leave_game/{game_id}/player/{player_id}) = Cambia la informacion de un jugador que estaba en una partida al valor default de jugador cuando se crea la partida 
-
+        make run_end2end_tests
 
 
 
