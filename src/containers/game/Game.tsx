@@ -1,11 +1,12 @@
 import React from 'react';
-import StopWatch from './components/timer/Timer';
+import QuitBtn from './components/QuitBtn/QuitBtn';
+
 
 function Game() {
     return(
         <div>
-            <StopWatch />
             <h1>GAME</h1>
+            <QuitBtn/>
         </div>
     )
 }
