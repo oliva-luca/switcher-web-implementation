@@ -178,6 +178,7 @@ function Game() {
             ) : (
               <FigureBoard
                 pos="top"
+                name = {order[2].nombre}
                 deck={ParsePlayerFigDeck(order[2].id_jugador, game.figcards)}
                 cards={ParsePlayerFigCards(order[2].id_jugador, game.figcards)}
               />
@@ -191,6 +192,7 @@ function Game() {
             ) : (
             <FigureBoard
               pos="lft"
+              name = {order[1].nombre}
               deck={ParsePlayerFigDeck(order[1].id_jugador, game.figcards)}
               cards={ParsePlayerFigCards(order[1].id_jugador, game.figcards)}
             />
@@ -205,6 +207,7 @@ function Game() {
             ) : (
             <FigureBoard
               pos="rgt"
+              name = {order[3].nombre}
               deck={ParsePlayerFigDeck(order[3].id_jugador, game.figcards)}
               cards={ParsePlayerFigCards(order[3].id_jugador, game.figcards)}
             />
@@ -215,6 +218,7 @@ function Game() {
           <div>
             <FigureBoard
               pos="btm"
+              name = {order[0].nombre}
               deck={ParsePlayerFigDeck(order[0].id_jugador, game.figcards)}
               cards={ParsePlayerFigCards(order[0].id_jugador, game.figcards)}
             />

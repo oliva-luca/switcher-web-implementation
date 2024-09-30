@@ -5,13 +5,15 @@ interface FigureBoardProp {
   pos: string;
   deck: number;
   cards: number[];
+  name: string;
 }
 
-const FigureBoard = ({ pos, deck, cards }: FigureBoardProp) => {
+const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
   return (
     <>
       {pos == "btm" && (
         <div className="figureBoard figureGridBtm ply1">
+          <div className="playerName">{name}</div>
           <div className="figureDeck ply1">{deck}</div>
           <FigureCard card={cards[0]} />
           <FigureCard card={cards[1]} />
@@ -24,6 +26,7 @@ const FigureBoard = ({ pos, deck, cards }: FigureBoardProp) => {
           <FigureCard card={cards[1]} />
           <FigureCard card={cards[2]} />
           <div className="figureDeck ply2">{deck}</div>
+          <div className="playerName">{name}</div>
         </div>
       )}
       {pos == "top" && (
@@ -32,10 +35,12 @@ const FigureBoard = ({ pos, deck, cards }: FigureBoardProp) => {
           <FigureCard card={cards[1]} />
           <FigureCard card={cards[2]} />
           <div className="figureDeck ply3">{deck}</div>
+          <div className="playerName">{name}</div>
         </div>
       )}
       {pos == "lft" && (
         <div className="figureBoardSide figureGridLft ply4">
+          <div className="playerName">{name}</div>
           <div className="figureDeck ply4">{deck}</div>
           <FigureCard card={cards[0]} />
           <FigureCard card={cards[1]} />
