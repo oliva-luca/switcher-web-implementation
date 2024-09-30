@@ -184,7 +184,6 @@ async def test_end_turn(operation: Operations):
     assert (current_position + 1) % number_of_players == new_position
     
 @pytest.mark.integration_test
-
 def test_get_player(operation: Operations):
     player = operation.get_player(2)
     assert player.id_jugador == 2
@@ -194,10 +193,12 @@ def test_get_player(operation: Operations):
     assert player.position == None
     assert player.id_partida == None
 
-    
-def test_end_turn_game_not_found(operation: Operations):
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_end_turn_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
-        operation.end_turn(1000)
+        await operation.end_turn(1000)
         
 @pytest.mark.integration_test
 def test_leave_game(operation: Operations):
@@ -232,21 +233,24 @@ def test_leave_game(operation: Operations):
     finally:
         session.close()
 
+
+
+@pytest.mark.integration_test
 def test_leave_lobby(operation: Operations):
     session = Session()
     try:
-        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        player = session.query(Player).filter(Player.id_jugador == 4).one()
         game = session.query(Game).filter(Game.id_partida == 5).one()
         players_in_1 = game.players
         assert player in players_in_1
     finally:
         session.close()
     
-    operation.leave_lobby(5)
+    operation.leave_lobby(4)
     
     session = Session()
     try:
-        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        player = session.query(Player).filter(Player.id_jugador == 4).one()
         assert player.id_partida == None
         game = session.query(Game).filter(Game.id_partida == 5).one()
         players_in_1 = game.players
