@@ -80,13 +80,20 @@ async def start_game(game_id: int):
     operation = Operations()
     try:
         return operation.start_game(game_id=game_id)
-    
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
-
     except GameStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/gamelist/{game_id}")
+async def get_game_by_id(game_id: int):
+    operation = Operations()
+    try:
+        game = operation.get_game(game_id=game_id)
+        return game
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+        
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

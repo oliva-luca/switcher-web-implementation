@@ -210,3 +210,15 @@ class Operations:
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
+
+    def get_game(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            game.players = game.players
+            return game
+        finally:
+            session.close()
+
