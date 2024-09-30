@@ -345,7 +345,7 @@ class Operations:
         finally:
             session.close()
 
-    def start_game(self,game_id: int):
+    async def start_game(self,game_id: int):
             session = Session()
             try:
                 # Buscar la partida por su ID
@@ -395,7 +395,7 @@ class Operations:
 
                 # Repartir cartas de figura entre los jugadores
                 repartir_cartas_figura(game_id)
-
+                await manager_game.broadcast(game_id, "Game has started")
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
@@ -464,7 +464,7 @@ class Operations:
             session.close()    
                 
            
-    def leave_lobby(self, player_id: int): 
+    async def leave_lobby(self, player_id: int): 
         session = Session()
         try:
             player = session.query(Player).filter(Player.id_jugador == player_id).first()
@@ -473,13 +473,14 @@ class Operations:
             player.id_partida = None
             player.in_game = False
             session.commit()
+            await manager.broadcast("player leave")
             return {"message": f"Player {player_id} has left the lobby"}
         finally:
             session.close()
   
             
          
-    def leave_game(self, player_id: int):
+    async def leave_game(self, player_id: int):
         session = Session()
         try:
             player = session.query(Player).filter(Player.id_jugador == player_id).first()
@@ -501,6 +502,7 @@ class Operations:
                 figcard.shown = False
                 
             session.commit()
+            await manager_game.broadcast(player.id_partida, "Player has left the game") 
             return {"message": f"Player {player_id} has left the game"}
         finally:
             session.close()

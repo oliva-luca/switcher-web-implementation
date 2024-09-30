@@ -63,7 +63,7 @@ async def create_player(name: str):
 async def start_game(game_id: int):
     operation = Operations()
     try:
-        return operation.start_game(game_id=game_id)
+        return await operation.start_game(game_id=game_id)
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except GameStartedError as e:
@@ -103,7 +103,7 @@ async def get_players(player_id: int):
 async def leave_game(player_id: int):
     operation = Operations()
     try:
-        return operation.leave_game(player_id=player_id)
+        return await operation.leave_game(player_id=player_id)
       
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -112,7 +112,7 @@ async def leave_game(player_id: int):
 async def leave_lobby(player_id: int):
     operation = Operations()
     try:
-        return operation.leave_lobby(player_id=player_id)
+        return await operation.leave_lobby(player_id=player_id)
 
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -133,6 +133,6 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int):
     try:
         while True:
             data = await websocket.receive_text()
-            await manager_game.broadcast(f"Message text was: {data}", game_id)
+            await manager_game.broadcast(game_id, f"Message text was: {data}")
     except WebSocketDisconnect:
-        manager_game.disconnect(websocket, game_id)
+        manager_game.disconnect(game_id, websocket)
