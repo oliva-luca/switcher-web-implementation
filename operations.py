@@ -304,7 +304,7 @@ class Operations:
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
-
+            await manager_game.broadcast(game_id, "Player has joined the game")
             # Devolver respuesta exitosa
             return new_player.id_jugador
 
@@ -402,6 +402,7 @@ class Operations:
                 # Repartir cartas de figura entre los jugadores
                 repartir_cartas_figura(game_id)
                 await manager_game.broadcast(game_id, "Game has started")
+                await manager.broadcast("game start")
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
@@ -489,6 +490,7 @@ class Operations:
             session.commit()
 
             await manager.broadcast("player leave")
+            await manager_game.broadcast(game.id_partida, "Player has left the lobby")
             return {"message": f"Player {player_id} has left the lobby"}
         finally:
             session.close()
