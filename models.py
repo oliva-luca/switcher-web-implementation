@@ -25,6 +25,7 @@ class Game(Base):
     is_private = Column(Boolean, nullable=False)
     password = Column(String,nullable=False)
     turn = Column(Integer, nullable=True)
+    owner = Column(Integer, nullable=True)
 
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'), nullable=True) 
     tablero = relationship("Tablero", backref="game")
