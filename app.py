@@ -90,6 +90,14 @@ async def end_turn(game_id: int):
         raise HTTPException(status_code=404, detail=str(e))
     except GameNotStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@app.get("/user/{player_id}")
+async def get_players(player_id: int):
+    operation = Operations()
+    try:
+        return operation.get_player(player_id=player_id)
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.put("/gamelist/leave/{player_id}")
 async def leave_game(player_id: int):

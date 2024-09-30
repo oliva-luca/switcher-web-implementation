@@ -184,6 +184,17 @@ async def test_end_turn(operation: Operations):
     assert (current_position + 1) % number_of_players == new_position
     
 @pytest.mark.integration_test
+
+def test_get_player(operation: Operations):
+    player = operation.get_player(2)
+    assert player.id_jugador == 2
+    assert player.nombre == 'player2'
+    assert player.in_game == False
+    assert player.block == False
+    assert player.position == None
+    assert player.id_partida == None
+
+    
 def test_end_turn_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         operation.end_turn(1000)

@@ -450,7 +450,20 @@ class Operations:
         finally:
             session.close()
 
-            
+    def get_player(self, player_id: int):
+        session = Session()
+        try:
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            player.game = player.game
+            player.movcards = player.movcards
+            player.figcards = player.figcards
+            return player
+        finally:
+            session.close()    
+                
+           
     def leave_lobby(self, player_id: int): 
         session = Session()
         try:
@@ -491,3 +504,4 @@ class Operations:
             return {"message": f"Player {player_id} has left the game"}
         finally:
             session.close()
+
