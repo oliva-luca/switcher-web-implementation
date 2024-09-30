@@ -181,3 +181,26 @@ def test_end_turn(operation: Operations):
 
     assert current_turn != new_turn
     assert (current_position + 1) % number_of_players == new_position
+    
+@pytest.mark.integration_test
+def test_leave_lobby(operation: Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        players_in_1 = game.players
+        assert player in players_in_1
+    finally:
+        session.close()
+    
+    operation.leave_lobby(5)
+    
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        assert player.id_partida == None
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        players_in_1 = game.players
+        assert player not in players_in_1
+    finally:
+        session.close()
