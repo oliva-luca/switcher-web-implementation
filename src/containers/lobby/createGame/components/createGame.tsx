@@ -69,22 +69,20 @@ const CreateGame = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      const playerName = userId ? userId.toString() : 'UnknownPlayer';
-      console.log('Player name:', playerName);
       console.log('Joining game');
       const joinData = {
-        player_name : playerName,
+        player_id : userId,
       };
 
       const joinQueryString = new URLSearchParams(joinData as any).toString();
-      const response = await axios.put(`/gamelist/${createInfo.id}?${joinQueryString}`, null, {
+      const response = await axios.put(`/gamelist/join/${createInfo.id}?${joinQueryString}`, null, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       console.log('Game joined successfully:', response.data);
       // Redirigir a la ruta /game
-      navigate('/game');
+      navigate('/pregame');
 
     } catch (error) {
        //borrar la partida creada con el metodo delete
@@ -104,8 +102,8 @@ const CreateGame = () => {
   };
 
   return (
-    <div className="container mt-5 custom-container">
-      <div className="row justify-content-center">
+    <div className="container custom-container">
+      <div className="row justify-content-center d-flex">
         <div className="col-md-12">
           <form onSubmit={handleSubmit}>
             <div className="mb-3 row align-items-center block-background">
