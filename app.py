@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 from sqlalchemy.exc import NoResultFound
-from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, GameNotStartedError, NumberOfPlayersError, manager, ConnectionManager
+from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, GameNotStartedError, NumberOfPlayersError, manager, ConnectionManager, manager_game
 
 from enum import Enum
 from typing import List
@@ -101,3 +101,12 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
+@app.websocket("/ws/game/{game_id}")
+async def websocket_endpoint(websocket: WebSocket, game_id: int):
+    await manager_game.connect(websocket, game_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await manager_game.broadcast(f"Message text was: {data}", game_id)
+    except WebSocketDisconnect:
+        manager_game.disconnect(websocket, game_id)
