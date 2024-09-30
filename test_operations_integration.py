@@ -2,7 +2,7 @@ import pytest
 import asyncio
 from  sqlalchemy.orm import sessionmaker
 from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError
-from models import Game, engine, Base, Player, Tablero, MovCard, Casilla 
+from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla 
 
 Session = sessionmaker(bind=engine)
 
@@ -138,6 +138,16 @@ def test_start_game(operation: Operations):
     
     for cant in cantidades:
         assert cant == 7
+
+    figcards = session.query(FigCard).filter(FigCard.id_partida == 1).all()
+    assert len(figcards) == 50
+
+    cantidades = [0] * 25
+    for figcard in figcards:
+        cantidades[figcard.type - 1] += 1
+    
+    for cant in cantidades:
+        assert cant == 2
 
     return True
 

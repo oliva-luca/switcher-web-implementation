@@ -1,7 +1,9 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
-from models import Game, Player, Tablero, Casilla, MovCard, engine
-from typing import List, Dict
+
+from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
+from typing import List
+
 
 from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
@@ -174,6 +176,52 @@ def repartir_cartas_movimiento(id_partida: int):
 
     return {"message": "Repartidas las cartas de movimiento"}
 
+def crear_cartas_figura(id_partida: int):
+    # Cantidad de cartas de figura diferentes
+    number_of_types = 25
+    # Cantidad de repeticiones de cada carta
+    repetitions = 2
+    # Crear las 50 cartas y agregarlas
+    session = Session()
+    for _ in range(repetitions):
+        for type in range(1, number_of_types+1):
+            new_figcard = FigCard(
+                type = type,
+                id_partida = id_partida
+            )
+            session.add(new_figcard)
+    session.commit()
+    session.close()
+    return {"message": "Creadas las cartas de figura de la partida"}
+
+def repartir_cartas_figura(id_partida: int):
+    session = Session()
+    try:
+        # Obtengo la partida
+        game = session.query(Game).filter(Game.id_partida == id_partida).first()
+        # Obtengo los jugadores de la partida
+        players = session.query(Player).filter(Player.id_partida == id_partida).all()
+        # Obtengo las cartas de figura de la partida
+        figcards = session.query(FigCard).filter(FigCard.id_partida == id_partida).all()
+        # Mezclo las cartas de figura
+        shuffle(figcards)
+        # Calculo cuantas le tocan a cada uno
+        number_of_figcards = len(figcards) // game.cant_jugadores
+        # Y las reparto entre los jugadores
+        for player in players:
+            # Elegir las cartas de cada jugador
+            for card_number in range(number_of_figcards):
+                new_figcard = figcards.pop()
+                new_figcard.id_jugador = player.id_jugador
+                # Las primeras 3 son visibles
+                if(card_number < 3):
+                    new_figcard.shown = True
+        session.commit()
+    finally:
+        session.close()
+
+    return {"message": "Repartidas las cartas de figura"}
+
 class Operations: 
 
     def get_games(self):
@@ -184,6 +232,8 @@ class Operations:
                 game.players = game.players
             for game in games:
                 game.movcards = game.movcards
+            for game in games:
+                game.figcards = game.figcards
             return games
         finally:
             session.close()
@@ -339,6 +389,13 @@ class Operations:
                 
                 # Repartir cartas de movimiento entre los jugadores
                 repartir_cartas_movimiento(game_id)
+                
+                # Crear las cartas de figura de la partida
+                crear_cartas_figura(game_id)
+
+                # Repartir cartas de figura entre los jugadores
+                repartir_cartas_figura(game_id)
+
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
@@ -385,6 +442,7 @@ class Operations:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
             game.players = game.players
             game.movcards = game.movcards
+            game.figcards = game.figcards
             return game
         finally:
             session.close()
