@@ -24,6 +24,7 @@ class Game(Base):
     started = Column(Boolean, nullable=False)
     is_private = Column(Boolean, nullable=False)
     password = Column(String,nullable=False)
+    turn = Column(Integer, nullable=True)
 
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'), nullable=True) 
     tablero = relationship("Tablero", backref="game")
@@ -41,7 +42,7 @@ class Player(Base):
     nombre = Column(String, nullable=False)
     in_game = Column(Boolean, nullable=False, default=False)
     block = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
-    turn = Column(Boolean, nullable=False, default=False)  # Si es su turno
+    position = Column(Integer, nullable=True)  # Posicion en la ronda
 
     # Relación con Game, asumiendo que cada jugador pertenece a una sola partida
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=True)

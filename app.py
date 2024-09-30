@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 from sqlalchemy.exc import NoResultFound
-from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, manager, ConnectionManager
+from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, GameNotStartedError, NumberOfPlayersError, manager, ConnectionManager
 
 from enum import Enum
 from typing import List
@@ -57,23 +57,7 @@ async def create_player(nombre: str):
     
     return operation.create_player(nombre=nombre)
 
-@app.put("/gamelist/join/{game_id}")
-async def join_game(game_id: int, player_id: int):
-    operation = Operations()
-    try:
-        player_id = await operation.join_game(game_id=game_id, player_id=player_id)
 
-        return {
-                'id_player ': player_id,
-                'id_partida': game_id,
-                'operation_result': "Successfully joined!"
-            }
-
-    except GameNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-    except PlayerNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))  
 
 @app.put("/gamelist/start/{game_id}")
 async def start_game(game_id: int):
@@ -83,6 +67,8 @@ async def start_game(game_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except GameStartedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except NumberOfPlayersError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/gamelist/{game_id}")
@@ -94,6 +80,17 @@ async def get_game_by_id(game_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
         
+@app.put("/end_turn/{game_id}")
+async def end_turn(game_id: int):
+    operation = Operations()
+    try:
+        return operation.end_turn(game_id=game_id)
+    
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except GameNotStartedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

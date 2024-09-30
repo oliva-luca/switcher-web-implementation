@@ -150,3 +150,24 @@ def test_start_game_game_not_found(operation: Operations):
 def test_start_game_game_already_started(operation: Operations):
     with pytest.raises(GameStartedError):
         operation.start_game(1)
+
+@pytest.mark.integration_test
+def test_end_turn(operation: Operations):
+    session = Session()
+    try:
+        current_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
+        current_position = session.query(Player).filter(Player.id_jugador == current_turn).one().position
+    finally:
+        session.close()
+
+    operation.end_turn(5)
+
+    try:
+        new_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
+        new_position = session.query(Player).filter(Player.id_jugador == new_turn).one().position
+        number_of_players = session.query(Game).filter(Game.id_partida == 5).one().cant_jugadores
+    finally:
+        session.close()
+
+    assert current_turn != new_turn
+    assert (current_position + 1) % number_of_players == new_position
