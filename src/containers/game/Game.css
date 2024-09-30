@@ -1,24 +1,8 @@
 .board {
   display: grid;
+  justify-items: center;
+  align-items: center;
   grid-template-columns: 100px 504px 100px;
   grid-template-rows: 100px 504px 100px;
   gap: 10px;
-}
-
-.square-cor {
-  background-color: aquamarine;
-  height: 100px;
-  width: 100px;
-}
-
-.square-side {
-  background-color: red;
-  width: 100px;
-  height: 504px;
-}
-
-.square-side2 {
-  background-color: red;
-  width: 504px;
-  height: 100px;
 }

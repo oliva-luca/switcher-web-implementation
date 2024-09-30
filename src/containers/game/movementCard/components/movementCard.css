@@ -1,0 +1,6 @@
+#imagen{
+    width: 13vw; /* Ancho de la imagen */
+    /* height: 50vh; Altura de la imagen */
+    margin: 0 auto;
+    display: block;
+}

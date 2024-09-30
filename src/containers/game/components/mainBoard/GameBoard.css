@@ -1,7 +1,4 @@
 .boardSquare {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: #92ecd3;
   border: 10px solid #7dd3b3;
   float: left;
@@ -14,6 +11,9 @@
 
 .boardGrid {
   display: grid;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
   grid-template-columns: repeat(6, 70px);
   grid-template-rows: repeat(6, 70px);
   gap: 6px;

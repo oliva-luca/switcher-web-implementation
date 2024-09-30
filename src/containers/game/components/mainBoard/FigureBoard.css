@@ -1,28 +1,29 @@
 .figureBoard {
   display: flex;
+  justify-items: center;
+  align-items: center;
   justify-content: center;
   align-content: center;
-  align-items: center;
   background: #92ecd3;
   border: 7px solid #7dd3b3;
   float: left;
   height: 100px;
-  width: 504px;
-  border-radius: 2px;
+  width: 404px;
+  border-radius: 10px;
 }
 
 .figureBoardSide {
   display: flex;
-  justify-content: center;
+  justify-items: center;
   align-items: center;
+  justify-content: center;
+  align-content: center;
   background: #92ecd3;
   border: 7px solid #7dd3b3;
   float: left;
-  height: 504px;
+  height: 404px;
   width: 100px;
-  border-radius: 2%;
-  align-content: center;
-  align-items: center;
+  border-radius: 10px;
 }
 
 .figureGridBtm {

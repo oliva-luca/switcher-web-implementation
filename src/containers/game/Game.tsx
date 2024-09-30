@@ -1,7 +1,7 @@
+import React from "react";
 import "./Game.css";
-import "./Game.css";
-import GameBoard from "./components/GameBoard";
-import FigureBoard from "./components/FigureBoard";
+import FigureBoard from "./components/mainBoard/FigureBoard";
+import GameBoard from "./components/mainBoard/GameBoard";
 
 function Game() {
   const board: string[][] = [
@@ -18,23 +18,23 @@ function Game() {
       <div className="board">
         <div></div>
         <div>
-          <FigureBoard pos="top" deck={3} />
+          <FigureBoard pos="top" deck={0} />
         </div>
         <div></div>
 
         <div>
-          <FigureBoard pos="lft" deck={3} />
+          <FigureBoard pos="lft" deck={0} />
         </div>
         <div>
           <GameBoard board={board} />
         </div>
         <div>
-          <FigureBoard pos="rgt" deck={3} />
+          <FigureBoard pos="rgt" deck={0} />
         </div>
 
         <div></div>
         <div>
-          <FigureBoard pos="btm" deck={3} />
+          <FigureBoard pos="btm" deck={0} />
         </div>
         <div></div>
       </div>
