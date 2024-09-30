@@ -15,6 +15,12 @@ async def print_games():
 
     return operation.get_games()
 
+@app.get("/tableros/{game_id}")
+async def print_tablero_by_id(game_id : int):
+    operation = Operations()
+
+    return operation.get_board_by_id(game_id=game_id)
+
 @app.post("/gamelist")
 async def create_game(name: str, cant_jugadores: int, private: bool, password: str):
     operation = Operations()
@@ -69,6 +75,16 @@ async def join_game(game_id: int, player_id: int):
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))  
 
+@app.put("/gamelist/start/{game_id}")
+async def start_game(game_id: int):
+    operation = Operations()
+    try:
+        return operation.start_game(game_id=game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except GameStartedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.get("/gamelist/{game_id}")
 async def get_game_by_id(game_id: int):
     operation = Operations()
@@ -77,7 +93,7 @@ async def get_game_by_id(game_id: int):
         return game
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    
+        
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch
+from board_to_test_board import tablero_a
 
 from app import app 
 
@@ -66,6 +67,21 @@ def test_get_only_one_game(mock_Get_games, game_a):
     assert response.status_code == 200
     assert response.json() == [game_a]
     
+
+#-------------------TESTS FOR BOARD-------------------
+
+
+
+@patch("app.Operations") 
+def test_get_tablero_by_id(mock_Get_board , tablero_a):
+    mock_board = MagicMock()
+    mock_board.get_board_by_id.return_value = [tablero_a]
+    mock_Get_board.return_value = mock_board
+    
+    response = client.get("/tableros/1")
+    assert response.status_code == 200
+    assert response.json() == [tablero_a]
+
 @patch("app.Operations")
 def test_get_games_by_id(mock_Get_games, game_a):
     mock_games = MagicMock()
@@ -75,3 +91,4 @@ def test_get_games_by_id(mock_Get_games, game_a):
     response = client.get("/gamelist/1")
     assert response.status_code == 200
     assert response.json() == game_a
+

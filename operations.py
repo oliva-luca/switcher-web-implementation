@@ -37,6 +37,35 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
+def generar_tablero_aleatorio(id_tablero: int):
+    # Los 4 colores que se van a distribuir equitativamente
+    colores = ['rojo', 'azul', 'verde', 'amarillo']
+    # Crear una lista con 9 repeticiones de cada color para llenar el tablero
+    lista_colores = colores * 9
+    shuffle(lista_colores)  # Barajar los colores aleatoriamente
+    # Crear los casilleros y asignar colores
+    session = Session()
+    try: 
+        tablero = session.query(Tablero).filter(Tablero.id_tablero == id_tablero).first() 
+        for fila in range(6):
+            for columna in range(6):
+                # Extraer un color de la lista barajada
+                color = lista_colores.pop()
+                # Crear un casillero en la posición (fila, columna) con el color asignado
+                casilla = Casilla(
+                    fila=fila,
+                    columna=columna,
+                    color=color,
+                    id_tablero=id_tablero  # Relación con el tablero
+                )
+                session.add(casilla)
+                tablero.casillas.append(casilla)
+        session.commit()  # Guardar todos los casilleros en la base de datos
+    finally:
+        session.close()
+    return {"message": "Tablero generado con éxito"}
+
+
 class Operations: 
 
     def get_games(self):
@@ -116,6 +145,28 @@ class Operations:
         finally:
             session.close()  # Cerrar la sesión para liberar recursos
     
+    def get_board_by_id(self, game_id: int):
+
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if game is None:
+                return {"error": "Partida no encontrada"}
+
+            # Si la partida no tiene tablero
+            if game.id_tablero is None:
+                return {"error": "La partida no tiene un tablero asignado"}
+            try:
+                tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one_or_none()
+                if tablero is None:
+                    return {"error": "Tablero no encontrado"}
+                tablero.casillas = session.query(Casilla).filter(Casilla.id_tablero == tablero.id_tablero).all()
+            finally:
+                session.close()
+            return tablero
+        finally:
+            session.close()
+
     def create_player(self, nombre: str):
 
         session = Session()
@@ -132,7 +183,33 @@ class Operations:
                 'operation_result': "Successfully created!"
             }
         finally:
-            session.close()   
+            session.close()
+
+    def start_game(self,game_id: int):
+            session = Session()
+            try:
+                # Buscar la partida por su ID
+                game = session.query(Game).filter(Game.id_partida == game_id).first()
+                # Verificar si la partida existe
+                if not game:
+                    raise GameNotFoundError(f"Game with ID {game_id} not found.")
+                # Verificar si la partida ya ha comenzado
+                if game.started:
+                    raise GameStartedError(f"Game already on course.")
+                # Crear un nuevo tablero para la partida
+                nuevo_tablero = Tablero()
+                session.add(nuevo_tablero)
+                session.commit()  # Guardar el tablero y obtener su id
+                session.refresh(nuevo_tablero)
+                # Asignar el tablero a la partida
+                game.id_tablero = nuevo_tablero.id_tablero
+                game.started = True  # Marcar que la partida ha comenzado
+                session.commit()  # Guardar los cambios en la partida
+                # Generar los casilleros y asignar colores aleatorios al tablero
+                generar_tablero_aleatorio(nuevo_tablero.id_tablero)
+                return {"message": f"Game {game_id} has started successfully!"}
+            finally:
+                session.close()
 
     def get_game(self, game_id: int):
         session = Session()
@@ -144,3 +221,4 @@ class Operations:
             return game
         finally:
             session.close()
+
