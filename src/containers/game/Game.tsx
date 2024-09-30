@@ -6,6 +6,9 @@ import FigureBoard from "./components/mainBoard/FigureBoard";
 import GameBoard from "./components/mainBoard/GameBoard";
 import QuitBtn from './components/QuitBtn/QuitBtn';
 import CantPlayer from "../PreGame/components/CantPlayer/CantPlayer";
+import PassTurn from "./components/passTurn/passTurn";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 interface Player {
   id_jugador: number;
@@ -91,6 +94,52 @@ function ParsePlayerFigDeck(plyId: number, figcards: FigCard[]) {
 function Game() {
   const [game, setGame] = useState<GameData | null>(null);
   const [board, setBoard] = useState<BoardData | null>(null);
+  const [gameInfoKey, setGameInfoKey] = useState(0);
+  const navigate = useNavigate();
+
+    useEffect(() => {
+        const gameId = localStorage.getItem("gameId");
+        const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
+
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+        };
+
+        socket.onmessage = (event) => {
+            console.log('WebSocket message received');
+            setGameInfoKey(prevKey => prevKey + 1); // Update key to force re-render
+            const message = event.data;
+            switch (message) {
+                case 'winner':
+                    Swal.fire({
+                        title: '¡Ganaste!',
+                        text: 'Felicidades, has ganado la partida.',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    navigate('/lobby')
+                    break;
+
+                default:
+                    // alert("Actualizar info partida");
+                    console.log(message)
+                    break;
+            }
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket error: ', error);
+        };
+
+        // Cleanup on component unmount
+        return () => {
+        socket.close();
+        };
+    }, []);
 
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
@@ -171,6 +220,8 @@ function Game() {
             />
           </div>
           <div></div>
+          <PassTurn key={gameInfoKey}/>
+          <></>
           <QuitBtn/>
         </div>
       )}

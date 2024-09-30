@@ -12,7 +12,7 @@ const QuitBtn = () => {
         try{
             const response = axios.put(`/gamelist/leave/${userId}`);
             console.log(response);
-            navigate('/')
+            navigate('/lobby')
             
         } catch(error){
             console.log(error);

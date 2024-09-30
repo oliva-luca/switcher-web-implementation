@@ -20,7 +20,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/end_turn"{
+      "/end_turn": {
         target: "http://127.0.0.1:8000/",
         changeOrigin: true,
         secure: false,
