@@ -1,0 +1,90 @@
+.boardSquare {
+  background: #92ecd3;
+  border: 10px solid #7dd3b3;
+  float: left;
+  height: 504px;
+  width: 504px;
+  border-radius: 10%;
+  align-content: center;
+  align-items: center;
+}
+
+.boardGrid {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: repeat(6, 70px);
+  grid-template-rows: repeat(6, 70px);
+  gap: 6px;
+}
+
+.boardTyle {
+  background-color: #7dd3b3 !important;
+  border: 7px solid #7dd3b3 !important;
+  display: flex !important;
+  border: 10px solid;
+  height: 70px;
+  width: 70px;
+  border-radius: 10%;
+}
+
+.red {
+  background-color: #f17252 !important;
+  border: 7px solid #e3634b !important;
+}
+
+.red:hover {
+  background-color: #e3634b !important;
+}
+
+.red:active {
+  transform: scale(0.95);
+  background-color: #f97756 !important;
+  border: 7px solid #f97756 !important;
+}
+
+.grn {
+  background-color: #7eb65b !important;
+  border: 7px solid #71ab51 !important;
+}
+
+.grn:hover {
+  background-color: #71ab51 !important;
+}
+
+.grn:active {
+  transform: scale(0.95);
+  background-color: #87bf62 !important;
+  border: 7px solid #87bf62 !important;
+}
+
+.blu {
+  background-color: #6ec5e1 !important;
+  border: 7px solid #5cadcd !important;
+}
+
+.blu:hover {
+  background-color: #5cadcd !important;
+}
+
+.blu:active {
+  transform: scale(0.95);
+  background-color: #72cfe6 !important;
+  border: 7px solid #72cfe6 !important;
+}
+
+.ylw {
+  background-color: #efd96c !important;
+  border: 7px solid #e4ca64 !important;
+}
+
+.ylw:hover {
+  background-color: #e4ca64 !important;
+}
+
+.ylw:active {
+  transform: scale(0.95);
+  background-color: #f7e271 !important;
+  border: 7px solid #f7e271 !important;
+}
