@@ -287,7 +287,10 @@ class Operations:
             new_player = session.query(Player).filter(Player.id_jugador == player_id).first()
             if not new_player:
                 raise PlayerNotFoundError(f"Player with id {player_id} not found.")
-            
+
+            if not game.players:
+                game.owner = new_player.id_jugador
+
             # Asociar el jugador a la partida
             game.players.append(new_player)
             
@@ -473,9 +476,18 @@ class Operations:
             player = session.query(Player).filter(Player.id_jugador == player_id).first()
             if not player:
                 raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+
+            game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
+
+            if game.owner == player.id_jugador:
+                for player_i in game.players: 
+                    player_i.in_game=False
+                session.delete(game)
+
             player.id_partida = None
             player.in_game = False
             session.commit()
+
             await manager.broadcast("player leave")
             return {"message": f"Player {player_id} has left the lobby"}
         finally:
