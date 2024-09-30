@@ -1,17 +1,17 @@
 #slotPartida{
     display: flex;
     background-color: #f17252;
-    border-radius: 10vw;
-    padding: 1vh 2vw;
-    border: 0.3vw solid;
+    border-radius: 100px;
+    padding: 6px 16px;
+    border: 3px solid white;
 }
 
 #nombrePartida{
     font-size: 1.5em;
     font-weight: bold;
     color: white;
-    margin-right: 1vw;
-    padding: 1vh 2vw;
+    margin-right: 10px;
+    padding: 10px 15px;
 }
 
 #capacidadPartida{
@@ -19,30 +19,31 @@
     font-size: 1.5em;
     font-weight: bold;
     color: white;
-    padding: 1vh 2vw;
+    padding: 10px;
     text-align: right;
+    margin-left: auto;
 }
 
 #botonUnirse{
     background-color: #7eb65b;
     border: none;
     color: white;
-    padding: 0.5vh 1vw;
+    padding: 5px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.6vh;
-    margin-left: 1vw;
-    border-radius: 10vw;
+    font-size: 16px;
+    margin-left: auto; 
+    border-radius: 100px;
 }
 
 #idPartida{
     display: flex;
     align-items: center;
-    font-size: 1vh;
+    font-size: 10px;
     color: white;
     text-align: left;
-    border-radius: 1vw;
-    padding: 0.1vh 0.5vw;
+    border-radius: 10px;
+    padding: 1px 5px;
     margin-top: auto;
 }
