@@ -15,6 +15,11 @@ class PlayerNotFoundError(Exception):
 class GameStartedError(Exception):
     pass
 
+class NumberOfPlayersError(Exception):
+    pass
+
+class GameNotStartedError(Exception):
+    pass
 
 Session = sessionmaker(bind = engine)
 
@@ -35,7 +40,6 @@ class ConnectionManager:
             await connection.send_text(message)
 
 manager = ConnectionManager()
-
 
 def generar_tablero_aleatorio(id_tablero: int):
     # Los 4 colores que se van a distribuir equitativamente
@@ -65,6 +69,43 @@ def generar_tablero_aleatorio(id_tablero: int):
         session.close()
     return {"message": "Tablero generado con éxito"}
 
+def asignar_posiciones(id_partida: int):
+    session = Session()
+    try:
+        # Obtengo la partida
+        game = session.query(Game).filter(Game.id_partida == id_partida).first()
+        # Obtengo los jugadores
+        players = session.query(Player).filter(Player.id_partida == id_partida).all()
+        # Sorteo las posiciones
+        positions = list(range(game.cant_jugadores))
+        shuffle(positions)
+        # Asignar las posiciones
+        for player in players:
+            player.position = positions.pop()
+        session.commit()
+    finally:
+        session.close()
+
+    return {"message": "Asignadas posiciones de los jugadores con éxito"}
+
+
+def asignar_turno_primer_jugador(id_partida: int):
+    session = Session()
+    try:
+        # Obtengo la partida
+        game = session.query(Game).filter(Game.id_partida == id_partida).first()
+        # Obtengo el jugador
+        first_player = session.query(Player).filter((Player.id_partida == id_partida) & 
+                                                    (Player.position == 0)).first()
+        
+        # Indico que es su turno
+        game.turn = first_player.id_jugador
+        
+        session.commit()
+    finally:
+        session.close()
+
+    return {"message": "Turno del primer jugador asignado con éxito"}
 
 def crear_cartas_movimiento(id_partida: int):
     # Cantidad de cartas de movimiento diferentes
@@ -244,6 +285,11 @@ class Operations:
                 if game.started:
                     raise GameStartedError(f"Game already on course.")
                 
+                # Verificar si la cantidad de jugadores es correcta
+                if(len(game.players) != game.cant_jugadores):
+                    raise NumberOfPlayersError(f"Game with ID {game_id} needs {game.cant_jugadores} "\
+                                                f"players to start, but {len(game.players)} found")
+
                 # Crear un nuevo tablero para la partida
                 nuevo_tablero = Tablero()
                 session.add(nuevo_tablero)
@@ -258,6 +304,12 @@ class Operations:
                 # Generar los casilleros y asignar colores aleatorios al tablero
                 generar_tablero_aleatorio(nuevo_tablero.id_tablero)
                 
+                # Asignar las posiciones de los jugadores en la ronda
+                asignar_posiciones(game_id)
+
+                # Indicar que es el turno del primer jugador
+                asignar_turno_primer_jugador(game_id)
+
                 # Crear las cartas de movimiento de la partida
                 crear_cartas_movimiento(game_id)
                 
@@ -266,6 +318,39 @@ class Operations:
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
+
+    def end_turn(self,game_id: int):
+        session = Session()
+        try:
+            # Obtengo la partida
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            
+            # Verificar si la partida existe
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            
+            # Verificar si la partida no ha comenzado
+            if not game.started:
+                raise GameNotStartedError(f"Game {game_id} has not started yet.")
+
+            # Obtengo el jugador actual
+            current_player = session.query(Player).filter((Player.id_partida == game_id) & 
+                                                          (Player.id_jugador == game.turn)).first()
+            
+            # Calculo la posicion del proximo jugador
+            next_player_position = (current_player.position + 1) % game.cant_jugadores
+
+            # Obtengo el siguiente jugador
+            next_player = session.query(Player).filter((Player.id_partida == game_id) & 
+                                                       (Player.position == next_player_position)).first()
+            
+            # Actualizo la informacion del turno actual
+            game.turn = next_player.id_jugador
+
+            session.commit()
+            return {"message": f"In game {game_id}, turn of player {current_player.id_jugador} ({current_player.nombre}) ended succesfully"}
+        finally:
+            session.close()
 
     def get_game(self, game_id: int):
         session = Session()
