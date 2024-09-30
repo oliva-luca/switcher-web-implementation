@@ -158,7 +158,7 @@ def crear_cartas_figura(id_partida: int):
     # Crear las 50 cartas y agregarlas
     session = Session()
     for _ in range(repetitions):
-        for type in range(number_of_types):
+        for type in range(1, number_of_types+1):
             new_figcard = FigCard(
                 type = type,
                 id_partida = id_partida
@@ -415,6 +415,7 @@ class Operations:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
             game.players = game.players
             game.movcards = game.movcards
+            game.figcards = game.figcards
             return game
         finally:
             session.close()
