@@ -2,7 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
 
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
-from typing import List
+from typing import List,Dict
 
 
 from random import shuffle
@@ -528,7 +528,8 @@ class Operations:
             game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
             if game.turn == player_id:
                 self.end_turn(player.id_partida)
-            
+                
+            id_game = player.id_partida
             player.in_game = False
             player.id_partida = None
             
@@ -538,8 +539,13 @@ class Operations:
                 figcard.id_jugador = None
                 figcard.shown = False
                 
+            # Contar cuántos jugadores quedan en la partida
+            remaining_players = session.query(Player).filter(Player.id_partida == id_game, Player.in_game == True).count()
             session.commit()
-            await manager_game.broadcast(player.id_partida, "Player has left the game") 
+            if remaining_players == 1:
+                await manager_game.broadcast(id_game, "winner")
+            else:
+                await manager_game.broadcast(id_game, "Player has left the game") 
             return {"message": f"Player {player_id} has left the game"}
         finally:
             session.close()
