@@ -33,6 +33,8 @@ class Game(Base):
 
     movcards = relationship("MovCard", back_populates="game")
 
+    figcards = relationship("FigCard", back_populates="game")
+
 
 
 class Player(Base):
@@ -52,6 +54,9 @@ class Player(Base):
 
     # Cartas de movimiento del jugador
     movcards = relationship("MovCard", back_populates="player")
+
+    # Cartas de figura del jugador
+    figcards = relationship("FigCard", back_populates="player")
 
 # Definir los colores como un Enum
 class Color(PyEnum):
@@ -92,6 +97,20 @@ class MovCard(Base):
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="movcards")
 
+# Carta de figura
+class FigCard(Base):
+    __tablename__ = 'figcard'
+    id_figcard = Column(Integer, primary_key=True, autoincrement=True)
+    type = Column(Integer, nullable=False)
+    shown = Column(Boolean, nullable=False, default=False)
+
+    # Partida a la que pertenece
+    id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
+    game = relationship("Game", back_populates="figcards")
+
+    # Jugador al que pertence
+    id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
+    player = relationship("Player", back_populates="figcards")
 
 # Validar color con Enum en Python
 def set_color(self, color: Color):
