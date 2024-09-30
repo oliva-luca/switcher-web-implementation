@@ -111,9 +111,10 @@ async def test_join_game_game_not_found(operation: Operations):
     
         
 @pytest.mark.integration_test
-def test_start_game(operation: Operations):
+@pytest.mark.asyncio
+async def test_start_game(operation: Operations):
     session = Session()
-    operation.start_game(1)
+    await operation.start_game(1)
     assert session.query(Game).filter(Game.id_partida == 1).one().started == True
     assert session.query(Game).filter(Game.id_partida == 1).one().tablero is not None
     tablero_game_1 = session.query(Game).filter(Game.id_partida == 1).one().tablero
@@ -152,14 +153,16 @@ def test_start_game(operation: Operations):
     return True
 
 @pytest.mark.integration_test
-def test_start_game_game_not_found(operation: Operations):
+@pytest.mark.asyncio
+async def test_start_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
-        operation.start_game(1000)
+        await operation.start_game(1000)
         
 @pytest.mark.integration_test
-def test_start_game_game_already_started(operation: Operations):
+@pytest.mark.asyncio
+async def test_start_game_game_already_started(operation: Operations):
     with pytest.raises(GameStartedError):
-        operation.start_game(1)
+        await operation.start_game(1)
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
@@ -201,14 +204,15 @@ async def test_end_turn_game_not_found(operation: Operations):
         await operation.end_turn(1000)
         
 @pytest.mark.integration_test
-def test_leave_game(operation: Operations):
+@pytest.mark.asyncio
+async def test_leave_game(operation: Operations):
     session = Session()
     try:
         players_in_1_cnt = session.query(Player).filter(Player.id_partida == 5).count()
     finally:
         session.close()
     
-    operation.leave_game(5)
+    await operation.leave_game(5)
     
     session = Session()
     try:
@@ -236,7 +240,8 @@ def test_leave_game(operation: Operations):
 
 
 @pytest.mark.integration_test
-def test_leave_lobby(operation: Operations):
+@pytest.mark.asyncio
+async def test_leave_lobby(operation: Operations):
     session = Session()
     try:
         player = session.query(Player).filter(Player.id_jugador == 4).one()
@@ -246,7 +251,7 @@ def test_leave_lobby(operation: Operations):
     finally:
         session.close()
     
-    operation.leave_lobby(4)
+    await operation.leave_lobby(4)
     
     session = Session()
     try:
