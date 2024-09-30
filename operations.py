@@ -156,8 +156,6 @@ def crear_cartas_movimiento(id_partida: int):
 def repartir_cartas_movimiento(id_partida: int):
     session = Session()
     try:
-        # Obtengo la partida
-        game = session.query(Game).filter(Game.id_partida == id_partida).first()
         # Obtengo los jugadores de la partida
         players = session.query(Player).filter(Player.id_partida == id_partida).all()
         # Obtengo las cartas de movimienta de la partida
@@ -203,24 +201,29 @@ def repartir_cartas_figura(id_partida: int):
         players = session.query(Player).filter(Player.id_partida == id_partida).all()
         # Obtengo las cartas de figura de la partida
         figcards = session.query(FigCard).filter(FigCard.id_partida == id_partida).all()
-        # Mezclo las cartas de figura
-        shuffle(figcards)
-        # Calculo cuantas le tocan a cada uno
-        number_of_figcards = len(figcards) // game.cant_jugadores
-        # Y las reparto entre los jugadores
-        for player in players:
-            # Elegir las cartas de cada jugador
-            for card_number in range(number_of_figcards):
-                new_figcard = figcards.pop()
-                new_figcard.id_jugador = player.id_jugador
-                # Las primeras 3 son visibles
-                if(card_number < 3):
-                    new_figcard.shown = True
+        # Las separo en faciles y dificiles
+        hard_figcards = [figcard for figcard in figcards if figcard.type <= 18]
+        easy_figcards = [figcard for figcard in figcards if figcard.type > 18]
+
+        # Reparto ambas usando la misma lógica
+        for deck in [hard_figcards, easy_figcards]:
+            # Mezclo las cartas de figura
+            shuffle(deck)
+            # Calculo cuantas le tocan a cada uno
+            number_of_figcards = len(deck) // game.cant_jugadores
+            # Y las reparto entre los jugadores
+            for player in players:
+                # Elegir las cartas de cada jugador
+                for _ in range(number_of_figcards):
+                    new_figcard = deck.pop()
+                    new_figcard.id_jugador = player.id_jugador
         session.commit()
     finally:
         session.close()
 
     return {"message": "Repartidas las cartas de figura"}
+
+
 
 class Operations: 
 
