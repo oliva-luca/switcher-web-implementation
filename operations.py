@@ -154,14 +154,15 @@ class Operations:
                 return {"error": "Partida no encontrada"}
 
             # Si la partida no tiene tablero
-            if game.tablero is None:
+            if game.id_tablero is None:
                 return {"error": "La partida no tiene un tablero asignado"}
-
-            tablero = game.tablero
-            
-            tablero.casillas = tablero.casillas
-
-
+            try:
+                tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one_or_none()
+                if tablero is None:
+                    return {"error": "Tablero no encontrado"}
+                tablero.casillas = session.query(Casilla).filter(Casilla.id_tablero == tablero.id_tablero).all()
+            finally:
+                session.close()
             return tablero
         finally:
             session.close()

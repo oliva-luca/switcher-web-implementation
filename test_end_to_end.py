@@ -7,7 +7,7 @@ SERVICE_URL = 'http://localhost:8000'
 @pytest.fixture
 def list_of_games():
     return [
-        {'id_partida': 1, 'name': 'game1', 'cant_jugadores': 2, 'started': False, 'is_private': False, 'password': 'as', 'id_tablero': None, 'players': []},
+        {'id_partida': 1, 'name': 'game1', 'cant_jugadores': 2, 'started': False, 'is_private': False, 'password': 'as', 'id_tablero': 1, 'players': []},
         {'id_partida': 2, 'name': 'game2', 'cant_jugadores': 3, 'started': True, 'is_private': False, 'password': 'as', 'id_tablero': None, 'players': []},
         {'id_partida': 3, 'name': 'game3', 'cant_jugadores': 4, 'started': False, 'is_private': False, 'password': 'as', 'id_tablero': None, 'players': []},
         {'id_partida': 4, 'name': 'game4', 'cant_jugadores': 3, 'started': False, 'is_private': False, 'password': 'as', 'id_tablero': None, 'players': []},

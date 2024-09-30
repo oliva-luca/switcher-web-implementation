@@ -1,12 +1,12 @@
 from sqlalchemy.orm import sessionmaker
-from models import Game, engine, Player, Tablero
+from models import Game, engine, Player, Tablero, Casilla
 
 
 Session = sessionmaker(bind=engine)
 
 def load_data_for_test():
     games = [
-        (1, 'game1', 2, False, False, 'as', None),
+        (1, 'game1', 2, False, False, 'as', 1),
         (2, 'game2', 3, True, False, 'as', None),
         (3, 'game3', 4, False, False, 'as', None),
         (4, 'game4', 3, False, False, 'as', None),
@@ -22,262 +22,43 @@ def load_data_for_test():
     ]
 
     tableros = [( None, 1 )]
-
-
-    casillas = [{
-      "verde",
-      1,
-      0,
-      0,
-      1
-    },
-    {
-      "amarillo",
-      2,
-      0,
-      1,
-      1
-    },
-    {
-      "rojo",
-      3,
-      0,
-      2,
-      1
-    },
-    {
-      "azul",
-      4,
-      0,
-      3,
-      1
-    },
-    {
-      "amarillo",
-      5,
-      0,
-      4,
-      1
-    },
-    {
-      "amarillo",
-      6,
-      0,
-      5,
-      1
-    },
-    {
-      "amarillo",
-      7,
-      1,
-      0,
-      1
-    },
-    {
-      "amarillo",
-      8,
-      1,
-      1,
-      1
-    },
-    {
-      "amarillo",
-      9,
-      1,
-      2,
-      1
-    },
-    {
-      "azul",
-      10,
-      1,
-      3,
-      1
-    },
-    {
-      "verde",
-      11,
-      1,
-      4,
-      1
-    },
-    {
-      "verde",
-      12,
-      1,
-      5,
-      1
-    },
-    {
-      "azul",
-      13,
-      2,
-      0,
-      1
-    },
-    {
-      "rojo",
-      14,
-      2,
-      1,
-      1
-    },
-    {
-      "azul",
-      15,
-      2,
-      2,
-      1
-    },
-    {
-      "verde",
-      16,
-      2,
-      3,
-      1
-    },
-    {
-      "rojo",
-      17,
-      2,
-      4,
-      1
-    },
-    {
-      "rojo",
-      18,
-      2,
-      5,
-      1
-    },
-    {
-      "azul",
-      19,
-      3,
-      0,
-      1
-    },
-    {
-      "verde",
-      20,
-      3,
-      1,
-      1
-    },
-    {
-      "azul",
-      21,
-      3,
-      2,
-      1
-    },
-    {
-      "rojo",
-      22,
-      3,
-      3,
-      1
-    },
-    {
-      "amarillo",
-      23,
-      3,
-      4,
-      1
-    },
-    {
-      "rojo",
-      24,
-      3,
-      5,
-      1
-    },
-    {
-      "verde",
-      25,
-      4,
-      0,
-      1
-    },
-    {
-      "verde",
-      26,
-      4,
-      1,
-      1
-    },
-    {
-      "rojo",
-      27,
-      4,
-      2,
-      1
-    },
-    {
-      "azul",
-      28,
-      4,
-      3,
-      1
-    },
-    {
-      "amarillo",
-      29,
-      4,
-      4,
-      1
-    },
-    {
-      "verde",
-      30,
-      4,
-      5,
-      1
-    },
-    {
-      "azul",
-      31,
-      5,
-      0,
-      1
-    },
-    {
-      "rojo",
-      32,
-      5,
-      1,
-      1
-    },
-    {
-      "rojo",
-      33,
-      5,
-      2,
-      1
-    },
-    {
-      "verde",
-      34,
-      5,
-      3,
-      1
-    },
-    {
-      "amarillo",
-      35,
-      5,
-      4,
-      1
-    },
-    {
-      "azul",
-      36,
-      5,
-      5,
-      1
-    }
-
-
+    casillas = [
+        {"color": "verde", "id_casilla": 1, "fila": 0, "columna": 0, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 2, "fila": 0, "columna": 1, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 3, "fila": 0, "columna": 2, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 4, "fila": 0, "columna": 3, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 5, "fila": 0, "columna": 4, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 6, "fila": 0, "columna": 5, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 7, "fila": 1, "columna": 0, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 8, "fila": 1, "columna": 1, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 9, "fila": 1, "columna": 2, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 10, "fila": 1, "columna": 3, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 11, "fila": 1, "columna": 4, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 12, "fila": 1, "columna": 5, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 13, "fila": 2, "columna": 0, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 14, "fila": 2, "columna": 1, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 15, "fila": 2, "columna": 2, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 16, "fila": 2, "columna": 3, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 17, "fila": 2, "columna": 4, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 18, "fila": 2, "columna": 5, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 19, "fila": 3, "columna": 0, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 20, "fila": 3, "columna": 1, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 21, "fila": 3, "columna": 2, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 22, "fila": 3, "columna": 3, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 23, "fila": 3, "columna": 4, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 24, "fila": 3, "columna": 5, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 25, "fila": 4, "columna": 0, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 26, "fila": 4, "columna": 1, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 27, "fila": 4, "columna": 2, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 28, "fila": 4, "columna": 3, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 29, "fila": 4, "columna": 4, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 30, "fila": 4, "columna": 5, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 31, "fila": 5, "columna": 0, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 32, "fila": 5, "columna": 1, "id_tablero": 1},
+        {"color": "rojo", "id_casilla": 33, "fila": 5, "columna": 2, "id_tablero": 1},
+        {"color": "verde", "id_casilla": 34, "fila": 5, "columna": 3, "id_tablero": 1},
+        {"color": "amarillo", "id_casilla": 35, "fila": 5, "columna": 4, "id_tablero": 1},
+        {"color": "azul", "id_casilla": 36, "fila": 5, "columna": 5, "id_tablero": 1}
     ]
 
 
@@ -306,8 +87,18 @@ def load_data_for_test():
     session = Session()
     try: 
         if session.query(Tablero).count() == 0:
-            for color_principal,id_tablero in tableros:     
-                tablero = Tablero(color_principal=color_principal, id_tablero = id_tablero, casillas = casillas)
+            for color_principal, id_tablero in tableros:
+                tablero = Tablero(color_principal=color_principal, id_tablero=id_tablero)
+                for casilla in casillas:
+                    if casilla["id_tablero"] == id_tablero:
+                        new_casilla = Casilla(
+                            color=casilla["color"],
+                            id_casilla=casilla["id_casilla"],
+                            fila=casilla["fila"],
+                            columna=casilla["columna"],
+                            id_tablero=casilla["id_tablero"]
+                        )
+                        tablero.casillas.append(new_casilla)
                 session.add(tablero)
             session.commit()
     finally:
@@ -315,4 +106,4 @@ def load_data_for_test():
     
     
 if __name__ == '__main__':
-    load_data_for_test()
+    load_data_for_test()            
