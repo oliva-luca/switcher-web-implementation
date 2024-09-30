@@ -66,4 +66,12 @@ def test_get_only_one_game(mock_Get_games, game_a):
     assert response.status_code == 200
     assert response.json() == [game_a]
     
-
+@patch("app.Operations")
+def test_get_games_by_id(mock_Get_games, game_a):
+    mock_games = MagicMock()
+    mock_games.get_game.return_value = game_a
+    mock_Get_games.return_value = mock_games
+    
+    response = client.get("/gamelist/1")
+    assert response.status_code == 200
+    assert response.json() == game_a
