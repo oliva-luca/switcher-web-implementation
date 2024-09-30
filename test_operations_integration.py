@@ -1,8 +1,8 @@
 import pytest
 import asyncio
 from  sqlalchemy.orm import sessionmaker
-from operations import Operations, GameNotFoundError, PlayerNotFoundError
-from models import Game, engine, Base, Player
+from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError
+from models import Game, engine, Base, Player, Tablero, Casilla 
 
 Session = sessionmaker(bind=engine)
 
@@ -108,3 +108,34 @@ async def test_join_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         await operation.join_game(1000, 1)
         
+    
+        
+@pytest.mark.integration_test
+def test_start_game(operation: Operations):
+    session = Session()
+    operation.start_game(1)
+    assert session.query(Game).filter(Game.id_partida == 1).one().started == True
+    assert session.query(Game).filter(Game.id_partida == 1).one().tablero is not None
+    tablero_game_1 = session.query(Game).filter(Game.id_partida == 1).one().tablero
+    
+    ocupada = [[False for _ in range(6)] for _ in range(6)]
+    color_count = {"azul" : 0,"rojo" : 0,"amarillo" : 0,"verde" : 0}
+    for casilla in tablero_game_1.casillas:
+        assert ocupada[casilla.fila][casilla.columna]== False
+        ocupada[casilla.fila][casilla.columna] = True
+        color_count[casilla.color] += 1
+    assert color_count["azul"] == 9
+    assert color_count["rojo"] == 9
+    assert color_count["amarillo"] == 9
+    assert color_count["verde"] == 9
+    return True
+
+@pytest.mark.integration_test
+def test_start_game_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.start_game(1000)
+        
+@pytest.mark.integration_test
+def test_start_game_game_already_started(operation: Operations):
+    with pytest.raises(GameStartedError):
+        operation.start_game(1)
