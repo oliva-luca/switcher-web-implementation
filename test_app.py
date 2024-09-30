@@ -92,3 +92,24 @@ def test_get_games_by_id(mock_Get_games, game_a):
     assert response.status_code == 200
     assert response.json() == game_a
 
+@pytest.fixture
+def player_a():
+    return {
+        "block": False,
+        "id_jugador": 2,
+        "id_partida": 3,
+        "in_game": False,
+        "nombre": "pepe",
+        "position": None,
+    }
+
+@patch("app.Operations")
+def test_get_player(mock_Get_player, player_a):
+    mock_player = MagicMock()
+    mock_player.get_player.return_value = player_a
+    
+    mock_Get_player.return_value = mock_player
+    
+    response = client.get("/user/2")
+    assert response.status_code == 200
+    assert response.json() == player_a
