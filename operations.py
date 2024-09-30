@@ -223,7 +223,23 @@ def repartir_cartas_figura(id_partida: int):
 
     return {"message": "Repartidas las cartas de figura"}
 
+def mostrar_cartas_figura_incial(id_partida: int):
+    session = Session()
+    try:
+        # Obtengo los jugadores de la partida
+        players = session.query(Player).filter(Player.id_partida == id_partida).all()
 
+        # Hago tres cartas de figura de cada jugador visibles
+        for player in players:
+            player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).all())
+            shuffle(player_figcards)
+            for _ in range(3):
+                new_figcard = player_figcards.pop()
+                new_figcard.shown = True
+
+        session.commit()
+    finally:
+        session.close()
 
 class Operations: 
 
@@ -401,6 +417,10 @@ class Operations:
 
                 # Repartir cartas de figura entre los jugadores
                 repartir_cartas_figura(game_id)
+
+                # Hacer visibles tres cartas de figura de cada uno de ellos
+                mostrar_cartas_figura_incial(game_id)
+
                 await manager_game.broadcast(game_id, "Game has started")
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
