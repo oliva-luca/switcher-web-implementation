@@ -5,15 +5,6 @@ import "./Game.css";
 import FigureBoard from "./components/mainBoard/FigureBoard";
 import GameBoard from "./components/mainBoard/GameBoard";
 
-const board2: string[][] = [
-  ["red", "ylw", "grn", "blu", "red", "ylw"],
-  ["blu", "red", "ylw", "grn", "blu", "red"],
-  ["grn", "blu", "red", "ylw", "grn", "blu"],
-  ["ylw", "grn", "blu", "red", "ylw", "grn"],
-  ["red", "ylw", "grn", "blu", "red", "ylw"],
-  ["blu", "red", "ylw", "grn", "blu", ""],
-];
-
 interface Player {
   id_jugador: number;
   block: boolean;
@@ -53,6 +44,20 @@ interface GameData {
   figcards: FigCard[];
 }
 
+interface Casillas {
+  id_casilla: number;
+  color: string;
+  columna: number;
+  fila: number;
+  id_tablero: number;
+}
+
+interface BoardData {
+  color_principal: number;
+  id_tablero: number;
+  casillas: Casillas[];
+}
+
 function ParsePlayers(players: Player[]) {
   var order = new Array(players.length);
   order[0] = players.find(
@@ -82,6 +87,7 @@ function ParsePlayerFigDeck(plyId: number, figcards: FigCard[]) {
 
 function Game() {
   const [game, setGame] = useState<GameData | null>(null);
+  const [board, setBoard] = useState<BoardData | null>(null);
 
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
@@ -94,13 +100,22 @@ function Game() {
       .catch((error) => {
         console.error("Error fetching the game list:", error);
       });
+
+    axios
+      .get(`/tableros/${gameId}`)
+      .then((response) => {
+        setBoard(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching the game list:", error);
+      });
   }, []);
 
   const order = game == null ? [] : ParsePlayers(game?.players);
 
   return (
     <>
-      {game == null ? (
+      {game == null || board == null ? (
         <h1>Error creando menu de partida</h1>
       ) : (
         <div className="board">
@@ -122,7 +137,7 @@ function Game() {
             />
           </div>
           <div>
-            <GameBoard board={board2} />
+            <GameBoard board={board.casillas} />
           </div>
           <div>
             <FigureBoard
