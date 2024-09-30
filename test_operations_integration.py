@@ -162,7 +162,8 @@ def test_start_game_game_already_started(operation: Operations):
         operation.start_game(1)
 
 @pytest.mark.integration_test
-def test_end_turn(operation: Operations):
+@pytest.mark.asyncio
+async def test_end_turn(operation: Operations):
     session = Session()
     try:
         current_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
@@ -170,7 +171,7 @@ def test_end_turn(operation: Operations):
     finally:
         session.close()
 
-    operation.end_turn(5)
+    await operation.end_turn(5)
 
     try:
         new_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
@@ -183,6 +184,7 @@ def test_end_turn(operation: Operations):
     assert (current_position + 1) % number_of_players == new_position
     
 @pytest.mark.integration_test
+
 def test_get_player(operation: Operations):
     player = operation.get_player(2)
     assert player.id_jugador == 2
@@ -191,3 +193,63 @@ def test_get_player(operation: Operations):
     assert player.block == False
     assert player.position == None
     assert player.id_partida == None
+
+    
+def test_end_turn_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.end_turn(1000)
+        
+@pytest.mark.integration_test
+def test_leave_game(operation: Operations):
+    session = Session()
+    try:
+        players_in_1_cnt = session.query(Player).filter(Player.id_partida == 5).count()
+    finally:
+        session.close()
+    
+    operation.leave_game(5)
+    
+    session = Session()
+    try:
+        players_in_1_cnt_new = session.query(Player).filter(Player.id_partida == 5).count()
+        assert players_in_1_cnt_new == players_in_1_cnt - 1
+    finally:
+        session.close()
+        
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        assert player.id_partida is None
+    finally:
+        session.close()
+
+    session = Session()
+    try:
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        players_in_1 = game.players
+        assert player not in players_in_1
+    finally:
+        session.close()
+
+def test_leave_lobby(operation: Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        players_in_1 = game.players
+        assert player in players_in_1
+    finally:
+        session.close()
+    
+    operation.leave_lobby(5)
+    
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        assert player.id_partida == None
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        players_in_1 = game.players
+        assert player not in players_in_1
+    finally:
+        session.close()
