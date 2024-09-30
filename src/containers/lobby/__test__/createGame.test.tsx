@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, jest } from '@jest/globals';
-import CreateGame from '../components/createGame';
+import CreateGame from '../createGame/components/createGame';
 import axios from 'axios';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Swal from 'sweetalert2';

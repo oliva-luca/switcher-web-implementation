@@ -9,13 +9,13 @@ import './index.css';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Router>
-      <div className='app'>
+      {/* <div className='app'> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />
           <Route path="/game" element={<Game />} />
         </Routes>
-      </div>
+      {/* </div> */}
     </Router>
   </StrictMode>,
 );
