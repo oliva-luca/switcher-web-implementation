@@ -4,9 +4,10 @@ import React from "react";
 import "./Game.css";
 import FigureBoard from "./components/mainBoard/FigureBoard";
 import GameBoard from "./components/mainBoard/GameBoard";
-import QuitBtn from './components/QuitBtn/QuitBtn';
+import QuitBtn from "./components/QuitBtn/QuitBtn";
 import CantPlayer from "../PreGame/components/CantPlayer/CantPlayer";
 import PassTurn from "./components/passTurn/passTurn";
+import HandOfCards from "./components/movementCard/HandOfCards";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -72,10 +73,10 @@ function ParsePlayers(players: Player[]) {
     order[i] = players.find(
       (ply) =>
         ply.position == order[i - 1].position + 1 ||
-        (order[i - 1].position == players.length-1 && ply.position == 0)
+        (order[i - 1].position == players.length - 1 && ply.position == 0)
     );
   }
-  console.log(order)
+  console.log(order);
   return order;
 }
 
@@ -97,49 +98,49 @@ function Game() {
   const [gameInfoKey, setGameInfoKey] = useState(0);
   const navigate = useNavigate();
 
-    useEffect(() => {
-        const gameId = localStorage.getItem("gameId");
-        const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
+  useEffect(() => {
+    const gameId = localStorage.getItem("gameId");
+    const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
 
-        socket.onopen = () => {
-            console.log('WebSocket connection established');
-        };
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
 
-        socket.onmessage = (event) => {
-            console.log('WebSocket message received');
-            setGameInfoKey(prevKey => prevKey + 1); // Update key to force re-render
-            const message = event.data;
-            switch (message) {
-                case 'winner':
-                    Swal.fire({
-                        title: '¡Ganaste!',
-                        text: 'Felicidades, has ganado la partida.',
-                        icon: 'success',
-                        confirmButtonText: 'Aceptar'
-                    });
-                    navigate('/lobby')
-                    break;
+    socket.onmessage = (event) => {
+      console.log("WebSocket message received");
+      setGameInfoKey((prevKey) => prevKey + 1); // Update key to force re-render
+      const message = event.data;
+      switch (message) {
+        case "winner":
+          Swal.fire({
+            title: "¡Ganaste!",
+            text: "Felicidades, has ganado la partida.",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+          });
+          navigate("/lobby");
+          break;
 
-                default:
-                    // alert("Actualizar info partida");
-                    console.log(message)
-                    break;
-            }
-        };
+        default:
+          // alert("Actualizar info partida");
+          console.log(message);
+          break;
+      }
+    };
 
-        socket.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
 
-        socket.onerror = (error) => {
-            console.error('WebSocket error: ', error);
-        };
+    socket.onerror = (error) => {
+      console.error("WebSocket error: ", error);
+    };
 
-        // Cleanup on component unmount
-        return () => {
-        socket.close();
-        };
-    }, []);
+    // Cleanup on component unmount
+    return () => {
+      socket.close();
+    };
+  }, []);
 
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
@@ -173,7 +174,7 @@ function Game() {
         <div className="board">
           <div></div>
           <div>
-          {game.cant_jugadores <= 2 ? (
+            {game.cant_jugadores <= 2 ? (
               ""
             ) : (
               <FigureBoard
@@ -186,28 +187,28 @@ function Game() {
           <div></div>
 
           <div>
-          {game.cant_jugadores <= 1 ? (
+            {game.cant_jugadores <= 1 ? (
               ""
             ) : (
-            <FigureBoard
-              pos="lft"
-              deck={ParsePlayerFigDeck(order[1].id_jugador, game.figcards)}
-              cards={ParsePlayerFigCards(order[1].id_jugador, game.figcards)}
-            />
+              <FigureBoard
+                pos="lft"
+                deck={ParsePlayerFigDeck(order[1].id_jugador, game.figcards)}
+                cards={ParsePlayerFigCards(order[1].id_jugador, game.figcards)}
+              />
             )}
           </div>
           <div>
             <GameBoard board={board.casillas} />
           </div>
           <div>
-          {game.cant_jugadores <= 3 ? (
+            {game.cant_jugadores <= 3 ? (
               ""
             ) : (
-            <FigureBoard
-              pos="rgt"
-              deck={ParsePlayerFigDeck(order[3].id_jugador, game.figcards)}
-              cards={ParsePlayerFigCards(order[3].id_jugador, game.figcards)}
-            />
+              <FigureBoard
+                pos="rgt"
+                deck={ParsePlayerFigDeck(order[3].id_jugador, game.figcards)}
+                cards={ParsePlayerFigCards(order[3].id_jugador, game.figcards)}
+              />
             )}
           </div>
 
@@ -220,9 +221,25 @@ function Game() {
             />
           </div>
           <div></div>
-          <PassTurn key={gameInfoKey}/>
+        </div>
+      )}
+      {game == null || board == null ? (
+        ""
+      ) : (
+        <div>
+          <PassTurn key={gameInfoKey} />
           <></>
-          <QuitBtn/>
+          <HandOfCards
+            cards={game.movcards
+              .filter(
+                (card) =>
+                  card.id_jugador != null &&
+                  card.id_jugador.toString() == localStorage.getItem("userId")
+              )
+              .map((card) => card.type)}
+          />
+          <></>
+          <QuitBtn />
         </div>
       )}
     </>

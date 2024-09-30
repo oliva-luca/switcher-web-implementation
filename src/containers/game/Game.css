@@ -1,5 +1,9 @@
 .board {
   display: grid;
+  position: fixed;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
   justify-items: center;
   align-items: center;
   grid-template-columns: 100px 504px 100px;
