@@ -74,7 +74,7 @@ def crear_cartas_movimiento(id_partida: int):
     # Crear las 49 cartas y agregarlas
     session = Session()
     for _ in range(repetitions):
-        for type in range(number_of_types):
+        for type in range(1, number_of_types+1):
             new_movcard = MovCard(
                 type = type,
                 id_partida = id_partida

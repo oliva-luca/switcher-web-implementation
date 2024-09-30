@@ -2,7 +2,7 @@ import pytest
 import asyncio
 from  sqlalchemy.orm import sessionmaker
 from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError
-from models import Game, engine, Base, Player, Tablero, Casilla 
+from models import Game, engine, Base, Player, Tablero, MovCard, Casilla 
 
 Session = sessionmaker(bind=engine)
 
@@ -128,6 +128,17 @@ def test_start_game(operation: Operations):
     assert color_count["rojo"] == 9
     assert color_count["amarillo"] == 9
     assert color_count["verde"] == 9
+
+    movcards = session.query(MovCard).filter(MovCard.id_partida == 1).all()
+    assert len(movcards) == 49
+
+    cantidades = [0] * 7
+    for movcard in movcards:
+        cantidades[movcard.type - 1] += 1
+    
+    for cant in cantidades:
+        assert cant == 7
+
     return True
 
 @pytest.mark.integration_test
