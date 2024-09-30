@@ -398,7 +398,10 @@ class Operations:
             # Obtengo el siguiente jugador
             next_player = session.query(Player).filter((Player.id_partida == game_id) & 
                                                        (Player.position == next_player_position)).first()
-            
+            while (next_player is None):
+                next_player_position = (next_player_position + 1) % game.cant_jugadores
+                next_player = session.query(Player).filter((Player.id_partida == game_id) & 
+                                                           (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
 
@@ -417,6 +420,31 @@ class Operations:
             game.movcards = game.movcards
             game.figcards = game.figcards
             return game
+        finally:
+            session.close()
+    
+    def leave_game(self, player_id: int):
+        session = Session()
+        try:
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            
+            game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
+            if game.turn == player_id:
+                self.end_turn(player.id_partida)
+            
+            player.in_game = False
+            player.id_partida = None
+            
+            for movcard in player.movcards:
+                movcard.id_jugador = None
+            for figcard in player.figcards:
+                figcard.id_jugador = None
+                figcard.shown = False
+                
+            session.commit()
+            return {"message": f"Player {player_id} has left the game"}
         finally:
             session.close()
 
