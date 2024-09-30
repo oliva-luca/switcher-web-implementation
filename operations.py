@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
-from models import Game, Player, Tablero, Casilla, engine
+from models import Game, Player, Tablero, Casilla, MovCard, engine
 from typing import List
 
 from random import shuffle
@@ -66,6 +66,49 @@ def generar_tablero_aleatorio(id_tablero: int):
     return {"message": "Tablero generado con éxito"}
 
 
+def crear_cartas_movimiento(id_partida: int):
+    # Cantidad de cartas de movimiento diferentes
+    number_of_types = 7
+    # Cantidad de repeticiones de cada carta
+    repetitions = 7
+    # Crear las 49 cartas y agregarlas
+    session = Session()
+    for _ in range(repetitions):
+        for type in range(number_of_types):
+            new_movcard = MovCard(
+                type = type,
+                id_partida = id_partida
+            )
+            session.add(new_movcard)
+    session.commit()
+    session.close()
+    return {"message": "Creadas las cartas de movimiento de la partida"}
+
+
+
+def repartir_cartas_movimiento(id_partida: int):
+    session = Session()
+    try:
+        # Obtengo la partida
+        game = session.query(Game).filter(Game.id_partida == id_partida).first()
+        # Obtengo los jugadores de la partida
+        players = session.query(Player).filter(Player.id_partida == id_partida).all()
+        # Obtengo las cartas de movimienta de la partida
+        movcards = session.query(MovCard).filter(MovCard.id_partida == id_partida).all()
+        # Mezclo las cartas de movimiento
+        shuffle(movcards)
+        # Y las reparto entre los jugadores
+        for player in players:
+            # Elegir 3 cartas
+            for _ in range(3):
+                new_movcard = movcards.pop()
+                new_movcard.id_jugador = player.id_jugador
+        session.commit()
+    finally:
+        session.close()
+
+    return {"message": "Repartidas las cartas de movimiento"}
+
 class Operations: 
 
     def get_games(self):
@@ -74,6 +117,8 @@ class Operations:
             games = session.query(Game).all()  # Obtener todos los juegos de la base de datos
             for game in games:
                 game.players = game.players
+            for game in games:
+                game.movcards = game.movcards
             return games
         finally:
             session.close()
@@ -190,23 +235,34 @@ class Operations:
             try:
                 # Buscar la partida por su ID
                 game = session.query(Game).filter(Game.id_partida == game_id).first()
+                
                 # Verificar si la partida existe
                 if not game:
                     raise GameNotFoundError(f"Game with ID {game_id} not found.")
+                
                 # Verificar si la partida ya ha comenzado
                 if game.started:
                     raise GameStartedError(f"Game already on course.")
+                
                 # Crear un nuevo tablero para la partida
                 nuevo_tablero = Tablero()
                 session.add(nuevo_tablero)
                 session.commit()  # Guardar el tablero y obtener su id
                 session.refresh(nuevo_tablero)
+                
                 # Asignar el tablero a la partida
                 game.id_tablero = nuevo_tablero.id_tablero
                 game.started = True  # Marcar que la partida ha comenzado
                 session.commit()  # Guardar los cambios en la partida
+                
                 # Generar los casilleros y asignar colores aleatorios al tablero
                 generar_tablero_aleatorio(nuevo_tablero.id_tablero)
+                
+                # Crear las cartas de movimiento de la partida
+                crear_cartas_movimiento(game_id)
+                
+                # Repartir cartas de movimiento entre los jugadores
+                repartir_cartas_movimiento(game_id)
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
@@ -218,6 +274,7 @@ class Operations:
             if not game:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
             game.players = game.players
+            game.movcards = game.movcards
             return game
         finally:
             session.close()
