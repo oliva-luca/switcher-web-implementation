@@ -6,11 +6,11 @@ Session = sessionmaker(bind=engine)
 
 def load_data_for_test():
     games = [
-        (1, 'game1', 2, False, False, 'as', 1),
-        (2, 'game2', 3, True, False, 'as', 2),
-        (3, 'game3', 4, False, False, 'as', 3),
-        (4, 'game4', 3, False, False, 'as', 4),
-        (5, 'game5', 2, False, False, 'as', 5),
+        (1, 'game1', 2, False, False, 'as', None),
+        (2, 'game2', 3, True, False, 'as', None),
+        (3, 'game3', 4, False, False, 'as', None),
+        (4, 'game4', 3, False, False, 'as', None),
+        (5, 'game5', 2, False, False, 'as', None),
     ]
     
     players =[
