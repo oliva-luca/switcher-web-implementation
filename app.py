@@ -91,7 +91,7 @@ async def end_turn(game_id: int):
     except GameNotStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.put("/gamelist/leave/{game_id}")
+@app.put("/gamelist/leave/{player_id}")
 async def leave_game(player_id: int):
     operation = Operations()
     try:
