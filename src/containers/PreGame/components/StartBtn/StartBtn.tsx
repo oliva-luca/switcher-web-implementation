@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './StartBtn.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'; // Importar Axios
@@ -8,6 +8,28 @@ import { useNavigate } from 'react-router-dom';
 const StartBtn = () => {
     const [started, setStarted] = useState(false);
     const navigate = useNavigate();
+    const [idOwner, setIdOwner] = useState(null);
+    const userId = localStorage.getItem("userId");
+
+    useEffect(() => {
+        const fetchGameData = async () => {
+            const gameId = localStorage.getItem('gameId');
+            if (!gameId) {
+                console.error('Game ID not found');
+                return;
+            }
+
+            try {
+                const response = await axios.get(`/gamelist/${gameId}`);
+                console.log('Game:', response.data);
+                setIdOwner(response.data.owner); // Actualiza el estado con el ID del propietario
+            } catch (error) {
+                console.error('Error fetching game data:', error);
+            }
+        };
+
+        fetchGameData();
+    }, []);
 
     const start = async () => {
         const gameId = localStorage.getItem('gameId');
@@ -36,14 +58,19 @@ const StartBtn = () => {
     }
 
 
-    return (
-        <button 
+    if(idOwner == userId){
+
+        return (
+            <button 
             type="submit" 
             className="btn btn-lg w-20 bottom-right-button" 
             onClick={start}>
             INICIAR PARTIDA
         </button>
     );
+    } else{
+        return null;
+    }
     
 }
 

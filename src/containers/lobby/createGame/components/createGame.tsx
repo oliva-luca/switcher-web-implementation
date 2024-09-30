@@ -81,6 +81,8 @@ const CreateGame = () => {
         },
       });
       console.log('Game joined successfully:', response.data);
+      //guardar id partida en local storage
+      localStorage.setItem('gameId', createInfo.id);
       // Redirigir a la ruta /game
       navigate('/pregame');
 

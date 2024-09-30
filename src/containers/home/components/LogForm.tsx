@@ -9,11 +9,6 @@ const LogForm = () => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
 
-    // Limpia el ID de storage
-    useEffect(() => {
-        localStorage.removeItem('userId');
-    }, []);
-
 
     // Funcio que cambia detecta el nuevo nombre
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
