@@ -1,0 +1,17 @@
+.bottom-right-button {
+    position: fixed;
+    bottom: 20px; /* Ajusta el valor según el margen deseado */
+    right: 20px;  /* Ajusta el valor según el margen deseado */
+    background-color: #7eb65b;
+    color: white
+}
+
+.bottom-right-button:hover {
+    background-color: #71ab51;
+    color: black;
+}
+
+.bottom-right-button:active {
+    background-color: #7eb65b !important; 
+    color: white !important;
+}

@@ -68,23 +68,23 @@ const CreateGame = () => {
     }
 
     try {
-      const userId = localStorage.getItem('userId');
-      const playerName = userId ? userId.toString() : 'UnknownPlayer';
-      console.log('Player name:', playerName);
-      console.log('Joining game');
+      const userID = localStorage.getItem('userId');
       const joinData = {
-        player_name : playerName,
+        player_id : userID,
       };
 
       const joinQueryString = new URLSearchParams(joinData as any).toString();
-      const response = await axios.put(`/gamelist/${createInfo.id}?${joinQueryString}`, null, {
+      const response = await axios.put(`/gamelist/join/${createInfo.id}?${joinQueryString}`, null, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      console.log('Game joined successfully:', response.data);
+      
+      // guardar el id de la partida en el local storage
+      localStorage.setItem('gameId', createInfo.id);
+
       // Redirigir a la ruta /game
-      navigate('/game');
+      navigate('/pregame');
 
     } catch (error) {
        //borrar la partida creada con el metodo delete
