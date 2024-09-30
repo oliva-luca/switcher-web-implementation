@@ -1,4 +1,3 @@
-export default Game;
 import axios from "axios";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -6,6 +5,7 @@ import "./Game.css";
 import FigureBoard from "./components/mainBoard/FigureBoard";
 import GameBoard from "./components/mainBoard/GameBoard";
 import QuitBtn from './components/QuitBtn/QuitBtn';
+import CantPlayer from "../PreGame/components/CantPlayer/CantPlayer";
 
 interface Player {
   id_jugador: number;
@@ -69,9 +69,10 @@ function ParsePlayers(players: Player[]) {
     order[i] = players.find(
       (ply) =>
         ply.position == order[i - 1].position + 1 ||
-        (order[i - 1].position == 3 && ply.position == 0)
+        (order[i - 1].position == players.length-1 && ply.position == 0)
     );
   }
+  console.log(order)
   return order;
 }
 
@@ -123,30 +124,42 @@ function Game() {
         <div className="board">
           <div></div>
           <div>
-            <FigureBoard
-              pos="top"
-              deck={ParsePlayerFigDeck(order[2].id_jugador, game.figcards)}
-              cards={ParsePlayerFigCards(order[2].id_jugador, game.figcards)}
-            />
+          {game.cant_jugadores <= 2 ? (
+              ""
+            ) : (
+              <FigureBoard
+                pos="top"
+                deck={ParsePlayerFigDeck(order[2].id_jugador, game.figcards)}
+                cards={ParsePlayerFigCards(order[2].id_jugador, game.figcards)}
+              />
+            )}
           </div>
           <div></div>
 
           <div>
+          {game.cant_jugadores <= 1 ? (
+              ""
+            ) : (
             <FigureBoard
               pos="lft"
               deck={ParsePlayerFigDeck(order[1].id_jugador, game.figcards)}
               cards={ParsePlayerFigCards(order[1].id_jugador, game.figcards)}
             />
+            )}
           </div>
           <div>
             <GameBoard board={board.casillas} />
           </div>
           <div>
+          {game.cant_jugadores <= 3 ? (
+              ""
+            ) : (
             <FigureBoard
               pos="rgt"
               deck={ParsePlayerFigDeck(order[3].id_jugador, game.figcards)}
               cards={ParsePlayerFigCards(order[3].id_jugador, game.figcards)}
             />
+            )}
           </div>
 
           <div></div>
