@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Lobby from './containers/lobby/Lobby.tsx';
-import Game from './containers/game/Game.tsx';
+import Game from './containers/PreGame/PreGame.tsx';
 import Home from './containers/home/Home.tsx';
 import './index.css';
 
@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />
-          <Route path="/game" element={<Game />} />
+          <Route path="/pregame" element={<Game />} />
         </Routes>
       {/* </div> */}
     </Router>
