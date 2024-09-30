@@ -37,7 +37,7 @@ export default function SlotJoinGame({ id, name, currentCapacity, capacity }: Ga
                 'Content-Type': 'application/json',
                 },
             });
-            navigate('/game');
+            navigate('/pregame');
         } catch (error) {
             console.error('Error joining game:', error);
             Swal.fire({

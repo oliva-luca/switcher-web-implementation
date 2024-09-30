@@ -3,7 +3,7 @@ import GameBoard from './components/GameBoard/GameBoard'
 import StartBtn from "./components/StartBtn/StartBtn";
 import CantPlayer from "./components/CantPlayer/CantPlayer";
 
-function Game() {
+function PreGame() {
 
     const board: string[][] = [
         ["red", "ylw", "grn", "blu", "red", "ylw", "grn"],
@@ -32,4 +32,4 @@ function Game() {
     )
 }
 
-export default Game
+export default PreGame
