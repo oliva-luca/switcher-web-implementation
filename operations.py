@@ -343,7 +343,7 @@ class Operations:
             finally:
                 session.close()
 
-    async def end_turn(self,game_id: int):
+    async def end_turn(self, game_id: int):
         session = Session()
         try:
             # Obtengo la partida
@@ -358,8 +358,7 @@ class Operations:
                 raise GameNotStartedError(f"Game {game_id} has not started yet.")
 
             # Obtengo el jugador actual
-            current_player = session.query(Player).filter((Player.id_partida == game_id) & 
-                                                          (Player.id_jugador == game.turn)).first()
+            current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
@@ -373,8 +372,8 @@ class Operations:
 
             session.commit()
             
-            await manager_game.broadcast(game_id, f"Turno del jugador {next_player.id_jugador} ({next_player.nombre})")
-            return {"message": f"In game {game_id}, turn of player {current_player.id_jugador} ({current_player.nombre}) ended succesfully"}
+            await manager_game.broadcast(game_id, "Turno del jugador")
+            return {"message": f"In game {game_id}, turn of player {current_player.id_jugador} ({current_player.nombre}) ended successfully"}
         finally:
             session.close()
 

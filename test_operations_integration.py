@@ -152,7 +152,8 @@ def test_start_game_game_already_started(operation: Operations):
         operation.start_game(1)
 
 @pytest.mark.integration_test
-def test_end_turn(operation: Operations):
+@pytest.mark.asyncio
+async def test_end_turn(operation: Operations):
     session = Session()
     try:
         current_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
@@ -160,7 +161,7 @@ def test_end_turn(operation: Operations):
     finally:
         session.close()
 
-    operation.end_turn(5)
+    await operation.end_turn(5)
 
     try:
         new_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
