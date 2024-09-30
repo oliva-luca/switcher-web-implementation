@@ -37,7 +37,10 @@ export default function SlotJoinGame({ id, name, currentCapacity, capacity }: Ga
                 'Content-Type': 'application/json',
                 },
             });
+<<<<<<< HEAD
             localStorage.setItem('gameId', id.toString());
+=======
+>>>>>>> eaf7b827183de3336ab21cf9e513358fab473059
             navigate('/pregame');
         } catch (error) {
             console.error('Error joining game:', error);
