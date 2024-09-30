@@ -446,4 +446,16 @@ class Operations:
             return game
         finally:
             session.close()
-
+    
+    def leave_lobby(self, player_id: int):
+        session = Session()
+        try:
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            player.id_partida = None
+            player.in_game = False
+            session.commit()
+            return {"message": f"Player {player_id} has left the lobby"}
+        finally:
+            session.close()
