@@ -1,14 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import './Lobby.css'
 import CreateGame from './createGame/components/createGame'
 import GameList from './gameList/gameList'
 import React, { useEffect, useState } from 'react';
 
+
 export function Lobby() {
   const [isConnected, setIsConnected] = useState(false);
   const [gameListKey, setGameListKey] = useState(0);
 
+  const navigate = useNavigate();
   useEffect(() => {
-    const socket = new WebSocket('localhost:8000/ws');
+    const socket = new WebSocket('ws://localhost:8000/ws');
 
     socket.onopen = () => {
       console.log('WebSocket connection established');
