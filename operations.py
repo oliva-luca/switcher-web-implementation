@@ -1,7 +1,9 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
+
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
 from typing import List
+
 
 from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
@@ -40,6 +42,30 @@ class ConnectionManager:
             await connection.send_text(message)
 
 manager = ConnectionManager()
+
+class GameConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[int, List[WebSocket]] = {}
+
+    async def connect(self, game_id: int, websocket: WebSocket):
+        await websocket.accept()
+        if game_id not in self.active_connections:
+            self.active_connections[game_id] = []
+        self.active_connections[game_id].append(websocket)
+
+    def disconnect(self, game_id: int, websocket: WebSocket):
+        if game_id in self.active_connections:
+            self.active_connections[game_id].remove(websocket)
+            if not self.active_connections[game_id]:
+                del self.active_connections[game_id]
+
+    async def broadcast(self, game_id: int, message: str):
+        if game_id in self.active_connections:
+            for connection in self.active_connections[game_id]:
+                await connection.send_text(message)
+
+manager_game = GameConnectionManager()
+
 
 def generar_tablero_aleatorio(id_tablero: int):
     # Los 4 colores que se van a distribuir equitativamente
@@ -374,7 +400,7 @@ class Operations:
             finally:
                 session.close()
 
-    def end_turn(self,game_id: int):
+    async def end_turn(self, game_id: int):
         session = Session()
         try:
             # Obtengo la partida
@@ -389,8 +415,7 @@ class Operations:
                 raise GameNotStartedError(f"Game {game_id} has not started yet.")
 
             # Obtengo el jugador actual
-            current_player = session.query(Player).filter((Player.id_partida == game_id) & 
-                                                          (Player.id_jugador == game.turn)).first()
+            current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
@@ -406,7 +431,9 @@ class Operations:
             game.turn = next_player.id_jugador
 
             session.commit()
-            return {"message": f"In game {game_id}, turn of player {current_player.id_jugador} ({current_player.nombre}) ended succesfully"}
+            
+            await manager_game.broadcast(game_id, "Turno del jugador")
+            return {"message": f"In game {game_id}, turn of player {current_player.id_jugador} ({current_player.nombre}) ended successfully"}
         finally:
             session.close()
 
@@ -422,13 +449,30 @@ class Operations:
             return game
         finally:
             session.close()
-    
+
+            
+    def leave_lobby(self, player_id: int): 
+        session = Session()
+        try:
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            player.id_partida = None
+            player.in_game = False
+            session.commit()
+            return {"message": f"Player {player_id} has left the lobby"}
+        finally:
+            session.close()
+  
+            
+         
     def leave_game(self, player_id: int):
         session = Session()
         try:
             player = session.query(Player).filter(Player.id_jugador == player_id).first()
             if not player:
                 raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+
             
             game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
             if game.turn == player_id:
@@ -447,4 +491,3 @@ class Operations:
             return {"message": f"Player {player_id} has left the game"}
         finally:
             session.close()
-

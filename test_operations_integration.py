@@ -162,7 +162,8 @@ def test_start_game_game_already_started(operation: Operations):
         operation.start_game(1)
 
 @pytest.mark.integration_test
-def test_end_turn(operation: Operations):
+@pytest.mark.asyncio
+async def test_end_turn(operation: Operations):
     session = Session()
     try:
         current_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
@@ -170,7 +171,7 @@ def test_end_turn(operation: Operations):
     finally:
         session.close()
 
-    operation.end_turn(5)
+    await operation.end_turn(5)
 
     try:
         new_turn = session.query(Game).filter(Game.id_partida == 5).one().turn
@@ -215,6 +216,28 @@ def test_leave_game(operation: Operations):
     try:
         game = session.query(Game).filter(Game.id_partida == 5).one()
         player = session.query(Player).filter(Player.id_jugador == 5).one()
+        players_in_1 = game.players
+        assert player not in players_in_1
+    finally:
+        session.close()
+
+def test_leave_lobby(operation: Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        game = session.query(Game).filter(Game.id_partida == 5).one()
+        players_in_1 = game.players
+        assert player in players_in_1
+    finally:
+        session.close()
+    
+    operation.leave_lobby(5)
+    
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 5).one()
+        assert player.id_partida == None
+        game = session.query(Game).filter(Game.id_partida == 5).one()
         players_in_1 = game.players
         assert player not in players_in_1
     finally:
