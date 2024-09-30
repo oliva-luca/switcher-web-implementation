@@ -8,7 +8,7 @@
   border: 7px solid #7dd3b3;
   float: left;
   height: 100px;
-  width: 404px;
+  width: 500px;
   border-radius: 10px;
 }
 
@@ -21,23 +21,23 @@
   background: #92ecd3;
   border: 7px solid #7dd3b3;
   float: left;
-  height: 404px;
+  height: 500px;
   width: 100px;
   border-radius: 10px;
 }
 
 .figureGridBtm {
   display: grid;
-  grid-template-columns: 110px repeat(3, 80px);
-  grid-template-rows: 80px;
-  gap: 10px;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: 50px;
+  gap: 5px;
 }
 
 .figureGridTop {
   display: grid;
-  grid-template-columns: repeat(3, 80px) 110px;
-  grid-template-rows: 80px;
-  gap: 10px;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: 50px;
+  gap: 5px;
   justify-items: center;
 }
 
@@ -50,7 +50,7 @@
 
 .figureGridRgt {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 80px;
   grid-template-rows: repeat(3, 80px) 110px;
   gap: 10px;
 }
