@@ -1,5 +1,5 @@
 import "./PreGame.css"
-import GameBoard from './components/GameBoard/GameBoard'
+import GameBoard from './components/GameBoard/PreGameBoard'
 import StartBtn from "./components/StartBtn/StartBtn";
 import CantPlayer from "./components/CantPlayer/CantPlayer";
 
