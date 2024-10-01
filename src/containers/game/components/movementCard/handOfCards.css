@@ -1,9 +1,0 @@
-.hand-of-cards {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start; /* Alinea las cartas al inicio */
-  background-color: #e9bf85;
-  border-radius: 30vh;
-  height: 30vh;
-  width: 50vw;
-}
