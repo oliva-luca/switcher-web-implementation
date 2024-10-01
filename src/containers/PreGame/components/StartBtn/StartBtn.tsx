@@ -57,6 +57,18 @@ const StartBtn = () => {
             }
     }
 
+    const exit = () => {
+        const userId = localStorage.getItem('userId');
+        try{
+            const response = axios.put(`/gamelist/leave/${userId}`);
+            console.log(response);
+            navigate('/lobby')
+            
+        } catch(error){
+            console.log(error);
+        }
+    }
+
 
     if(idOwner == userId){
 
@@ -69,7 +81,15 @@ const StartBtn = () => {
         </button>
     );
     } else{
-        return null;
+        return(
+
+            <button 
+            type="submit" 
+            className="btn btn-lg w-20 bottom-right-button-exit" 
+            onClick={exit}>
+            ABANDONAR PARTIDA
+        </button>
+        )
     }
     
 }

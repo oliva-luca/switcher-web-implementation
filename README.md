@@ -1,50 +1,77 @@
-# React + TypeScript + Vite
+# El Switcher (Frontend)
+## Grupo: FullSnack Devs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Implementacion del frontend del juego "El Switcher", utilizando ```Vite + React + TypeScript```
 
-Currently, two official plugins are available:
+## Features 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Log In**
+![Imagen Login](/front/public/readme/Login.png)
 
-## Expanding the ESLint configuration
+**Lobby**: Unirse a partida y creacion de partida
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![Imagen Lobby](/front/public/readme/Lobby2.png)
 
-- Configure the top-level `parserOptions` property like this:
+**Pre partida**: Sala de espera hasta que el creador inicia la partida
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+![Imagen pre partida para creadores](/front/public/readme/pre-partida.png)
+![Imagen pre partida para no creadores](/front/public/readme/pre-partida-not-owner.png)
+
+**Partida**: Se muestra el tablero mas la mano de cartas de figura de cada jugador
+
+![Imagen dentro de la partida](/front/public/readme/in-game.png)
+
+## Requisitos
+
+**Node.js y npm:**
+
+Version Node.js: 18 o superior
+
+```bash
+$ sudo apt update
+$ sudo apt upgrade
+$ sudo apt-get install nodejs
+$ sudo apt install npm
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+**Librerias especificas:** 
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+Especificados en ```vite.config.ts```, los mismos pueden ser instalados con:
+```bash
+$ npm install
 ```
+
+## Como correr
+
+### Levantar frontend:
+
+En la carpeta raiz del frontend
+
+```bash
+$ npm run dev
+```
+
+![imagen vite](/front/public/readme/vite.png)
+
+Ya se puede ingresar a la aplicacion en [http://localhost:5173](http://localhost:5173)
+
+El frontend debe estar acompaÃ±ado del backend (idealmente en un directorio diferente)
+```bash
+$ git clone https://github.com/IngSoft1-FullSnackDevs/backend.git
+```
+
+Una vez alli crear el entorno virtual en el cual instalaremos las dependencias
+
+```bash
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip install -r requirements.txt
+```
+```bash
+$ uvicorn app:app --reload
+```
+
+Podemos acceder al backend desde
+[http://localhost:8000](http://localhost:8000)
+
+Con todo esto funcionando podemos utilizar la aplicacion web sin problemas
