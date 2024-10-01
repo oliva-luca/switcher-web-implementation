@@ -20,12 +20,15 @@ export default function GameList() {
 
   return (
     <div id="gameColumn">
-      {partidas.map((partida) => (
+      {partidas
+      .filter(partida => !partida.started && partida.players.length < partida.cant_jugadores)
+      .map((partida) => (
         <SlotJoinGame
-          id={partida.id_partida}
-          name={partida.name}
-          currentCapacity={partida.players.length}
-          capacity={partida.cant_jugadores}
+        key={partida.id_partida}
+        id={partida.id_partida}
+        name={partida.name}
+        currentCapacity={partida.players.length}
+        capacity={partida.cant_jugadores}
         />
       ))}
     </div>
