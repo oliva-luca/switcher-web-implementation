@@ -1,0 +1,35 @@
+.bottom-right-button {
+    position: fixed;
+    bottom: 20px; /* Ajusta el valor según el margen deseado */
+    right: 20px;  /* Ajusta el valor según el margen deseado */
+    background-color: #7eb65b;
+    color: white
+}
+
+.bottom-right-button:hover {
+    background-color: #71ab51;
+    color: black;
+}
+
+.bottom-right-button:active {
+    background-color: #7eb65b !important; 
+    color: white !important;
+}
+
+.bottom-right-button-exit {
+    position: fixed;
+    bottom: 20px; /* Ajusta el valor según el margen deseado */
+    right: 20px;  /* Ajusta el valor según el margen deseado */
+    background-color: red;
+    color: white
+}
+
+.bottom-right-button-exit:hover {
+    background-color: darkred;
+    color: black;
+}
+
+.bottom-right-button-exit:active {
+    background-color: red !important; 
+    color: white !important;
+}

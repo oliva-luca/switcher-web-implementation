@@ -1,0 +1,7 @@
+.top-left-text {
+    position: absolute;
+    top: 10px; /* Ajusta el valor según el margen deseado */
+    left: 10px; /* Ajusta el valor según el margen deseado */
+    font-size: 40px; /* Ajusta el tamaño de la fuente según sea necesario */
+    color: black; /* Ajusta el color del texto según sea necesario */
+}

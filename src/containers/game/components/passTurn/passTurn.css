@@ -1,0 +1,22 @@
+.pass-turn {
+  position: fixed;
+  top: 20px; /* Ajusta el valor según el margen deseado */
+  right: 20px; /* Ajusta el valor según el margen deseado */
+  padding: 10px 20px; /* Ajusta el padding según sea necesario */
+  font-size: 1.5em;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none; /* Añade un borde si es necesario */
+  border-radius: 5px; /* Ajusta el radio del borde según sea necesario */
+}
+
+.gray-button {
+    background-color: gray !important;
+    border-color: gray !important;
+  }
+
+.blue-button {
+  background-color: blue !important;
+  border-color: blue !important;
+}

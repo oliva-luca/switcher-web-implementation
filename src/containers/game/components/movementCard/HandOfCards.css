@@ -1,0 +1,21 @@
+.hand-of-cards {
+  display: grid;
+  position: fixed;
+  bottom: 20px;
+  right: 300px;
+  justify-content: center;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(3, 180px);
+  grid-template-rows: 1fr;
+  gap: 0px;
+  background-color: #e9bf85;
+  border-radius: 30px;
+  height: 200px;
+  width: 500px;
+}
+
+.movCard {
+  height: 180px;
+}
