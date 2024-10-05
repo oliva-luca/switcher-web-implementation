@@ -50,20 +50,6 @@ interface GameData {
   figcards: FigCard[];
 }
 
-interface Casillas {
-  id_casilla: number;
-  color: string;
-  columna: number;
-  fila: number;
-  id_tablero: number;
-}
-
-interface BoardData {
-  color_principal: number;
-  id_tablero: number;
-  casillas: Casillas[];
-}
-
 function ParsePlayers(players: Player[]) {
   var order = new Array(players.length);
   order[0] = players.find(
@@ -94,7 +80,6 @@ function ParsePlayerFigDeck(plyId: number, figcards: FigCard[]) {
 
 function Game() {
   const [game, setGame] = useState<GameData | null>(null);
-  const [board, setBoard] = useState<BoardData | null>(null);
   const [gameInfoKey, setGameInfoKey] = useState(0);
   const navigate = useNavigate();
 
@@ -153,22 +138,13 @@ function Game() {
       .catch((error) => {
         console.error("Error fetching the game list:", error);
       });
-
-    axios
-      .get(`/tableros/${gameId}`)
-      .then((response) => {
-        setBoard(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching the game list:", error);
-      });
   }, []);
 
   const order = game == null ? [] : ParsePlayers(game?.players);
 
   return (
     <>
-      {game == null || board == null ? (
+      {game == null ? (
         <h1>Error creando menu de partida</h1>
       ) : (
         <div className="board">
@@ -200,7 +176,7 @@ function Game() {
             )}
           </div>
           <div>
-            <GameBoard board={board.casillas} />
+            <GameBoard />
           </div>
           <div>
             {game.cant_jugadores <= 3 ? (
@@ -227,7 +203,7 @@ function Game() {
           <div></div>
         </div>
       )}
-      {game == null || board == null ? (
+      {game == null ? (
         ""
       ) : (
         <div>

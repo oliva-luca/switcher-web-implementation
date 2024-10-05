@@ -1,4 +1,7 @@
 import "./GameBoard.css";
+import ColorTyle from "./ColorTyle";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface Casillas {
   id_casilla: number;
@@ -8,34 +11,45 @@ interface Casillas {
   id_tablero: number;
 }
 
-interface GameBoardProp {
-  board: Casillas[];
+interface BoardData {
+  color_principal: number;
+  id_tablero: number;
+  casillas: Casillas[];
 }
 
-interface BoardTyleProps {
-  color: string;
-  onClick: () => void;
-}
+const GameBoard = () => {
+  const [board, setBoard] = useState<BoardData | null>(null);
+  useEffect(() => {
+    const gameId = localStorage.getItem("gameId");
 
-const BoardTyle = ({ color, onClick }: BoardTyleProps) => (
-  <button className={`boardTyle ` + color} onClick={onClick}></button>
-);
+    axios
+      .get(`/tableros/${gameId}`)
+      .then((response) => {
+        setBoard(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching the game list:", error);
+      });
+  }, []);
 
-const GameBoard = ({ board }: GameBoardProp) => {
   const handleClick = (row: number, column: number) =>
     console.log(row + "," + column);
 
   return (
     <>
-      <div className="boardSquare boardGrid">
-        {board.map((tyle) => (
-          <BoardTyle
-            key={tyle.id_casilla}
-            color={tyle.color}
-            onClick={() => handleClick(tyle.fila, tyle.columna)}
-          />
-        ))}
-      </div>
+      {board == null ? (
+        "Couldn't load board"
+      ) : (
+        <div className="boardSquare boardGrid">
+          {board?.casillas.map((tyle) => (
+            <ColorTyle
+              key={tyle.id_casilla}
+              color={tyle.color}
+              onClick={() => handleClick(tyle.fila, tyle.columna)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 };
