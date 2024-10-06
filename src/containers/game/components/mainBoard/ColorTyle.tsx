@@ -1,3 +1,4 @@
+import React from "react";
 import "./ColorTyle.css";
 
 interface ColorTyleProps {
@@ -16,10 +17,20 @@ const ColorTyle = ({
   setSelected,
 }: ColorTyleProps) => (
   <button
-    className={`colorTyle ` + color}
+    className={`colorTyle ${color} ${
+      selected != null && selected[0] == col && selected[1] == row
+        ? "selectedTyle"
+        : ""
+    }`}
     onClick={() => setSelected(selected == null ? [col, row] : null)}
     disabled={selected != null && (selected[0] != col || selected[1] != row)}
-  ></button>
+  >
+    {selected != null && selected[0] == col && selected[1] == row ? (
+      <div className="squareMarker" />
+    ) : (
+      ""
+    )}
+  </button>
 );
 
 export default ColorTyle;
