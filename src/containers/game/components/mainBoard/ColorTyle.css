@@ -7,6 +7,9 @@
   width: 70px;
   border-radius: 10%;
 }
+.colorTyle:disabled {
+  background-color: black !important;
+}
 
 .rojo {
   background-color: #f17252 !important;
@@ -21,6 +24,21 @@
   transform: scale(0.95);
   background-color: #f97756 !important;
   border: 7px solid #f97756 !important;
+}
+
+.rojo:disabled {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  pointer-events: none;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.rojo:disabled:hover,
+.rojo:disabled:active {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  transform: none !important;
 }
 
 .verde {
@@ -38,6 +56,21 @@
   border: 7px solid #87bf62 !important;
 }
 
+.verde:disabled {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  pointer-events: none;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.verde:disabled:hover,
+.verde:disabled:active {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  transform: none !important;
+}
+
 .azul {
   background-color: #6ec5e1 !important;
   border: 7px solid #5cadcd !important;
@@ -53,6 +86,21 @@
   border: 7px solid #72cfe6 !important;
 }
 
+.azul:disabled {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  pointer-events: none;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.azul:disabled:hover,
+.azul:disabled:active {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  transform: none !important;
+}
+
 .amarillo {
   background-color: #efd96c !important;
   border: 7px solid #e4ca64 !important;
@@ -66,4 +114,19 @@
   transform: scale(0.95);
   background-color: #f7e271 !important;
   border: 7px solid #f7e271 !important;
+}
+
+.amarillo:disabled {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  pointer-events: none;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.amarillo:disabled:hover,
+.amarillo:disabled:active {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  transform: none !important;
 }

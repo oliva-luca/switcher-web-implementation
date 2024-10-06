@@ -19,6 +19,10 @@ interface BoardData {
 
 const GameBoard = () => {
   const [board, setBoard] = useState<BoardData | null>(null);
+  const [selectedTyle, setSelectedTyle] = useState<[number, number] | null>(
+    null
+  );
+
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
 
@@ -32,9 +36,6 @@ const GameBoard = () => {
       });
   }, []);
 
-  const handleClick = (row: number, column: number) =>
-    console.log(row + "," + column);
-
   return (
     <>
       {board == null ? (
@@ -44,8 +45,11 @@ const GameBoard = () => {
           {board?.casillas.map((tyle) => (
             <ColorTyle
               key={tyle.id_casilla}
+              col={tyle.columna}
+              row={tyle.fila}
               color={tyle.color}
-              onClick={() => handleClick(tyle.fila, tyle.columna)}
+              selected={selectedTyle}
+              setSelected={setSelectedTyle}
             />
           ))}
         </div>
