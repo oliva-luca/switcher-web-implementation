@@ -13,7 +13,7 @@ interface GameData {
 
 const PassTurn = () => {
     const [gameData, setGameData] = useState<GameData | null>(null);
-    const [nameTurn, setNameTurn] = useState(null);
+    const [nameTurn, setNameTurn] = useState<string | null>(null);
 
     useEffect(() => {
         // --------------------------
@@ -27,8 +27,6 @@ const PassTurn = () => {
                     const response2 = await axios.get(`/user/${toFind}`);
                     setNameTurn(response2.data.nombre);
                     console.log(response2.data.nombre);
-                } else{
-                    console.log("PPE");
                 }
         } catch (error) {
             console.error('Error fetching game data:', error);
@@ -36,7 +34,7 @@ const PassTurn = () => {
         };
 
         fetchGameData();
-    }, [1]);
+    }, []);
 
     return (
         <div className="pass-turn">
@@ -50,21 +48,15 @@ const PassTurn = () => {
                 onClick={async () => {
                     try{
                         const gameId = localStorage.getItem("gameId")
-                        const response = await axios.put(`/end_turn/${gameId}`);
+                        await axios.put(`/end_turn/${gameId}`);
                     }
                     catch(error){
                         console.error('Error ending turn:', error);
                     }
                 }}
             >
-                pass turn
+                PASAR TURNO
             </Button>
-            {/* {gameData && (
-                <div>
-                    <h3>Game Data:</h3>
-                    <pre>{JSON.stringify(gameData, null, 2)}</pre>
-                </div>
-            )} */}
         </div>
     );
 };
