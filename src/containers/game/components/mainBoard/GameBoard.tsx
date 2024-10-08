@@ -1,9 +1,10 @@
+import React from "react";
 import "./GameBoard.css";
 import ColorTyle from "./ColorTyle";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-interface Casillas {
+interface Casilla {
   id_casilla: number;
   color: string;
   columna: number;
@@ -14,7 +15,7 @@ interface Casillas {
 interface BoardData {
   color_principal: number;
   id_tablero: number;
-  casillas: Casillas[];
+  casillas: Casilla[];
 }
 
 const GameBoard = () => {
@@ -36,13 +37,17 @@ const GameBoard = () => {
       });
   }, []);
 
+  board?.casillas.sort((a: Casilla, b: Casilla) =>
+    a.fila == b.fila ? a.columna - b.columna : a.fila - b.fila
+  );
+
   return (
     <>
       {board == null ? (
         "Couldn't load board"
       ) : (
         <div className="boardSquare boardGrid">
-          {board?.casillas.map((tyle) => (
+          {board.casillas.map((tyle) => (
             <ColorTyle
               key={tyle.id_casilla}
               col={tyle.columna}
