@@ -1,7 +1,7 @@
 .pass-turn {
   position: fixed;
-  top: 20px; /* Ajusta el valor según el margen deseado */
-  right: 20px; /* Ajusta el valor según el margen deseado */
+  top: 5%; /* Ajusta el valor según el margen deseado */
+  right: 4.5%; /* Ajusta el valor según el margen deseado */
   padding: 10px 20px; /* Ajusta el padding según sea necesario */
   font-size: 1.5em;
   color: #333;

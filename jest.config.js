@@ -14,4 +14,7 @@ module.exports = {
   transformIgnorePatterns: [
     "<rootDir>/node_modules/(?!your-module-to-transform)", // Ajusta según sea necesario
   ],
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['html', 'text'],
 };

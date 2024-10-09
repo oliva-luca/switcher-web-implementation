@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .board {
   display: grid;
   position: fixed;
@@ -10,3 +11,6 @@
   grid-template-rows: 100px 504px 100px;
   gap: 10px;
 }
+=======
+
+>>>>>>> dd329c0cc121471a9e7d9e653afd0be11a618670

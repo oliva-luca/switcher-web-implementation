@@ -1,36 +1,9 @@
 import "./GameBoard.css";
 import ColorTyle from "./ColorTyle";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-interface Casillas {
-  id_casilla: number;
-  color: string;
-  columna: number;
-  fila: number;
-  id_tablero: number;
-}
-
-interface BoardData {
-  color_principal: number;
-  id_tablero: number;
-  casillas: Casillas[];
-}
+import { useBoard } from "../../hooks/BoardData.hook";
 
 const GameBoard = () => {
-  const [board, setBoard] = useState<BoardData | null>(null);
-  useEffect(() => {
-    const gameId = localStorage.getItem("gameId");
-
-    axios
-      .get(`/tableros/${gameId}`)
-      .then((response) => {
-        setBoard(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching the game list:", error);
-      });
-  }, []);
+  const { board } = useBoard();
 
   const handleClick = (row: number, column: number) =>
     console.log(row + "," + column);
