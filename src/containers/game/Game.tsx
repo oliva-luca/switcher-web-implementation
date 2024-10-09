@@ -5,6 +5,7 @@ import HandOfCards from "./components/movementCard/HandOfCards";
 import { useGame } from "./hooks/GameData.hook";
 import MainBoard from "./components/mainBoard/MainBoard";
 import { useGameInfoKey } from "./hooks/GameInfoKey.hook";
+import Timer from "./components/Timer/Timer";
 
 function Game() {
   const game = useGame();
@@ -21,6 +22,7 @@ function Game() {
             num_players={game.cant_jugadores}
             figcards={game.figcards}
           />
+          <Timer />
           <PassTurn key={gameInfoKey} />
           <HandOfCards
             cards={game.movcards

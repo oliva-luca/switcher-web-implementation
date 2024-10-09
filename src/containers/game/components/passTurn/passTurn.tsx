@@ -35,8 +35,10 @@ const PassTurn = () => {
 
   return (
     <div className="pass-turn">
-      <div className="top-right-text">
-        TURNO DE: {nameTurn ? nameTurn : "Loading..."}
+      <div className="text-center top-right-text"> TURNO DE</div>
+      <div className="text-center top-right-text">
+        {" "}
+        {nameTurn ? nameTurn : "Loading..."}{" "}
       </div>
       <Button
         variant="primary"
