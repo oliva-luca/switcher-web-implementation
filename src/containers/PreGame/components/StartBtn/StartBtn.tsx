@@ -79,7 +79,7 @@ const StartBtn = () => {
             onClick={start}>
             INICIAR PARTIDA
         </button>
-    );
+        );
     } else{
         return(
 
@@ -89,7 +89,7 @@ const StartBtn = () => {
             onClick={exit}>
             ABANDONAR PARTIDA
         </button>
-        )
+        );
     }
     
 }
