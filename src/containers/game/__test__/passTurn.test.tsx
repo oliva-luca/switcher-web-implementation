@@ -13,7 +13,8 @@ describe('PassTurn Component', () => {
 
     it('should render the component and display "TURNO DE"', () => {
         const { getByText } = render(<PassTurn />);
-        expect(getByText('TURNO DE: Loading...')).toBeInTheDocument();
+        expect(getByText('TURNO DE')).toBeInTheDocument();
+        expect(getByText('Loading...')).toBeInTheDocument();
     });
 
     it('should fetch game data and update state correctly', async () => {
@@ -26,7 +27,8 @@ describe('PassTurn Component', () => {
         const { getByText } = render(<PassTurn />);
 
         await waitFor(() => {
-            expect(getByText('TURNO DE: Player 1')).toBeInTheDocument();
+            expect(getByText('TURNO DE')).toBeInTheDocument();
+            expect(getByText('Player 1')).toBeInTheDocument();
         });
     });
 
@@ -127,3 +129,5 @@ describe('PassTurn Component', () => {
     });
     
 });
+
+    

@@ -1,15 +1,15 @@
+import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import React from "react";
 import "./Game.css";
 import FigureBoard from "./components/mainBoard/FigureBoard";
 import GameBoard from "./components/mainBoard/GameBoard";
 import QuitBtn from "./components/QuitBtn/QuitBtn";
-import CantPlayer from "../PreGame/components/CantPlayer/CantPlayer";
 import PassTurn from "./components/passTurn/passTurn";
 import HandOfCards from "./components/movementCard/HandOfCards";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Timer from './components/Timer/Timer';
 
 interface Player {
   id_jugador: number;
@@ -207,6 +207,7 @@ function Game() {
         ""
       ) : (
         <div>
+          <Timer/>
           <PassTurn key={gameInfoKey} />
           <></>
           <HandOfCards
