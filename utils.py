@@ -9,7 +9,11 @@ from typing import List,Dict
 
 
 #--------------------------- TABLERO -------------------------------------------------------------
-
+class Modifies:
+    def __init__(self, id_cartamov: int, id_casilal1:int , id_casilla2:int):
+        self.id_cartamov = id_cartamov
+        self.id_casilla1 = pos1
+        self.id_casilla2 = pos2
 
 def generar_tablero_aleatorio(id_tablero: int, session):
     # Los 4 colores que se van a distribuir equitativamente
@@ -69,7 +73,10 @@ def asignar_turno_primer_jugador(id_partida: int, session):
     finally:
         return {"message": "Turno del primer jugador asignado con éxito"}
 
+to_modify = Dict[int, List[Modifies]] 
 
+
+    
 
 #--------------------------- CARTAS DE MOVIMIENTO -------------------------------------------------------------
 
