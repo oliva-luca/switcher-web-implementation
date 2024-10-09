@@ -1,11 +1,10 @@
 import "./GameBoard.css";
 import ColorTyle from "./ColorTyle";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useBoard } from "../../hooks/GameBoard.hooks";
+import { useBoard } from "../../hooks/BoardData.hook";
 
 const GameBoard = () => {
   const { board } = useBoard();
+
   const handleClick = (row: number, column: number) =>
     console.log(row + "," + column);
 
