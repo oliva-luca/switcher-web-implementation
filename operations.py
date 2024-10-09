@@ -186,7 +186,9 @@ class Operations:
                 crear_cartas_movimiento(game_id, session)
                 
                 # Repartir cartas de movimiento entre los jugadores
-                repartir_cartas_movimiento(game_id, session)
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    repartir_cartas_movimiento(game_id, player.id_jugador, session)
                 
                 # Crear las cartas de figura de la partida
                 crear_cartas_figura(game_id, session)
@@ -219,6 +221,9 @@ class Operations:
 
             # Obtengo el jugador actual
             current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
+
+            # Le reparto sus cartas de movimiento faltantes
+            repartir_cartas_movimiento(game_id, current_player.id_jugador, session)
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
