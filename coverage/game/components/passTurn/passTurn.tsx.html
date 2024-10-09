@@ -125,9 +125,13 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,7 +147,6 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -172,10 +175,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,76 +198,83 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
-import './passTurn.css';
-import { Button } from 'react-bootstrap';
-import axios from 'axios';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+import "./passTurn.css";
+import { Button } from "react-bootstrap";
+import axios from "axios";
 &nbsp;
-&nbsp;
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 interface GameData {
-    turn: number;
-    // Add other properties of gameData if needed
+  turn: number;
+  // Add other properties of gameData if needed
 }
 &nbsp;
-&nbsp;
 const PassTurn = () =&gt; {
-    const [gameData, setGameData] = useState&lt;GameData | null&gt;(null);
-    const [nameTurn, setNameTurn] = useState&lt;string | null&gt;(null);
+  const [gameData, setGameData] = useState&lt;GameData | null&gt;(null);
+  const [nameTurn, setNameTurn] = useState&lt;string | null&gt;(null);
 &nbsp;
-    useEffect(() =&gt; {
-        
-        const fetchGameData = async () =&gt; {
-            try {
-                const gameId = localStorage.getItem("gameId");
-                const response = await axios.get(`/gamelist/${gameId}`);
-                setGameData(response.data);
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (response.data.turn !== undefined) {
-                    const toFind = response.data.turn;
-                    const response2 = await axios.get(`/user/${toFind}`);
-                    setNameTurn(response2.data.nombre);
-                    console.log(response2.data.nombre);
-                }
-        } catch (error) {
-            console.error('Error fetching game data:', error);
+  useEffect(() =&gt; {
+    const fetchGameData = async () =&gt; {
+      try {
+        const gameId = localStorage.getItem("gameId");
+        const response = await axios.get(`/gamelist/${gameId}`);
+        setGameData(response.data);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (response.data.turn !== undefined) {
+          const toFind = response.data.turn;
+          const response2 = await axios.get(`/user/${toFind}`);
+          setNameTurn(response2.data.nombre);
+          console.log(response2.data.nombre);
         }
-        };
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
+    };
 &nbsp;
-        fetchGameData();
-    }, []);
+    fetchGameData();
+  }, []);
 &nbsp;
-    return (
-        &lt;div className="pass-turn"&gt;
-            &lt;div className="text-center top-right-text"&gt; TURNO DE&lt;/div&gt;
-            &lt;div className="text-center top-right-text"&gt; {nameTurn ? nameTurn : 'Loading...'} &lt;/div&gt;
-            &lt;Button
-                variant="primary"
-                disabled={!gameData || gameData.turn !== Number(localStorage.getItem('userId'))}
-                className={!gameData || gameData.turn === Number(localStorage.getItem('userId')) ? 'blue-button' : 'gray-button'}
-                onClick={async () =&gt; {
-                    try{
-                        const gameId = localStorage.getItem("gameId")
-                        await axios.put(`/end_turn/${gameId}`);
-                    }
-                    catch(error){
-                        console.error('Error ending turn:', error);
-                    }
-                }}
-            &gt;
-                PASAR TURNO
-            &lt;/Button&gt;
-        &lt;/div&gt;
-    );
+  return (
+    &lt;div className="pass-turn"&gt;
+      &lt;div className="text-center top-right-text"&gt; TURNO DE&lt;/div&gt;
+      &lt;div className="text-center top-right-text"&gt;
+        {" "}
+        {nameTurn ? nameTurn : "Loading..."}{" "}
+      &lt;/div&gt;
+      &lt;Button
+        variant="primary"
+        disabled={
+          !gameData || gameData.turn !== Number(localStorage.getItem("userId"))
+        }
+        className={
+          !gameData || gameData.turn === Number(localStorage.getItem("userId"))
+            ? "blue-button"
+            : "gray-button"
+        }
+        onClick={async () =&gt; {
+          try {
+            const gameId = localStorage.getItem("gameId");
+            await axios.put(`/end_turn/${gameId}`);
+          } catch (error) {
+            console.error("Error ending turn:", error);
+          }
+        }}
+      &gt;
+        PASAR TURNO
+      &lt;/Button&gt;
+    &lt;/div&gt;
+  );
 };
 &nbsp;
-export default PassTurn;</pre></td></tr></table></pre>
+export default PassTurn;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-09T21:59:06.812Z
+                at 2024-10-09T22:20:49.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
