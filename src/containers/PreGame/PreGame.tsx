@@ -5,19 +5,12 @@ import CantPlayer from "./components/CantPlayer/CantPlayer";
 import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import CancelBtn from "./components/CancelBtn/CancelBtn";
+import Swal from 'sweetalert2';
 
 function PreGame() {
     const navigate = useNavigate();
 
-    // const board: string[][] = [
-    //     ["red", "ylw", "grn", "blu", "red", "ylw", "grn"],
-    //     ["blu", "red", "ylw", "grn", "blu", "red", "ylw"],
-    //     ["grn", "blu", "red", "ylw", "grn", "blu", "red"],
-    //     ["ylw", "grn", "blu", "red", "ylw", "grn", "blu"],
-    //     ["red", "ylw", "grn", "blu", "red", "ylw", "grn"],
-    //     ["blu", "red", "ylw", "grn", "blu", "red", "ylw"],
-    // ];
-    
     const [gameInfoKey, setGameInfoKey] = useState(0);
     useEffect(() => {
         let gameId = localStorage.getItem('gameId');
@@ -35,11 +28,19 @@ function PreGame() {
             switch (message) {
                 case 'Game has started':
                     // alert("La partida empezo");
-                    navigate('/game')
+                    navigate('/game');
+                    break;
+                case 'Owner cancelled the game':
+                    Swal.fire({
+                      title: 'Creador canceló la partida',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    });
+                    navigate('/lobby');
                     break;
                 default:
                     // alert("Actualizar info partida");
-                    console.log(message)
+                    console.log(message);
                     break;
             }
         };
@@ -74,6 +75,9 @@ function PreGame() {
         </div>
         <div className="blank-screen"></div>
         <div className="content" style={{ zIndex: 1 }}></div>
+        <div style={{ zIndex: 3 }}>
+          <CancelBtn />
+        </div>
         <div style={{ zIndex: 3 }}>
           <StartBtn />
         </div>
