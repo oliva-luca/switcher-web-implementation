@@ -16,7 +16,7 @@ const PassTurn = () => {
     const [nameTurn, setNameTurn] = useState<string | null>(null);
 
     useEffect(() => {
-        // --------------------------
+        
         const fetchGameData = async () => {
             try {
                 const gameId = localStorage.getItem("gameId");
@@ -38,9 +38,8 @@ const PassTurn = () => {
 
     return (
         <div className="pass-turn">
-            <div className="top-right-text">
-            TURNO DE: {nameTurn ? nameTurn : 'Loading...'}
-            </div>
+            <div className="text-center top-right-text"> TURNO DE</div>
+            <div className="text-center top-right-text"> {nameTurn ? nameTurn : 'Loading...'} </div>
             <Button
                 variant="primary"
                 disabled={!gameData || gameData.turn !== Number(localStorage.getItem('userId'))}
