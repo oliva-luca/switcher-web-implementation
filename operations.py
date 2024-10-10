@@ -330,6 +330,7 @@ class Operations:
         session = Session()
 
         try: 
+            
             game = session.query(Game).filter(Game.id_partida == game_id).first()
             if not game: 
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
@@ -337,6 +338,11 @@ class Operations:
             mov_card = session.query(MovCard).filter(MovCard.id_movcard == mov_card_id).first()
             if not mov_card: 
                 raise CardNotFoundError(f"MovCard with ID {mov_card_id} not found.")
+
+            player = mov_card.player
+
+            if game.turn != player.id_jugador:
+                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
             
             mov_card.id_jugador = None 
             session.commit()

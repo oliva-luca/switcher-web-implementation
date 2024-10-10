@@ -17,3 +17,6 @@ class GameNotStartedError(Exception):
 
 class CardNotFoundError(Exception):
     pass
+
+class NotTheirTurnError(Exception):
+    pass

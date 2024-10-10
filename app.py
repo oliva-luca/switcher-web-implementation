@@ -128,7 +128,9 @@ async def play_card(game_id: int ,mov_card_id: int, casilla_id1: int , casilla_i
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except CardNotFoundError as e: 
-        raise HTTPException(status_code=404, detail=str(e))        
+        raise HTTPException(status_code=404, detail=str(e)) 
+    except NotTheirTurnError as e:
+        raise HTTPException(status_code=400, detail=str(e))   
 
 
 

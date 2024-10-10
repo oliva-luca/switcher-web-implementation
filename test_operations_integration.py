@@ -262,3 +262,6 @@ async def test_leave_lobby(operation: Operations):
         assert player not in players_in_1
     finally:
         session.close()
+
+
+

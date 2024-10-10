@@ -113,10 +113,6 @@ class FigCard(Base):
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="figcards")
 
-# Validar color con Enum en Python
-def set_color(self, color: Color):
-    self.color = color.value
-
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(engine)
