@@ -2,10 +2,19 @@
   background-color: #7dd3b3 !important;
   border: 7px solid #7dd3b3 !important;
   display: flex !important;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
   border: 10px solid;
+  height: 65px;
+  width: 65px;
+  border-radius: 10%;
+}
+
+.colorTyle:hover {
   height: 70px;
   width: 70px;
-  border-radius: 10%;
 }
 
 .rojo {
@@ -13,8 +22,8 @@
   border: 7px solid #e3634b !important;
 }
 
-.rojo:hover {
-  background-color: #e3634b !important;
+.rojo.selectedTyle {
+  background-color: #f97756 !important;
 }
 
 .rojo:active {
@@ -23,13 +32,21 @@
   border: 7px solid #f97756 !important;
 }
 
+.rojo:disabled {
+  background-color: #e3634b !important;
+  border-color: #e3634b !important;
+  pointer-events: none;
+  opacity: 0.8;
+  transform: none !important;
+}
+
 .verde {
   background-color: #7eb65b !important;
   border: 7px solid #71ab51 !important;
 }
 
-.verde:hover {
-  background-color: #71ab51 !important;
+.verde.selectedTyle {
+  background-color: #87bf62 !important;
 }
 
 .verde:active {
@@ -38,13 +55,21 @@
   border: 7px solid #87bf62 !important;
 }
 
+.verde:disabled {
+  background-color: #71ab51 !important;
+  border-color: #71ab51 !important;
+  pointer-events: none;
+  opacity: 0.8;
+  transform: none !important;
+}
+
 .azul {
   background-color: #6ec5e1 !important;
   border: 7px solid #5cadcd !important;
 }
 
-.azul:hover {
-  background-color: #5cadcd !important;
+.azul.selectedTyle {
+  background-color: #72cfe6 !important;
 }
 
 .azul:active {
@@ -53,17 +78,45 @@
   border: 7px solid #72cfe6 !important;
 }
 
+.azul:disabled {
+  background-color: #5cadcd !important;
+  border-color: #5cadcd !important;
+  pointer-events: none;
+  opacity: 0.8;
+  transform: none !important;
+}
+
 .amarillo {
   background-color: #efd96c !important;
   border: 7px solid #e4ca64 !important;
 }
 
-.amarillo:hover {
-  background-color: #e4ca64 !important;
+.amarillo.selectedTyle {
+  background-color: #f7e271 !important;
 }
 
 .amarillo:active {
   transform: scale(0.95);
   background-color: #f7e271 !important;
   border: 7px solid #f7e271 !important;
+}
+
+.amarillo:disabled {
+  background-color: #e4ca64 !important;
+  border-color: #e4ca64 !important;
+  pointer-events: none;
+  opacity: 0.8;
+  transform: none !important;
+}
+
+.squareMarker {
+  background-color: rgba(230, 230, 230, 0.3) !important;
+  display: flex !important;
+  height: 30px;
+  width: 30px;
+  border-radius: 10%;
+}
+
+.amarillo .squareMarker {
+  background-color: rgba(200, 180, 180, 0.3) !important;
 }

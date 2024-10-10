@@ -2,16 +2,19 @@
   background: #92ecd3;
   border: 10px solid #7dd3b3;
   float: left;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
   height: 504px;
   width: 504px;
   border-radius: 10%;
-  align-content: center;
-  align-items: center;
 }
 
 .boardGrid {
   display: grid;
   justify-content: center;
+  justify-items: center;
   align-content: center;
   align-items: center;
   grid-template-columns: repeat(6, 70px);
