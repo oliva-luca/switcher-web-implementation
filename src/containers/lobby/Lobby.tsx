@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import './Lobby.css'
-import CreateGame from './createGame/components/createGame'
-import GameList from './gameList/gameList'
 import React, { useEffect, useState } from 'react';
+import './Lobby.css'
+import CreateGame from './components/createGame/createGame'
+import GameList from './components/gameList/gameList'
+import { FilterProvider } from './components/filters/FilterContext'; // Ajusta la ruta según sea necesario
+import Filters from './components/filters/Filter'
 
 
 export function Lobby() {
@@ -42,11 +44,13 @@ export function Lobby() {
   return (
     <div className="container">
 
-      <div className='d-flex flex-column align-items-center'>
+    <div className='join-game-section'>
       <h2 className='title'>Unirse a partida</h2>
-      {isConnected ? <p>Connected</p> : <p>Not Connected</p>}
-      <GameList key={gameListKey} /> {/* Render GameList with a unique key */}
-      </div>
+      <FilterProvider>
+        <Filters />
+        <GameList key={gameListKey} /> {/* Render GameList with a unique key */}
+      </FilterProvider>
+    </div>
 
       <div className='d-flex flex-column align-items-center'>
       <h2 className='title'>Crear partida</h2>

@@ -32,8 +32,12 @@ const CreateGame = () => {
 
   const handlePlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    if (value >= 2 && value <= 4) {
-      setPlayers(value);
+    if (value < 2) {
+      setPlayers(2);
+    } else if (value > 4) {
+        setPlayers(4);
+    } else {
+        setPlayers(value);
     }
   };
 

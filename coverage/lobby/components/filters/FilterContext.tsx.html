@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for game/components/mainBoard/ColorTyle.tsx</title>
+    <title>Code coverage report for lobby/components/filters/FilterContext.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">game/components/mainBoard</a> ColorTyle.tsx</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">lobby/components/filters</a> FilterContext.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -91,17 +91,7 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -112,66 +102,52 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">46x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
-import "./ColorTyle.css";
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { createContext, useContext, useState, ReactNode } from 'react';
 &nbsp;
-interface ColorTyleProps {
-  col: number;
-  row: number;
-  color: string;
-  selected: [number, number] | null;
-  setSelected: React.Dispatch&lt;React.SetStateAction&lt;[number, number] | null&gt;&gt;;
+interface FilterContextProps {
+    playerCount: number | string;
+    setPlayerCount: React.Dispatch&lt;React.SetStateAction&lt;number | string&gt;&gt;;
+    nameFilter: string;
+    setNameFilter: React.Dispatch&lt;React.SetStateAction&lt;string&gt;&gt;;
 }
 &nbsp;
-const ColorTyle = ({
-  color,
-  col,
-  row,
-  selected,
-  setSelected,
-}: ColorTyleProps) =&gt; (
-  &lt;button
-    className={`colorTyle ${color} ${
-      selected != null &amp;&amp; selected[0] == col &amp;&amp; selected[1] == row
-        ? "selectedTyle"
-        : ""
-    }`}
-    onClick={() =&gt; setSelected(selected == null ? [col, row] : <span class="branch-1 cbranch-no" title="branch not covered" >null)</span>}
-    disabled={selected != null &amp;&amp; (selected[0] != col || selected[1] != row)}
-  &gt;
-    {selected != null &amp;&amp; selected[0] == col &amp;&amp; selected[1] == row ? (
-      &lt;div className="squareMarker" /&gt;
-    ) : (
-      ""
-    )}
-  &lt;/button&gt;
-);
+const FilterContext = createContext&lt;FilterContextProps | undefined&gt;(undefined);
 &nbsp;
-export default ColorTyle;
-&nbsp;</pre></td></tr></table></pre>
+export const FilterProvider: React.FC&lt;{ children: ReactNode }&gt; = ({ children }) =&gt; {
+    const [playerCount, setPlayerCount] = useState&lt;number | string&gt;('');
+    const [nameFilter, setNameFilter] = useState&lt;string&gt;('');
+&nbsp;
+    return (
+        &lt;FilterContext.Provider value={{ playerCount, setPlayerCount, nameFilter, setNameFilter }}&gt;
+            {children}
+        &lt;/FilterContext.Provider&gt;
+    );
+};
+&nbsp;
+export const useFilter = (): FilterContextProps =&gt; {
+    const context = useContext(FilterContext);
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!context) {
+<span class="cstat-no" title="statement not covered" >        throw new Error('useFilter must be used within a FilterProvider');</span>
+    }
+    return context;
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
