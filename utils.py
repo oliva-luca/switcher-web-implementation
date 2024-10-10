@@ -9,7 +9,11 @@ from typing import List,Dict
 
 
 #--------------------------- TABLERO -------------------------------------------------------------
-
+class Modifies:
+    def __init__(self, id_cartamov: int, id_casilla1:int , id_casilla2:int):
+        self.id_cartamov = id_cartamov
+        self.id_casilla1 = id_casilla1
+        self.id_casilla2 = id_casilla2
 
 def generar_tablero_aleatorio(id_tablero: int, session):
     # Los 4 colores que se van a distribuir equitativamente
@@ -69,7 +73,24 @@ def asignar_turno_primer_jugador(id_partida: int, session):
     finally:
         return {"message": "Turno del primer jugador asignado con éxito"}
 
+to_modify: Dict[int, List[Modifies]] = {}
 
+def modificar_tablero(board: Dict):
+    modifies = to_modify.get(board['id_tablero'], [])
+    for modify in modifies:
+        casilla = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla1), None)
+        casilla2 = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla2), None)
+        if casilla is not None and casilla2 is not None:
+            temp_color = casilla['color']
+            casilla['color'] = casilla2['color']
+            casilla2['color'] = temp_color
+        else:
+            raise HTTPException(status_code=404, detail="Casilla no encontrada")
+    return board
+    
+
+
+    
 
 #--------------------------- CARTAS DE MOVIMIENTO -------------------------------------------------------------
 
