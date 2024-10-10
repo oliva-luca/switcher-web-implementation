@@ -89,19 +89,26 @@ def crear_cartas_movimiento(id_partida: int, session):
     session.commit()
     return {"message": "Creadas las cartas de movimiento de la partida"}
 
+# Obtiene las cartas de movimiento que no le pertencen a ningun jugador
+# en la partida dada por id_partida
+def obtener_movcars_libres(id_partida: int, session):
+    free_movcards = session.query(MovCard).filter((MovCard.id_partida == id_partida) & 
+                                                  (MovCard.id_jugador == None)).all()
+    return free_movcards
 
+# Cuentas las cartas de movimiento de un jugador
+def contar_movcards(id_jugador: int, session):
+    count = session.query(MovCard).filter(MovCard.id_jugador == id_jugador).count()
+    return count
 
 def repartir_cartas_movimiento(id_partida: int, id_jugador: int, session):
     try:
         # Obtengo las cartas de movimienta de la partida sin usar
-        free_movcards = session.query(MovCard).filter((MovCard.id_partida == id_partida) & 
-                                                      (MovCard.id_jugador == None)).all()
+        free_movcards = obtener_movcars_libres(id_partida, session)
         # Mezclo las cartas de movimiento
         shuffle(free_movcards)
-        print(f"Hay en total {len(free_movcards)} movcards disponibles!!!!!!!")
-        print(f"Partida {id_partida}, jugador {id_jugador}")
         # Cuento la cantidad de cartas de movimiento que tiene
-        player_movcards = session.query(MovCard).filter(MovCard.id_jugador == id_jugador).count()
+        player_movcards = contar_movcards(id_jugador, session)
         # Y le doy al jugador hasta que tenga 3
         while(player_movcards < 3):
             new_movcard = free_movcards.pop()
