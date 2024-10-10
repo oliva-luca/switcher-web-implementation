@@ -179,19 +179,20 @@ def repartir_cartas_figura(id_partida: int, session):
     finally:
         return {"message": "Repartidas las cartas de figura"}
 
-def mostrar_cartas_figura_incial(id_partida: int, session):
+def mostrar_cartas_figura(id_jugador : int, session):
     try:
-        # Obtengo los jugadores de la partida
-        players = session.query(Player).filter(Player.id_partida == id_partida).all()
-
-        # Hago tres cartas de figura de cada jugador visibles
-        for player in players:
-            player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).all())
-            shuffle(player_figcards)
-            for _ in range(3):
-                new_figcard = player_figcards.pop()
-                new_figcard.shown = True
-
+        # Obtengo las cartas de figura del jugador
+        player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == id_jugador).all())
+        # Obtengo solo las cartas sin mostrar
+        not_shown_figcards = [card for card in player_figcards if not card.shown]
+        # Las mezclo
+        shuffle(not_shown_figcards)
+        # Obtengo cuántas si se muestran
+        number_shown_figcards = len([card for card in player_figcards if card.shown])
+        while(len(not_shown_figcards) > 0 and number_shown_figcards < 3):
+            new_figcard = not_shown_figcards.pop()
+            new_figcard.shown = True
+            number_shown_figcards += 1
         session.commit()
     finally:
         pass

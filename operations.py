@@ -195,7 +195,9 @@ class Operations:
                 repartir_cartas_figura(game_id, session)
 
                 # Hacer visibles tres cartas de figura de cada uno de ellos
-                mostrar_cartas_figura_incial(game_id, session)
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    mostrar_cartas_figura(player.id_jugador, session)
 
                 await manager_game.broadcast(game_id, "Game has started")
                 await manager.broadcast("game start")
@@ -219,6 +221,9 @@ class Operations:
 
             # Obtengo el jugador actual
             current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
+
+            # Le revelo cartas de figura hasta tener tres (si le quedan suficientes)
+            mostrar_cartas_figura(current_player.id_jugador, session)
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
