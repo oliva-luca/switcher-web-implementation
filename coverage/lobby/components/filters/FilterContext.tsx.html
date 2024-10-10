@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for game/components/QuitBtn/QuitBtn.tsx</title>
+    <title>Code coverage report for lobby/components/filters/FilterContext.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">game/components/QuitBtn</a> QuitBtn.tsx</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">lobby/components/filters</a> FilterContext.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
@@ -91,75 +91,63 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState } from 'react';
-import './QuitBtn.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios'; // Importar Axios
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { createContext, useContext, useState, ReactNode } from 'react';
 &nbsp;
-const QuitBtn = () =&gt; {
-    const navigate = useNavigate();
-    const quit = () =&gt; {
-        const userId = localStorage.getItem('userId');
-        try{
-            const response = axios.put(`/gamelist/leave/${userId}`);
-            console.log(response);
-            navigate('/lobby')
-            
-        } catch(error){
-<span class="cstat-no" title="statement not covered" >            console.log(error);</span>
-        }
-    }
-    
-    return (
-        &lt;button 
-        type="submit" 
-        className="btn btn-lg w-20 bottom-quit" 
-        onClick={quit}&gt;
-        ABANDORNAR PARTIDA
-        &lt;/button&gt;
-    );
-    
+interface FilterContextProps {
+    playerCount: number | string;
+    setPlayerCount: React.Dispatch&lt;React.SetStateAction&lt;number | string&gt;&gt;;
+    nameFilter: string;
+    setNameFilter: React.Dispatch&lt;React.SetStateAction&lt;string&gt;&gt;;
 }
 &nbsp;
-export default QuitBtn;</pre></td></tr></table></pre>
+const FilterContext = createContext&lt;FilterContextProps | undefined&gt;(undefined);
+&nbsp;
+export const FilterProvider: React.FC&lt;{ children: ReactNode }&gt; = ({ children }) =&gt; {
+    const [playerCount, setPlayerCount] = useState&lt;number | string&gt;('');
+    const [nameFilter, setNameFilter] = useState&lt;string&gt;('');
+&nbsp;
+    return (
+        &lt;FilterContext.Provider value={{ playerCount, setPlayerCount, nameFilter, setNameFilter }}&gt;
+            {children}
+        &lt;/FilterContext.Provider&gt;
+    );
+};
+&nbsp;
+export const useFilter = (): FilterContextProps =&gt; {
+    const context = useContext(FilterContext);
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!context) {
+<span class="cstat-no" title="statement not covered" >        throw new Error('useFilter must be used within a FilterProvider');</span>
+    }
+    return context;
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

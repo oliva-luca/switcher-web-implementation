@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, getByRole } from '@testing-library/react';
 import { describe, it, expect, jest } from '@jest/globals';
-import CreateGame from '../createGame/components/createGame';
+import CreateGame from '../components/createGame/createGame';
 import axios from 'axios';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -24,16 +24,18 @@ describe("CreateGame Component", () => {
     });
 
     it('shoulde update number of players on change', () => {
-        render(
+        const { getByRole } = render(
             <Router>
                 <CreateGame />
             </Router>
         );
-        const input = document.querySelector('input');
-        if(input){   
-            fireEvent.change(input, { target: { value: 3 } });
-            expect(input.value).toBe('3');
-        }
+        const input = getByRole('spinbutton');
+        fireEvent.change(input, { target: { value: '3' } });
+        expect(input.value).toBe('3');
+        fireEvent.change(input, { target: { value: '5' } });
+        expect(input.value).toBe('4');
+        fireEvent.change(input, { target: { value: '1' } });
+        expect(input.value).toBe('2');
     });
 
     it('should submit form', async () => {
@@ -113,4 +115,30 @@ describe("CreateGame Component", () => {
         });
     });
 
+    it('should update isPrivate on checkbox change', () => {
+        const { getByRole } = render(
+            <Router>
+                <CreateGame />
+            </Router>
+        );
+        const checkbox = getByRole('switch');
+        fireEvent.click(checkbox);
+        expect(checkbox.checked).toBe(true);
+        fireEvent.click(checkbox);
+        expect(checkbox.checked).toBe(false);
+    });
+
+    it('should update password on input change', () => {
+        render(
+            <Router>
+                <CreateGame />
+            </Router>
+        );
+        const input = document.querySelector('input', { type: 'password' });
+        fireEvent.change(input, { target: { value: 'newpassword' } });
+        expect(input.value).toBe('newpassword');
+    });
+
 });
+
+// 26,30,34-36,85-87 

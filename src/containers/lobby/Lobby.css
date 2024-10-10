@@ -8,6 +8,17 @@
 }
 
 /* Estilos para el contenedor .container */
+
+.join-game-section {
+  width: 100%;
+  max-width: 800px; /* Ajusta según sea necesario */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px; /* Espacio entre secciones */
+  overflow-y: auto;
+}
+
 .container {
   display: flex;
   flex-direction: row; /* Alinea los elementos en una fila */
