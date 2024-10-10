@@ -1,31 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row } from "react-bootstrap";
 import "./HandOfCards.css"; // Importa el archivo CSS
+import MovCard from "./MovCard";
 
-interface CardProp {
-  id: number;
+interface MovCardType {
+  id_partida: number;
+  type: number;
+  id_movcard: number;
+  id_jugador: number;
 }
 
 interface HandProp {
-  cards: number[];
+  cards: MovCardType[];
 }
 
-const Card = ({ id }: CardProp) => {
-  return (
-    <img
-      className="movCard"
-      src={"/mov" + id + ".svg"}
-      alt="carta de movimiento"
-      id="imagen"
-    />
-  );
-};
-
 const HandOfCards = ({ cards }: HandProp) => {
+  const [selectedMov, setSelectedMov] = useState<number | null>(null);
+
   return (
     <Row className="hand-of-cards">
       {cards.map((card) => (
-        <Card id={card} />
+        <MovCard
+          cardId={card.id_movcard}
+          type={card.type}
+          selected={selectedMov}
+          setSelected={setSelectedMov}
+        />
       ))}
     </Row>
   );

@@ -1,42 +1,15 @@
 import React from "react";
 import "./GameBoard.css";
 import ColorTyle from "./ColorTyle";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-interface Casilla {
-  id_casilla: number;
-  color: string;
-  columna: number;
-  fila: number;
-  id_tablero: number;
-}
-
-interface BoardData {
-  color_principal: number;
-  id_tablero: number;
-  casillas: Casilla[];
-}
+import { useState } from "react";
+import { useBoard } from "../../hooks/BoardData.hook";
+import { Casilla } from "../../utils/interfaces";
 
 const GameBoard = () => {
-  const [board, setBoard] = useState<BoardData | null>(null);
+  const { board } = useBoard();
   const [selectedTyle, setSelectedTyle] = useState<[number, number] | null>(
     null
   );
-
-  useEffect(() => {
-    const gameId = localStorage.getItem("gameId");
-
-    axios
-      .get(`/tableros/${gameId}`)
-      .then((response) => {
-        setBoard(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching the game list:", error);
-      });
-  }, []);
-
   board?.casillas.sort((a: Casilla, b: Casilla) =>
     a.fila == b.fila ? a.columna - b.columna : a.fila - b.fila
   );

@@ -21,7 +21,7 @@ const StartBtn = () => {
 
             try {
                 const response = await axios.get(`/gamelist/${gameId}`);
-                console.log('Game:', response.data);
+                // console.log('Game:', response.data);
                 setIdOwner(response.data.owner); // Actualiza el estado con el ID del propietario
             } catch (error) {
                 console.error('Error fetching game data:', error);
@@ -33,7 +33,7 @@ const StartBtn = () => {
 
     const start = async () => {
         const gameId = localStorage.getItem('gameId');
-        console.log('Game ID:', gameId);
+        // console.log('Game ID:', gameId);
         if (!gameId) {
             console.error('Game ID not found');
             return;
@@ -46,7 +46,7 @@ const StartBtn = () => {
             }
             });
             setStarted(true);
-            console.log('Game started successfully:', response.data);
+            // console.log('Game started successfully:', response.data);
             navigate('/game');
         } catch (error) {
                 Swal.fire({
@@ -61,7 +61,7 @@ const StartBtn = () => {
         const userId = localStorage.getItem('userId');
         try{
             const response = axios.put(`/gamelist/leave/${userId}`);
-            console.log(response);
+            // console.log(response);
             navigate('/lobby')
             
         } catch(error){
@@ -79,7 +79,7 @@ const StartBtn = () => {
             onClick={start}>
             INICIAR PARTIDA
         </button>
-    );
+        );
     } else{
         return(
 
@@ -89,7 +89,7 @@ const StartBtn = () => {
             onClick={exit}>
             ABANDONAR PARTIDA
         </button>
-        )
+        );
     }
     
 }

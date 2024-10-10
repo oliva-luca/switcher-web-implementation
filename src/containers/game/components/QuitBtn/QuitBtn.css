@@ -2,6 +2,7 @@
     position: fixed;
     bottom: 20px; /* Ajusta el valor según el margen deseado */
     right: 20px;  /* Ajusta el valor según el margen deseado */
+    margin: 5px;
     background-color: red;
     color: white
 }
