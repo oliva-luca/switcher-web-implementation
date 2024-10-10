@@ -14,3 +14,6 @@ class NumberOfPlayersError(Exception):
 
 class GameNotStartedError(Exception):
     pass
+
+class CardNotFoundError(Exception):
+    pass

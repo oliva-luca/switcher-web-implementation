@@ -326,3 +326,21 @@ class Operations:
         finally:
             session.close()
 
+    def playmovcard(self , game_id : int , mov_card_id : int , casilla_id1 : int, casilla_id2 : int):
+        session = Session()
+
+        try: 
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+
+            mov_card = session.query(MovCard).filter(MovCard.id_movcard == mov_card_id).first()
+            if not mov_card: 
+                raise CardNotFoundError(f"MovCard with ID {mov_card_id} not found.")
+            
+            mov_card.id_jugador = None 
+            session.commit()
+
+        finally:
+            session.close()
+            
