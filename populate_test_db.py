@@ -8,15 +8,15 @@ def load_data_for_test():
     games = [
         (1, 'game1', 1, False, False, 'as', None, 1),
         (2, 'game2', 3, True, False, 'as', None, None),
-        (3, 'game3', 4, False, False, 'as', None, None),
+        (3, 'game3', 2, False, False, 'as', None, None),
         (4, 'game4', 3, False, False, 'as', None, None),
         (5, 'game5', 2, True, False, 'as', 4, None),
     ]
     
     players = [
         (1, 'player1', False, False, None, None),
-        (2, 'player2', False, False, None, None),
-        (3, 'player3', False, False, None, None),
+        (2, 'player2', False, False, None, 3),
+        (3, 'player3', False, False, None, 3),
         (4, 'player4', False, False, 0, 5),
         (5, 'player5', False, False, 1, 5),
     ]
