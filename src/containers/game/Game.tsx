@@ -6,6 +6,7 @@ import { useGame } from "./hooks/GameData.hook";
 import MainBoard from "./components/mainBoard/MainBoard";
 import { useGameInfoKey } from "./hooks/GameInfoKey.hook";
 import Timer from "./components/Timer/Timer";
+import { SelectedCardProvider } from "./hooks/SelectedCard.hook";
 
 function Game() {
   const game = useGame();
@@ -16,23 +17,25 @@ function Game() {
       {game == null ? (
         ""
       ) : (
-        <div>
-          <MainBoard
-            players={game.players}
-            num_players={game.cant_jugadores}
-            figcards={game.figcards}
-          />
-          <Timer />
-          <PassTurn key={gameInfoKey} />
-          <HandOfCards
-            cards={game.movcards.filter(
-              (card) =>
-                card.id_jugador != null &&
-                card.id_jugador.toString() == localStorage.getItem("userId")
-            )}
-          />
-          <QuitBtn />
-        </div>
+        <SelectedCardProvider>
+          <div>
+            <MainBoard
+              players={game.players}
+              num_players={game.cant_jugadores}
+              figcards={game.figcards}
+            />
+            <Timer />
+            <PassTurn key={gameInfoKey} />
+            <HandOfCards
+              cards={game.movcards.filter(
+                (card) =>
+                  card.id_jugador != null &&
+                  card.id_jugador.toString() == localStorage.getItem("userId")
+              )}
+            />
+            <QuitBtn />
+          </div>
+        </SelectedCardProvider>
       )}
     </>
   );

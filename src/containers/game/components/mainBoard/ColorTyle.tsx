@@ -1,5 +1,6 @@
 import React from "react";
 import "./ColorTyle.css";
+import { useSelectedCard } from "../../hooks/SelectedCard.hook";
 
 interface ColorTyleProps {
   col: number;
@@ -19,14 +20,13 @@ movMap.set(6, [1, 2]);
 movMap.set(7, [4, 0]);
 
 const availableMov = (
-  cardId: number,
+  cardType: number,
   col: number,
   row: number,
   selectedCol: number,
   selectedRow: number
 ) => {
-  const baseMov = movMap.get(cardId);
-
+  const baseMov = movMap.get(cardType);
   return baseMov == undefined
     ? false
     : (selectedCol + baseMov[0] == col && selectedRow + baseMov[1] == row) ||
@@ -41,31 +41,45 @@ const ColorTyle = ({
   row,
   selected,
   setSelected,
-}: ColorTyleProps) => (
-  <button
-    className={`colorTyle ${color} ${
-      selected != null && selected[0] == col && selected[1] == row
-        ? "selectedTyle"
-        : ""
-    }`}
-    onClick={() =>
-      selected != null && availableMov(1, col, row, selected[0], selected[1])
-        ? console.log(col + "," + row)
-        : setSelected(selected == null ? [col, row] : null)
-    }
-    disabled={
-      selected != null &&
-      (selected[0] != col || selected[1] != row) &&
-      !availableMov(1, col, row, selected[0], selected[1])
-    }
-  >
-    {selected != null && selected[0] == col && selected[1] == row ? (
-      <div className="squareMarker" />
-    ) : selected != null &&
-      availableMov(1, col, row, selected[0], selected[1]) ? (
-      <div className="circleMarker" />
-    ) : null}
-  </button>
-);
+}: ColorTyleProps) => {
+  const { selectedCard, setSelectedCard } = useSelectedCard();
+  const cardType = selectedCard == null ? 0 : selectedCard[1];
+
+  const handleFinalSelect = () => {
+    console.log(col + "," + row);
+    setSelectedCard(null);
+    setSelected(null);
+  };
+
+  const handleClick = () => {
+    selected != null &&
+    availableMov(cardType, col, row, selected[0], selected[1])
+      ? handleFinalSelect()
+      : setSelected(selected == null ? [col, row] : null);
+  };
+
+  return (
+    <button
+      className={`colorTyle ${color} ${
+        selected != null && selected[0] == col && selected[1] == row
+          ? "selectedTyle"
+          : ""
+      }`}
+      onClick={handleClick}
+      disabled={
+        selected != null &&
+        (selected[0] != col || selected[1] != row) &&
+        !availableMov(cardType, col, row, selected[0], selected[1])
+      }
+    >
+      {selected != null && selected[0] == col && selected[1] == row ? (
+        <div className="squareMarker" />
+      ) : selected != null &&
+        availableMov(cardType, col, row, selected[0], selected[1]) ? (
+        <div className="circleMarker" />
+      ) : null}
+    </button>
+  );
+};
 
 export default ColorTyle;
