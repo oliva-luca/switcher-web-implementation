@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from models import Game, engine, Player, Tablero, Casilla
+from models import Game, engine, Player, MovCard, Tablero, Casilla
 
 
 Session = sessionmaker(bind=engine)
@@ -11,6 +11,7 @@ def load_data_for_test():
         (3, 'game3', 4, False, False, 'as', None, None),
         (4, 'game4', 3, False, False, 'as', None, None),
         (5, 'game5', 2, True, False, 'as', 4, None),
+        (6, 'game6', 2, True, False, 'as', 7, None),
     ]
     
     players = [
@@ -19,6 +20,8 @@ def load_data_for_test():
         (3, 'player3', False, False, None, None),
         (4, 'player4', False, False, 0, 5),
         (5, 'player5', False, False, 1, 5),
+        (6, 'player6', True, False, 1, 6),
+        (7, 'player7', True, False, 0, 6),
     ]
 
     tableros = [( None, 1 )]
@@ -61,7 +64,60 @@ def load_data_for_test():
         {"color": "azul", "id_casilla": 36, "fila": 5, "columna": 5, "id_tablero": 1}
     ]
 
+    movcards = [
+        {"id_partida": 6, "id_movcard": 1, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 2, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 3, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 4, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 5, "type": 5, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 6, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 7, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 8, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 9, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 10, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 11, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 12, "type": 5, "id_jugador": 6}, 
+        {"id_partida": 6, "id_movcard": 13, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 14, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 15, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 16, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 17, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 18, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 19, "type": 5, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 20, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 21, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 22, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 23, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 24, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 25, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 26, "type": 5, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 27, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 28, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 29, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 30, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 31, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 32, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 33, "type": 5, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 34, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 35, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 36, "type": 1, "id_jugador": 7},
+        {"id_partida": 6, "id_movcard": 37, "type": 2, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 38, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 39, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 40, "type": 5, "id_jugador": 7}, 
+        {"id_partida": 6, "id_movcard": 41, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 42, "type": 7, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 43, "type": 1, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 44, "type": 2, "id_jugador": 6}, 
+        {"id_partida": 6, "id_movcard": 45, "type": 3, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 46, "type": 4, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 47, "type": 5, "id_jugador": 7}, 
+        {"id_partida": 6, "id_movcard": 48, "type": 6, "id_jugador": None}, 
+        {"id_partida": 6, "id_movcard": 49, "type": 7, "id_jugador": 6}
+    ]
 
+
+    # Agregar partidas
     session = Session()
     try:    
         if session.query(Game).count() == 0:
@@ -72,8 +128,8 @@ def load_data_for_test():
     finally:
         session.close() 
     
+    # Agregar jugadores
     session = Session()
-    
     try:
         if session.query(Player).count() == 0:
             for id_jugador, nombre, in_game, block, position, id_partida in players:
@@ -83,7 +139,18 @@ def load_data_for_test():
     finally:
         session.close()
 
-    
+    # Agregar movcards
+    session = Session()
+    try:
+        if session.query(MovCard).count() == 0:
+            for movcard in movcards:
+                new_movcard = MovCard(id_partida=movcard["id_partida"], id_movcard=movcard["id_movcard"], type=movcard["type"], id_jugador=movcard["id_jugador"])
+                session.add(new_movcard)
+            session.commit()
+    finally:
+        session.close()
+
+    # Agregar tableros
     session = Session()
     try: 
         if session.query(Tablero).count() == 0:
