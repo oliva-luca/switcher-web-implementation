@@ -44,9 +44,21 @@ const ColorTyle = ({
 }: ColorTyleProps) => {
   const { selectedCard, setSelectedCard } = useSelectedCard();
   const cardType = selectedCard == null ? 0 : selectedCard[1];
+  const cardId = selectedCard == null ? 0 : selectedCard[0];
 
   const handleFinalSelect = () => {
-    console.log(col + "," + row);
+    console.log(
+      "card " +
+        cardId +
+        " swaped: " +
+        selected[0] +
+        "," +
+        selected[1] +
+        "<--->" +
+        col +
+        "," +
+        row
+    );
     setSelectedCard(null);
     setSelected(null);
   };
