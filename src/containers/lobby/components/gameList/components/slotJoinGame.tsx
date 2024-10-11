@@ -40,7 +40,7 @@ export default function SlotJoinGame({ id, name, currentCapacity, capacity }: Ga
             localStorage.setItem('gameId', id.toString());
             navigate('/pregame');
         } catch (error) {
-            console.error('Error joining game:', error);
+            // console.error('Error joining game:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
