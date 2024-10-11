@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 from sqlalchemy.exc import NoResultFound
-from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError, GameNotStartedError, NumberOfPlayersError, manager, ConnectionManager, manager_game
+from operations import Operations, manager, ConnectionManager, manager_game
+from exception import * 
 
 from enum import Enum
 from typing import List
@@ -116,6 +117,22 @@ async def leave_lobby(player_id: int):
 
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.put("/game/{game_id}/playcard/{mov_card_id}/casillas/{casilla_id1}/{casilla_id2}")
+async def play_card(game_id: int ,mov_card_id: int, casilla_id1: int , casilla_id2: int):
+    operation = Operations()
+    try:
+        return operation.playmovcard(game_id, mov_card_id ,casilla_id1, casilla_id2)
+
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except CardNotFoundError as e: 
+        raise HTTPException(status_code=404, detail=str(e)) 
+    except NotTheirTurnError as e:
+        raise HTTPException(status_code=400, detail=str(e))   
+
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

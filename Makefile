@@ -16,6 +16,6 @@ run_end2end_tests:
 
 run_all_tests:
 	ENVIRONMENT=test python3 populate_test_db.py
-	pytest -vv
+	pytest --cov=.  --cov-report=term-missing -vv
 	rm database_test.sqlite
 	unset ENVIRONMENT
