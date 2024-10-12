@@ -2,15 +2,12 @@ import React from "react";
 import "./passTurn.css";
 import { Button } from "react-bootstrap";
 import axios from "axios";
-
+import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 import { useEffect, useState } from "react";
-interface GameData {
-  turn: number;
-  // Add other properties of gameData if needed
-}
 
 const PassTurn = () => {
-  const [gameData, setGameData] = useState<GameData | null>(null);
+  const { setSelectedCard, setSelectedTyle, currentTurn, setCurrentTurn } =
+    useCurrentPlay();
   const [nameTurn, setNameTurn] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,7 +15,7 @@ const PassTurn = () => {
       try {
         const gameId = localStorage.getItem("gameId");
         const response = await axios.get(`/gamelist/${gameId}`);
-        setGameData(response.data);
+        setCurrentTurn(response.data.turn);
         if (response.data.turn !== undefined) {
           const toFind = response.data.turn;
           const response2 = await axios.get(`/user/${toFind}`);
@@ -43,10 +40,10 @@ const PassTurn = () => {
       <Button
         variant="primary"
         disabled={
-          !gameData || gameData.turn !== Number(localStorage.getItem("userId"))
+          !currentTurn || currentTurn !== Number(localStorage.getItem("userId"))
         }
         className={
-          !gameData || gameData.turn === Number(localStorage.getItem("userId"))
+          !currentTurn || currentTurn === Number(localStorage.getItem("userId"))
             ? "blue-button"
             : "gray-button"
         }
@@ -54,6 +51,8 @@ const PassTurn = () => {
           try {
             const gameId = localStorage.getItem("gameId");
             await axios.put(`/end_turn/${gameId}`);
+            setSelectedCard(null);
+            setSelectedTyle(null);
           } catch (error) {
             console.error("Error ending turn:", error);
           }

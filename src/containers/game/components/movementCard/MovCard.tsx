@@ -1,6 +1,6 @@
 import React from "react";
 import "./MovCard.css";
-import { useSelectedCard } from "../../hooks/SelectedCard.hook";
+import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 
 interface MovCardProp {
   cardId: number;
@@ -8,7 +8,7 @@ interface MovCardProp {
 }
 
 const MovCard = ({ cardId, type }: MovCardProp) => {
-  const { selectedCard, setSelectedCard } = useSelectedCard();
+  const { selectedCard, setSelectedCard } = useCurrentPlay();
   return (
     <img
       id={cardId.toString()}

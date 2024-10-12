@@ -1,13 +1,12 @@
 import React from "react";
 import "./ColorTyle.css";
-import { useSelectedCard } from "../../hooks/SelectedCard.hook";
+import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 
 interface ColorTyleProps {
+  tyleId: number;
   col: number;
   row: number;
   color: string;
-  selected: [number, number] | null;
-  setSelected: React.Dispatch<React.SetStateAction<[number, number] | null>>;
 }
 
 const movMap = new Map<number, [number, number]>();
@@ -35,59 +34,50 @@ const availableMov = (
         (selectedCol + baseMov[1] == col && selectedRow - baseMov[0] == row);
 };
 
-const ColorTyle = ({
-  color,
-  col,
-  row,
-  selected,
-  setSelected,
-}: ColorTyleProps) => {
-  const { selectedCard, setSelectedCard } = useSelectedCard();
+const ColorTyle = ({ tyleId, color, col, row }: ColorTyleProps) => {
+  const {
+    selectedCard,
+    setSelectedCard,
+    selectedTyle,
+    setSelectedTyle,
+    currentTurn,
+  } = useCurrentPlay();
   const cardType = selectedCard == null ? 0 : selectedCard[1];
   const cardId = selectedCard == null ? 0 : selectedCard[0];
 
   const handleFinalSelect = () => {
     console.log(
-      "card " +
-        cardId +
-        " swaped: " +
-        selected[0] +
-        "," +
-        selected[1] +
-        "<--->" +
-        col +
-        "," +
-        row
+      "card " + cardId + " swaped: " + selectedTyle[2] + "<--->" + tyleId
     );
     setSelectedCard(null);
-    setSelected(null);
+    setSelectedTyle(null);
   };
 
   const handleClick = () => {
-    selected != null &&
-    availableMov(cardType, col, row, selected[0], selected[1])
-      ? handleFinalSelect()
-      : setSelected(selected == null ? [col, row] : null);
+    if (!currentTurn || currentTurn == Number(localStorage.getItem("userId"))) {
+      selectedTyle != null &&
+      availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
+        ? handleFinalSelect()
+        : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
+    }
   };
 
   return (
     <button
       className={`colorTyle ${color} ${
-        selected != null && selected[0] == col && selected[1] == row
-          ? "selectedTyle"
-          : ""
+        selectedTyle != null && selectedTyle[2] == tyleId ? "selectedTyle" : ""
       }`}
       onClick={handleClick}
       disabled={
-        selected != null &&
-        (selected[0] != col || selected[1] != row) &&
-        !availableMov(cardType, col, row, selected[0], selected[1])
+        selectedTyle != null &&
+        selectedTyle[2] != tyleId &&
+        !availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
       }
     >
-      {selected != null && selected[0] == col && selected[1] == row ? (
+      {selectedTyle != null && selectedTyle[2] == tyleId ? (
         <div className="squareMarker" />
-      ) : selected != null &&
-        availableMov(cardType, col, row, selected[0], selected[1]) ? (
+      ) : selectedTyle != null &&
+        availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1]) ? (
         <div className="circleMarker" />
       ) : null}
     </button>

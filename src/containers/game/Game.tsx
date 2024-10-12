@@ -6,7 +6,7 @@ import { useGame } from "./hooks/GameData.hook";
 import MainBoard from "./components/mainBoard/MainBoard";
 import { useGameInfoKey } from "./hooks/GameInfoKey.hook";
 import Timer from "./components/Timer/Timer";
-import { SelectedCardProvider } from "./hooks/SelectedCard.hook";
+import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 
 function Game() {
   const game = useGame();
@@ -17,7 +17,7 @@ function Game() {
       {game == null ? (
         ""
       ) : (
-        <SelectedCardProvider>
+        <CurrentPlayProvider>
           <div>
             <MainBoard
               players={game.players}
@@ -35,7 +35,7 @@ function Game() {
             />
             <QuitBtn />
           </div>
-        </SelectedCardProvider>
+        </CurrentPlayProvider>
       )}
     </>
   );
