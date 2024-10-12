@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from models import Game, engine, Player, Tablero, Casilla
+from models import Game, engine, Player, FigCard, Tablero, Casilla
 
 
 Session = sessionmaker(bind=engine)
@@ -62,8 +62,61 @@ def load_data_for_test():
     ]
 
 
+    figcards = [
+        {"type": 1, "id_partida": 6, "shown": False, "id_figcard": 1, "id_jugador": 7}, 
+        {"type": 2, "id_partida": 6, "shown": False, "id_figcard": 2, "id_jugador": 6}, 
+        {"type": 3, "id_partida": 6, "shown": False, "id_figcard": 3, "id_jugador": 7}, 
+        {"type": 4, "id_partida": 6, "shown": False, "id_figcard": 4, "id_jugador": 6}, 
+        {"type": 5, "id_partida": 6, "shown": False, "id_figcard": 5, "id_jugador": 7}, 
+        {"type": 6, "id_partida": 6, "shown": False, "id_figcard": 6, "id_jugador": 7}, 
+        {"type": 7, "id_partida": 6, "shown": False, "id_figcard": 7, "id_jugador": 7}, 
+        {"type": 8, "id_partida": 6, "shown": False, "id_figcard": 8, "id_jugador": 6}, 
+        {"type": 9, "id_partida": 6, "shown": True, "id_figcard": 9, "id_jugador": 6}, 
+        {"type": 10, "id_partida": 6, "shown": False, "id_figcard": 10, "id_jugador": 7}, 
+        {"type": 11, "id_partida": 6, "shown": False, "id_figcard": 11, "id_jugador": 6}, 
+        {"type": 12, "id_partida": 6, "shown": False, "id_figcard": 12, "id_jugador": 7}, 
+        {"type": 13, "id_partida": 6, "shown": False, "id_figcard": 13, "id_jugador": 7}, 
+        {"type": 14, "id_partida": 6, "shown": False, "id_figcard": 14, "id_jugador": 6}, 
+        {"type": 15, "id_partida": 6, "shown": True, "id_figcard": 15, "id_jugador": 6}, 
+        {"type": 16, "id_partida": 6, "shown": False, "id_figcard": 16, "id_jugador": 7}, 
+        {"type": 17, "id_partida": 6, "shown": False, "id_figcard": 17, "id_jugador": 6}, 
+        {"type": 18, "id_partida": 6, "shown": True, "id_figcard": 18, "id_jugador": 7}, 
+        {"type": 19, "id_partida": 6, "shown": False, "id_figcard": 19, "id_jugador": 7}, 
+        {"type": 20, "id_partida": 6, "shown": True, "id_figcard": 20, "id_jugador": 6}, 
+        {"type": 21, "id_partida": 6, "shown": False, "id_figcard": 21, "id_jugador": 6}, 
+        {"type": 22, "id_partida": 6, "shown": False, "id_figcard": 22, "id_jugador": 7}, 
+        {"type": 23, "id_partida": 6, "shown": False, "id_figcard": 23, "id_jugador": 6}, 
+        {"type": 24, "id_partida": 6, "shown": False, "id_figcard": 24, "id_jugador": 7}, 
+        {"type": 25, "id_partida": 6, "shown": False, "id_figcard": 25, "id_jugador": 7}, 
+        {"type": 1, "id_partida": 6, "shown": False, "id_figcard": 26, "id_jugador": 7}, 
+        {"type": 2, "id_partida": 6, "shown": False, "id_figcard": 27, "id_jugador": 7}, 
+        {"type": 3, "id_partida": 6, "shown": False, "id_figcard": 28, "id_jugador": 7}, 
+        {"type": 4, "id_partida": 6, "shown": False, "id_figcard": 29, "id_jugador": 6}, 
+        {"type": 5, "id_partida": 6, "shown": False, "id_figcard": 30, "id_jugador": 7}, 
+        {"type": 6, "id_partida": 6, "shown": False, "id_figcard": 31, "id_jugador": 7}, 
+        {"type": 7, "id_partida": 6, "shown": False, "id_figcard": 32, "id_jugador": 6}, 
+        {"type": 8, "id_partida": 6, "shown": False, "id_figcard": 33, "id_jugador": 6}, 
+        {"type": 9, "id_partida": 6, "shown": False, "id_figcard": 34, "id_jugador": 6}, 
+        {"type": 10, "id_partida": 6, "shown": False, "id_figcard": 35, "id_jugador": 6}, 
+        {"type": 11, "id_partida": 6, "shown": False, "id_figcard": 36, "id_jugador": 6}, 
+        {"type": 12, "id_partida": 6, "shown": False, "id_figcard": 37, "id_jugador": 6}, 
+        {"type": 13, "id_partida": 6, "shown": False, "id_figcard": 38, "id_jugador": 6}, 
+        {"type": 14, "id_partida": 6, "shown": False, "id_figcard": 39, "id_jugador": 6}, 
+        {"type": 15, "id_partida": 6, "shown": False, "id_figcard": 40, "id_jugador": 7}, 
+        {"type": 16, "id_partida": 6, "shown": False, "id_figcard": 41, "id_jugador": 7}, 
+        {"type": 17, "id_partida": 6, "shown": False, "id_figcard": 42, "id_jugador": 7}, 
+        {"type": 18, "id_partida": 6, "shown": False, "id_figcard": 43, "id_jugador": 6}, 
+        {"type": 19, "id_partida": 6, "shown": True, "id_figcard": 44, "id_jugador": 7}, 
+        {"type": 20, "id_partida": 6, "shown": False, "id_figcard": 45, "id_jugador": 6}, 
+        {"type": 21, "id_partida": 6, "shown": True, "id_figcard": 46, "id_jugador": 7}, 
+        {"type": 22, "id_partida": 6, "shown": False, "id_figcard": 47, "id_jugador": 6}, 
+        {"type": 23, "id_partida": 6, "shown": False, "id_figcard": 48, "id_jugador": 7}, 
+        {"type": 24, "id_partida": 6, "shown": False, "id_figcard": 49, "id_jugador": 6}, 
+        {"type": 25, "id_partida": 6, "shown": False, "id_figcard": 50, "id_jugador": 6}
+    ]
+
     session = Session()
-    try:    
+    try:
         if session.query(Game).count() == 0:
             for id_partida, name, cant_jugadores, started, is_private, password, turn, id_tablero in games:
                 game = Game(id_partida=id_partida, name=name, cant_jugadores=cant_jugadores, started=started, is_private=is_private, password=password, turn=turn, id_tablero=id_tablero)
@@ -105,5 +158,16 @@ def load_data_for_test():
         session.close()
     
     
+# Agregar figcards
+    session = Session()
+    try:
+        if session.query(FigCard).count() == 0:
+            for movcard in figcards:
+                new_movcard = FigCard(type=movcard["type"], id_partida=movcard["id_partida"], shown=movcard["shown"], id_figcard=movcard["id_figcard"], id_jugador=movcard["id_jugador"])
+                session.add(new_movcard)
+            session.commit()
+    finally:
+        session.close()
+
 if __name__ == '__main__':
     load_data_for_test()            

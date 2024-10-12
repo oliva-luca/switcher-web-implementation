@@ -3,6 +3,10 @@ from unittest.mock import MagicMock, patch
 from board_to_test_board import *
 from utils import *
 from modifies_to_test import *
+from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla
+
+Session = sessionmaker(bind=engine)
+
 #-------------------TEST TABLERO-------------------
 def validar_tablero(Dict : dict):
     verde = 0
@@ -91,3 +95,148 @@ def test_modificar_tablero_colores_iguales(tablero_a,modify_9):
     with patch('utils.to_modify', to_modify):
         modified_board = modificar_tablero(tablero_a)
     assert modified_board == tablero_a
+
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_show_figcards_having_2_shown():
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(figcards) == 3
+    finally:
+        session.close()
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        figcards[0].id_jugador = None
+        session.commit()
+        new_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(new_figcards) == 2
+    finally:
+        session.close()
+    session = Session()
+    try:
+        mostrar_cartas_figura(7, session)
+    finally:
+        session.close()
+    
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(figcards) == 3
+    finally:
+        session.close()
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_show_figcards_having_0_shown():
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(figcards) == 3
+    finally:
+        session.close()
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        for figcard in figcards:
+            figcard.id_jugador = None
+        session.commit()
+        new_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(new_figcards) == 0
+    finally:
+        session.close()
+    session = Session()
+    try:
+        mostrar_cartas_figura(7, session)
+    finally:
+        session.close()
+    
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(figcards) == 3
+    finally:
+        session.close()
+
+# Revisa que las nuevas cartas mostradas eran del mismo jugador 
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_shown_figcards_are_own():
+    session = Session()
+    try:
+        shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(shown_figcards) == 3
+        all_figcards = session.query(FigCard).filter(FigCard.id_jugador == 7).all()
+        figcards_id = [figcard.id_figcard for figcard in all_figcards]  # Para chequear que esten aca
+        assert len(all_figcards) >= 6
+    finally:
+        session.close()
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        for figcard in figcards:
+            figcard.id_jugador = None
+        session.commit()
+        new_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(new_figcards) == 0
+    finally:
+        session.close()
+    session = Session()
+    try:
+        mostrar_cartas_figura(7, session)
+    finally:
+        session.close()
+    
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        for figcard in figcards:
+            assert(figcard.id_figcard in figcards_id)
+    finally:
+        session.close()
+
+# Solo le queda 1 carta mostrandose y solo 1 sin mostrar
+# Al llamar a la funcion, tienen que estar las dos (todas) mostrandose
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_show_figcards_having_just_1_shown_1_not_shown():
+    # Precondicion
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter(FigCard.id_jugador == 7).all()
+        assert len(figcards) >= 5
+    finally:
+        session.close()
+    # Preparo la situacion
+    session = Session()
+    try:
+        shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        shown_figcards.pop()
+        for figcard in shown_figcards:
+            figcard.id_jugador = None
+        not_shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (~FigCard.shown)).all()
+        not_shown_figcards.pop()
+        for figcard in not_shown_figcards:
+            figcard.id_jugador = None
+        session.commit()
+        new_shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        assert len(new_shown_figcards) == 1
+        new_not_shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (~FigCard.shown)).all()
+        assert len(new_not_shown_figcards) == 1
+    finally:
+        session.close()
+    session = Session()
+    try:
+        mostrar_cartas_figura(7, session)
+    finally:
+        session.close()
+    
+    session = Session()
+    try:
+        shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == 7) & (FigCard.shown)).all()
+        all_figcards = session.query(FigCard).filter(FigCard.id_jugador == 7).all()
+        assert len(shown_figcards) == len(all_figcards)
+    finally:
+        session.close()
