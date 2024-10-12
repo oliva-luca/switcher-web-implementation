@@ -15,6 +15,19 @@ class Modifies:
         self.id_casilla1 = id_casilla1
         self.id_casilla2 = id_casilla2
 
+class To_modify:
+    def __init__(self):
+        self.modify: Dict[int, List[Modifies]] = {}
+    def tablero(self, id_tablero : int):
+        return self.modify.get(id_tablero, [])
+    def add_modify(self, id_tablero : int, movcard_id : int, casilla1 : int, casilla2 :int):
+        if id_tablero not in self.modify:
+            self.modify[id_tablero] = []
+        self.modify[id_tablero].append(Modifies(movcard_id, casilla1, casilla2))
+        print("!!!!!")
+
+modificates =  To_modify()
+
 def generar_tablero_aleatorio(id_tablero: int, session):
     # Los 4 colores que se van a distribuir equitativamente
     colores = ['rojo', 'azul', 'verde', 'amarillo']
@@ -73,10 +86,11 @@ def asignar_turno_primer_jugador(id_partida: int, session):
     finally:
         return {"message": "Turno del primer jugador asignado con éxito"}
 
-to_modify: Dict[int, List[Modifies]] = {}
 
 def modificar_tablero(board: Dict):
-    modifies = to_modify.get(board['id_tablero'], [])
+    modifies = modificates.tablero(board["id_tablero"])
+    print("#################")
+    print(len(modifies))
     for modify in modifies:
         casilla = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla1), None)
         casilla2 = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla2), None)

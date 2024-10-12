@@ -72,7 +72,12 @@ class Tablero(Base):
     id_tablero = Column(Integer, primary_key=True, autoincrement=True)
     color_principal = Column(String, nullable=True)  # Mantienes el color principal si es necesario
     casillas = relationship("Casilla", back_populates="tablero")  # Relación con las casillas
-
+    def to_dict(self):
+        return {
+            'id_tablero': self.id_tablero,
+            'color_principal': self.color_principal,
+            'casillas': [casilla.to_dict() for casilla in self.casillas]
+        }
 
 # Tabla de Casillas
 class Casilla(Base):
@@ -83,7 +88,14 @@ class Casilla(Base):
     color = Column(String, nullable=False)  # Color de la casilla
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'))  # Relación con el tablero
     tablero = relationship("Tablero", back_populates="casillas")
-
+    def to_dict(self):
+        return {
+            'id_casilla': self.id_casilla,
+            'fila': self.fila,
+            'columna': self.columna,
+            'color': self.color,
+            'id_tablero': self.id_tablero
+        }
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'

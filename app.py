@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconne
 from sqlalchemy.exc import NoResultFound
 from operations import Operations, manager, ConnectionManager, manager_game
 from exception import * 
+from utils import *
 
 from enum import Enum
 from typing import List
@@ -13,14 +14,14 @@ app= FastAPI()
 @app.get("/gamelist")
 async def print_games():
     operation = Operations()
-
     return operation.get_games()
 
 @app.get("/tableros/{game_id}")
 async def print_tablero_by_id(game_id : int):
     operation = Operations()
-
-    return operation.get_board_by_id(game_id=game_id)
+    board = operation.get_board_by_id(game_id = game_id)
+    board_dict = board.to_dict()  
+    return modificar_tablero(board_dict)
 
 @app.post("/gamelist")
 async def create_game(name: str, cant_players: int):

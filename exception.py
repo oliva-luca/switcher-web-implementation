@@ -20,3 +20,6 @@ class CardNotFoundError(Exception):
 
 class NotTheirTurnError(Exception):
     pass
+
+class CasillaNotFoundError(Exception):
+    pass
