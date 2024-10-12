@@ -186,7 +186,9 @@ class Operations:
                 crear_cartas_movimiento(game_id, session)
                 
                 # Repartir cartas de movimiento entre los jugadores
-                repartir_cartas_movimiento(game_id, session)
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    repartir_cartas_movimiento(game_id, player.id_jugador, session)
                 
                 # Crear las cartas de figura de la partida
                 crear_cartas_figura(game_id, session)
@@ -224,6 +226,10 @@ class Operations:
 
             # Le revelo cartas de figura hasta tener tres (si le quedan suficientes)
             mostrar_cartas_figura(current_player.id_jugador, session)
+
+            # Le reparto sus cartas de movimiento faltantes
+            repartir_cartas_movimiento(game_id, current_player.id_jugador, session)
+
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
@@ -331,3 +337,27 @@ class Operations:
         finally:
             session.close()
 
+    def playmovcard(self , game_id : int , mov_card_id : int , casilla_id1 : int, casilla_id2 : int):
+        session = Session()
+
+        try: 
+            
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+
+            mov_card = session.query(MovCard).filter(MovCard.id_movcard == mov_card_id).first()
+            if not mov_card: 
+                raise CardNotFoundError(f"MovCard with ID {mov_card_id} not found.")
+
+            player = mov_card.player
+
+            if game.turn != player.id_jugador:
+                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
+            
+            mov_card.id_jugador = None 
+            session.commit()
+
+        finally:
+            session.close()
+            

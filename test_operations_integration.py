@@ -194,7 +194,7 @@ def test_get_player(operation: Operations):
     assert player.in_game == False
     assert player.block == False
     assert player.position == None
-    assert player.id_partida == None
+    assert player.id_partida == 3
 
 
 @pytest.mark.integration_test
@@ -262,3 +262,44 @@ async def test_leave_lobby(operation: Operations):
         assert player not in players_in_1
     finally:
         session.close()
+
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_playmovcard(operation : Operations):
+    session = Session()
+    try:
+        await operation.start_game(3)
+        assert session.query(Game).filter(Game.id_partida == 3).one().started == True
+        assert session.query(Game).filter(Game.id_partida == 3).one().tablero is not None
+        game = session.query(Game).filter(Game.id_partida == 3).one()
+
+        actual_turn = game.turn 
+
+        player = session.query(Player).filter(Player.id_jugador == actual_turn).first()
+
+        player.movcards = player.movcards
+        cant_mov_cards = len(player.movcards)
+        carta = player.movcards[0]
+
+        assert cant_mov_cards == 3
+    finally:
+        session.close()
+
+    operation.playmovcard(3,carta.id_movcard, 10, 11)
+
+    try:
+        session = Session()
+
+        player = session.query(Player).filter(Player.id_jugador == actual_turn).first()
+        player.movcards = player.movcards
+        new_cant_mov_cards = len(player.movcards)
+        assert cant_mov_cards - 1 == new_cant_mov_cards
+
+    finally:
+        session.close()
+
+
+
+
+
