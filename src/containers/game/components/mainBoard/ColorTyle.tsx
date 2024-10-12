@@ -1,6 +1,7 @@
 import React from "react";
 import "./ColorTyle.css";
 import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
+import axios from "axios";
 
 interface ColorTyleProps {
   tyleId: number;
@@ -45,7 +46,18 @@ const ColorTyle = ({ tyleId, color, col, row }: ColorTyleProps) => {
   const cardType = selectedCard == null ? 0 : selectedCard[1];
   const cardId = selectedCard == null ? 0 : selectedCard[0];
 
-  const handleFinalSelect = () => {
+  const handleFinalSelect = async () => {
+    
+    try {
+      const game_id = localStorage.getItem("gameId");
+      const casilla_id1 = selectedTyle[2];
+      const casilla_id2 = tyleId;
+      console.log(`Attempting to swap tiles: game_id=${game_id}, cardId=${cardId}, casilla_id1=${casilla_id1}, casilla_id2=${casilla_id2}`);
+      const response = await axios.put(`/gamelist/${game_id}/playcard/${cardId}/casillas/${casilla_id1}/${casilla_id2}`);
+      console.log('Response:', response);
+    } catch (error) {
+      console.error("Error swapping tyles:", error);
+    }
     console.log(
       "card " + cardId + " swaped: " + selectedTyle[2] + "<--->" + tyleId
     );
