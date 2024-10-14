@@ -25,7 +25,7 @@ const MovCard = ({ cardId, type }: MovCardProp) => {
             : [cardId, type]
         )
       }
-      alt="carta de movimiento"
+      alt={undefined}
     />
   );
 };
