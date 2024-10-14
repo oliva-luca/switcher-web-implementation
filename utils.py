@@ -205,3 +205,56 @@ def mostrar_cartas_figura(id_jugador : int, session):
         session.commit()
     finally:
         pass
+
+
+#--------------------------- COMPUTAR COMPONENTES  -------------------------------------------------------------
+# Chequea si el par (fila, columna) es una casilla válida
+# Las coordenadas de las casillas deben estar entre 0 y 6 no inclusive
+def es_valida(fila: int, columna: int):
+    return 0 <= fila < 6 and 0 <= columna < 6
+
+# Direcciones a moverse para llegar a una casilla vecina
+directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+# Calcula la casilla obtenida al moverse en cierta direccion
+def mover_en_direccion(casilla: tuple, direccion: tuple):
+    return (casilla[0] + direccion[0], casilla[1] + direccion[1])
+
+# Dada la casilla (fila, columna) calcula sus casillas vecinas
+def obtener_vecinas(fila: int, columna: int):
+    vecinos = []
+    for dir in directions:
+        nueva_casilla = mover_en_direccion((fila, columna), dir)
+        if(es_valida(*nueva_casilla)):
+            vecinos.append(nueva_casilla)
+    return vecinos
+
+# Devuelve la lista de casillas que pertenecen a la componente de una casilla dada
+# Precondicion: La casilla inicial no fue visitada anteriormente
+# El algoritmo es un BFS (Búsqueda en profundidad)
+def obtener_componente_de_casilla(tablero: List, visited: List, casilla: tuple):
+    componente = [casilla]
+    visited[casilla[0]][casilla[1]] = True
+    color = tablero[casilla[0]][casilla[1]] # color de las casillas de la componente
+    for nueva_casilla in componente:
+        vecinos = obtener_vecinas(*nueva_casilla)
+        for vecino in vecinos:
+            if(not visited[vecino[0]][vecino[1]] and tablero[vecino[0]][vecino[1]] == color):
+                componente.append(vecino)
+                visited[vecino[0]][vecino[1]] = True
+    return componente
+
+# Toma como entrada una lista de 6 listas, cada uno de ellas 
+# contiene 6 strings, que son los colores de las casillas
+# La primera lista representa la primera fila del tablero y así sucesivamente
+# La salida es una lista de listas, cada lista contiene pares (fila, columna)
+# que representan las casillas de esa componente.
+def obtener_componentes_conexas(tablero : List):
+    componentes = []
+    visited = [[False] * 6 for i in range(6)]
+    for fila in range(6):
+        for columna in range(6):
+            if(not visited[fila][columna]):
+                nueva_comp = obtener_componente_de_casilla(tablero, visited, (fila, columna))
+                componentes.append(nueva_comp)
+    return componentes
