@@ -8,23 +8,25 @@ interface MovCardProp {
 }
 
 const MovCard = ({ cardId, type }: MovCardProp) => {
-  const { selectedCard, setSelectedCard } = useCurrentPlay();
+  const { selectedCard, setSelectedCard, playedCards} = useCurrentPlay();
   return (
     <img
       id={cardId.toString()}
-      className="movCard "
+      className={playedCards.includes(cardId) ? "used" : "movCard"}
       src={"/mov" + type + ".svg"}
       style={{
         opacity: selectedCard == null || selectedCard[0] == cardId ? 1 : 0.5,
         height: selectedCard != null && selectedCard[0] == cardId ? 200 : 180,
       }}
-      onClick={() =>
-        setSelectedCard(
-          selectedCard != null && selectedCard[0] == cardId
-            ? null
-            : [cardId, type]
-        )
-      }
+      onClick={() => {
+        if (!playedCards.includes(cardId)) {
+          setSelectedCard(
+            selectedCard != null && selectedCard[0] == cardId
+              ? null
+              : [cardId, type]
+          );
+        }
+      }}
       alt="carta de movimiento"
     />
   );
