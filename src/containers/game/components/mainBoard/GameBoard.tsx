@@ -23,6 +23,7 @@ const GameBoard = () => {
           {board.casillas.map((tyle) => (
             <ColorTyle
               key={tyle.id_casilla}
+              tyleId={tyle.id_casilla}
               col={tyle.columna}
               row={tyle.fila}
               color={tyle.color}

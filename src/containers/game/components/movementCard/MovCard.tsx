@@ -1,25 +1,31 @@
 import React from "react";
 import "./MovCard.css";
+import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 
 interface MovCardProp {
   cardId: number;
   type: number;
-  selected: number | null;
-  setSelected: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const MovCard = ({ cardId, type, selected, setSelected }: MovCardProp) => {
+const MovCard = ({ cardId, type }: MovCardProp) => {
+  const { selectedCard, setSelectedCard } = useCurrentPlay();
   return (
     <img
       id={cardId.toString()}
       className="movCard "
       src={"/mov" + type + ".svg"}
       style={{
-        opacity: selected == cardId || selected == null ? 1 : 0.5,
-        height: selected == cardId && selected != null ? 200 : 180,
+        opacity: selectedCard == null || selectedCard[0] == cardId ? 1 : 0.5,
+        height: selectedCard != null && selectedCard[0] == cardId ? 200 : 180,
       }}
-      onClick={() => setSelected(selected == cardId ? null : cardId)}
-      alt="carta de movimiento"
+      onClick={() =>
+        setSelectedCard(
+          selectedCard != null && selectedCard[0] == cardId
+            ? null
+            : [cardId, type]
+        )
+      }
+      alt={undefined}
     />
   );
 };

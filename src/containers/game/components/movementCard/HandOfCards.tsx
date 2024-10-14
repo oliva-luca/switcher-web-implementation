@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Row } from "react-bootstrap";
 import "./HandOfCards.css"; // Importa el archivo CSS
 import MovCard from "./MovCard";
+import { SelectedCardProvider } from "../../hooks/CurrentPlay.context";
 
 interface MovCardType {
   id_partida: number;
@@ -15,16 +16,13 @@ interface HandProp {
 }
 
 const HandOfCards = ({ cards }: HandProp) => {
-  const [selectedMov, setSelectedMov] = useState<number | null>(null);
-
   return (
     <Row className="hand-of-cards">
       {cards.map((card) => (
         <MovCard
+          key={card.id_movcard}
           cardId={card.id_movcard}
           type={card.type}
-          selected={selectedMov}
-          setSelected={setSelectedMov}
         />
       ))}
     </Row>
