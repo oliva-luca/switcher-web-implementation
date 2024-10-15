@@ -9,24 +9,25 @@ from typing import List,Dict
 
 
 #--------------------------- TABLERO -------------------------------------------------------------
-class Modifies:
+class Modify:
     def __init__(self, id_cartamov: int, id_casilla1:int , id_casilla2:int):
         self.id_cartamov = id_cartamov
         self.id_casilla1 = id_casilla1
         self.id_casilla2 = id_casilla2
 
-class To_modify:
+class Modifies:
     def __init__(self):
-        self.modify: Dict[int, List[Modifies]] = {}
-    def tablero(self, id_tablero : int):
-        return self.modify.get(id_tablero, [])
+        self.modify: Dict[int, List[Modify]] = {}
     def add_modify(self, id_tablero : int, movcard_id : int, casilla1 : int, casilla2 :int):
         if id_tablero not in self.modify:
             self.modify[id_tablero] = []
-        self.modify[id_tablero].append(Modifies(movcard_id, casilla1, casilla2))
-        print("!!!!!")
+        self.modify[id_tablero].append(Modify(movcard_id, casilla1, casilla2))
+    def get_game_modifies(self, id_tablero: int):
+        return self.modify.get(id_tablero, [])
+    def clear_modifies(self, id_tablero: int):
+        self.modify[id_tablero] = []
 
-modificates =  To_modify()
+modificates =  Modifies()
 
 def generar_tablero_aleatorio(id_tablero: int, session):
     # Los 4 colores que se van a distribuir equitativamente
@@ -88,9 +89,9 @@ def asignar_turno_primer_jugador(id_partida: int, session):
 
 
 def modificar_tablero(board: Dict):
-    modifies = modificates.tablero(board["id_tablero"])
-    print("#################")
+    modifies = modificates.get_game_modifies(board["id_tablero"])
     print(len(modifies))
+    print(len(modificates.modify.get(1, [])))
     for modify in modifies:
         casilla = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla1), None)
         casilla2 = next((c for c in board['casillas'] if c['id_casilla'] == modify.id_casilla2), None)
