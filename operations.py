@@ -95,8 +95,19 @@ class Operations:
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
 
+            #Por si el jugador tiene cartas de anteriores partidas se borran 
+            if new_player.movcards is not None:
+                for movcard in new_player.movcards:
+                    movcard.id_jugador = None
+
+
+            if new_player.figcards is not None:
+                for figcard in new_player.figcards:
+                    figcard.id_jugador = None
+
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
+
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
@@ -293,8 +304,13 @@ class Operations:
 
             if game.owner == player.id_jugador:
                 for player_i in game.players: 
+                    player_i.id_partida = None
                     player_i.in_game=False
+                await manager_game.broadcast(game.id_partida, "Owner cancelled the game") 
                 session.delete(game)
+                session.commit()
+                session.close()
+                return {"message": f"Game cancelled"}
 
             player.id_partida = None
             player.in_game = False
