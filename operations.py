@@ -289,8 +289,13 @@ class Operations:
 
             if game.owner == player.id_jugador:
                 for player_i in game.players: 
+                    player_i.id_partida = None
                     player_i.in_game=False
+                await manager_game.broadcast(game.id_partida, "Owner cancelled the game") 
                 session.delete(game)
+                session.commit()
+                session.close()
+                return {"message": f"Game cancelled"}
 
             player.id_partida = None
             player.in_game = False
