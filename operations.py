@@ -93,7 +93,7 @@ class Operations:
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
 
-
+            #Por si el jugador tiene cartas de anteriores partidas se borran 
             if new_player.movcards is not None:
                 for movcard in new_player.movcards:
                     movcard.id_jugador = None
@@ -103,7 +103,6 @@ class Operations:
                 for figcard in new_player.figcards:
                     figcard.id_jugador = None
 
-            
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
 
