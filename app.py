@@ -22,9 +22,9 @@ async def print_tablero_by_id(game_id : int):
     return operation.get_board_by_id(game_id=game_id)
 
 @app.post("/gamelist")
-async def create_game(name: str, cant_players: int):
+async def create_game(name: str, cant_players: int, priv: bool, psw: str):
     operation = Operations()
-    new_id = await operation.create_game(name=name,cant_jugadores=cant_players,private=False,password="")
+    new_id = await operation.create_game(name=name,cant_jugadores=cant_players,private=priv,password=psw)
 
     return {
                 'id': new_id,
