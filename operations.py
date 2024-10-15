@@ -80,6 +80,8 @@ class Operations:
             if not new_player:
                 raise PlayerNotFoundError(f"Player with id {player_id} not found.")
 
+            
+
             if not game.players:
                 game.owner = new_player.id_jugador
 
@@ -91,8 +93,20 @@ class Operations:
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
 
+
+            if new_player.movcards is not None:
+                for movcard in new_player.movcards:
+                    movcard.id_jugador = None
+
+
+            if new_player.figcards is not None:
+                for figcard in new_player.figcards:
+                    figcard.id_jugador = None
+
+            
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
+
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
