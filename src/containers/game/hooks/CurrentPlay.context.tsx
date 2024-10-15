@@ -16,9 +16,7 @@ interface CurrentPlayContextProps {
   setCurrentTurn: React.Dispatch<React.SetStateAction<number | null>>;
 
   playedCards: number[];
-  setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;
-
-  
+  setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;  
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(

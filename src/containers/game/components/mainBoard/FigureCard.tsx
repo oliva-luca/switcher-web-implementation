@@ -5,7 +5,6 @@ interface FigureCardProp {
 }
 
 const FigureCard = ({ card }: FigureCardProp) => {
-  const { selectedCard, setSelectedCard } = useCurrentPlay();
   return (
     <img
       className="figCard"
@@ -15,13 +14,6 @@ const FigureCard = ({ card }: FigureCardProp) => {
           : card < 10
           ? "/fig0" + card + ".svg"
           : "/fig" + card + ".svg"
-      }
-      onClick={() =>
-        setSelectedCard(
-          selectedCard != null && selectedCard[0] == cardId
-            ? null
-            : [cardId, type]
-        )
       }
       alt={`${card}`}
     />
