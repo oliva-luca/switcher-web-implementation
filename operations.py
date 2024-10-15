@@ -80,6 +80,10 @@ class Operations:
             if not new_player:
                 raise PlayerNotFoundError(f"Player with id {player_id} not found.")
 
+            # Verficar si el jugador ya está en alguna partida
+            if new_player.id_partida != None:
+                raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
+
             if not game.players:
                 game.owner = new_player.id_jugador
 

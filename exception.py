@@ -20,3 +20,6 @@ class CardNotFoundError(Exception):
 
 class NotTheirTurnError(Exception):
     pass
+
+class PlayerAlreadyInGameError(Exception):
+    pass
