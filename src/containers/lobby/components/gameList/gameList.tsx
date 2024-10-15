@@ -12,6 +12,7 @@ export default function GameList() {
     axios.get('/gamelist')
       .then(response => {
         setPartidas(response.data);
+        // console.log(response.data);
       })
       .catch(error => {
         console.error('Error fetching the game list:', error);
@@ -42,6 +43,8 @@ export default function GameList() {
           name={partida.name}
           currentCapacity={partida.players.length}
           capacity={partida.cant_jugadores}
+          is_private={partida.is_private}
+          password={partida.password}
         />
       ))}
     </div>

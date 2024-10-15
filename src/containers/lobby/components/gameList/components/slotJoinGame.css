@@ -47,3 +47,10 @@
     padding: 1px 5px;
     margin-top: auto;
 }
+
+#candadoPartida{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: white;
+}
