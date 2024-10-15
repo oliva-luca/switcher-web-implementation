@@ -3,6 +3,7 @@ import { render, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import PassTurn from '../components/passTurn/passTurn';
 import axios from 'axios';
+import { CurrentPlayProvider } from '../hooks/CurrentPlay.context';
 
 jest.mock('axios');
 
@@ -12,7 +13,11 @@ describe('PassTurn Component', () => {
     });
 
     it('should render the component and display "TURNO DE"', () => {
-        const { getByText } = render(<PassTurn />);
+        const { getByText } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
         expect(getByText('TURNO DE')).toBeInTheDocument();
         expect(getByText('Loading...')).toBeInTheDocument();
     });
@@ -24,7 +29,11 @@ describe('PassTurn Component', () => {
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: userData });
 
-        const { getByText } = render(<PassTurn />);
+        const { getByText } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             expect(getByText('TURNO DE')).toBeInTheDocument();
@@ -37,7 +46,11 @@ describe('PassTurn Component', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
 
-        render(<PassTurn />);
+        render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching game data:', expect.any(Error));
@@ -54,7 +67,11 @@ describe('PassTurn Component', () => {
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: userData });
 
-        const { getByRole } = render(<PassTurn />);
+        const { getByRole } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             const button = getByRole('button', { name: 'PASAR TURNO' });
@@ -70,7 +87,11 @@ describe('PassTurn Component', () => {
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: userData });
 
-        const { getByRole } = render(<PassTurn />);
+        const { getByRole } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             const button = getByRole('button', { name: 'PASAR TURNO' });
@@ -87,7 +108,11 @@ describe('PassTurn Component', () => {
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: userData });
         (axios.put as jest.Mock).mockResolvedValueOnce({ data: {} });
 
-        const { getByRole } = render(<PassTurn />);
+        const { getByRole } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith('/gamelist/1');
@@ -112,7 +137,11 @@ describe('PassTurn Component', () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         (axios.put as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
 
-        const { getByRole } = render(<PassTurn />);
+        const { getByRole } = render(
+            <CurrentPlayProvider>
+                <PassTurn />
+            </CurrentPlayProvider>
+        );
 
         await waitFor(() => {
             expect(axios.get).toHaveBeenCalledWith('/gamelist/1');

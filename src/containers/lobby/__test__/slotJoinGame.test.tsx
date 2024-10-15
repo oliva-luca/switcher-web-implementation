@@ -232,4 +232,84 @@ describe('GameList Component', () => {
       });
     });
     
+    it('should prompt for password when game is private', async () => {
+      Swal.fire.mockResolvedValue({ isConfirmed: true, value: 'correct_password' });
+  
+      const { getByRole } = render(
+        <Router>
+          <SlotJoinGame id="1" name="Test Game" currentCapacity={2} capacity={4} is_private={true} password="correct_password" />
+        </Router>
+      );
+  
+      fireEvent.click(getByRole('button', { name: /Unirse/i }));
+  
+      await waitFor(() => {
+        expect(Swal.fire).toHaveBeenCalledWith({
+          title: 'Ingrese la contraseña',
+          input: 'password',
+          confirmButtonText: 'Unirse',
+          confirmButtonColor: '#7eb65b',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          cancelButtonColor: '#d33',
+          inputValidator: expect.any(Function),
+        });
+      });
+    });
+  
+    it('should show error if password is incorrect', async () => {
+      Swal.fire
+        .mockResolvedValueOnce({ isConfirmed: true, value: 'wrong_password' })
+        .mockResolvedValueOnce({ isConfirmed: true });
+  
+      const { getByRole } = render(
+        <Router>
+          <SlotJoinGame id="1" name="Test Game" currentCapacity={2} capacity={4} is_private={true} password="correct_password" />
+        </Router>
+      );
+  
+      fireEvent.click(getByRole('button', { name: /Unirse/i }));
+  
+      await waitFor(() => {
+        expect(Swal.fire).toHaveBeenCalledWith({
+          icon: 'error',
+          title: 'Contraseña incorrecta',
+          text: 'Por favor, intenta de nuevo.',
+        });
+      });
+    });
+  
+    it('should return an error message if the input is empty', async () => {
+      Swal.fire
+        .mockResolvedValueOnce({ isConfirmed: true, value: '' })
+        .mockResolvedValueOnce({ isConfirmed: true });
+  
+      const { getByRole } = render(
+        <Router>
+          <SlotJoinGame id="1" name="Test Game" currentCapacity={2} capacity={4} is_private={true} password="correct_password" />
+        </Router>
+      );
+  
+      fireEvent.click(getByRole('button', { name: /Unirse/i }));
+  
+      await waitFor(() => {
+        expect(Swal.fire).toHaveBeenCalledWith({
+          title: 'Ingrese la contraseña',
+          input: 'password',
+          confirmButtonText: 'Unirse',
+          confirmButtonColor: '#7eb65b',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          cancelButtonColor: '#d33',
+          inputValidator: expect.any(Function),
+        });
+      });
+
+      const inputValidator = Swal.fire.mock.calls[0][0].inputValidator as (value: string) => string | null;
+      if (inputValidator) {
+        expect(inputValidator('')).toBe('Debes ingresar una contraseña');
+      }
+
+    });
+
 });

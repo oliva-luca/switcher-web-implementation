@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, jest } from "@jest/globals";
 import MovCard from "../components/movementCard/MovCard";
+import { CurrentPlayProvider } from "../hooks/CurrentPlay.context"
 
 describe("MovCard Component", () => {
   const mockSetSelected = jest.fn();
@@ -17,7 +18,7 @@ describe("MovCard Component", () => {
       });
     }
     const { getAllByAltText } = render(
-      <>
+      <CurrentPlayProvider>
         {allMovCards.map((card) => (
           <MovCard
             cardId={card.cardId}
@@ -26,7 +27,7 @@ describe("MovCard Component", () => {
             setSelected={card.setSelected}
           />
         ))}
-      </>
+      </CurrentPlayProvider>
     );
     const MovCards = getAllByAltText("carta de movimiento");
     expect(MovCards.length).toBe(7);
@@ -34,12 +35,14 @@ describe("MovCard Component", () => {
 
   it("should have full opacity when selected or no card is selected", () => {
     const { getByAltText } = render(
-      <MovCard
-        cardId={1}
-        type={2}
-        selected={null}
-        setSelected={mockSetSelected}
-      />
+      <CurrentPlayProvider>
+        <MovCard
+          cardId={1}
+          type={2}
+          selected={null}
+          setSelected={mockSetSelected}
+          />
+        </CurrentPlayProvider>
     );
     const imgElement = getByAltText("carta de movimiento");
     expect(imgElement).toHaveStyle("opacity: 1");
@@ -47,7 +50,9 @@ describe("MovCard Component", () => {
 
   it("should have lower opacity when another card is selected", () => {
     const { getByAltText } = render(
-      <MovCard cardId={1} type={2} selected={2} setSelected={mockSetSelected} />
+      <CurrentPlayProvider>
+        <MovCard cardId={1} type={2} selected={2} setSelected={mockSetSelected} />
+      </CurrentPlayProvider>
     );
     const imgElement = getByAltText("carta de movimiento");
     expect(imgElement).toHaveStyle("opacity: 0.5");
@@ -55,7 +60,9 @@ describe("MovCard Component", () => {
 
   it("should change height when selected", () => {
     const { getByAltText } = render(
-      <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+      <CurrentPlayProvider>
+        <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+      </CurrentPlayProvider>
     );
     const imgElement = getByAltText("carta de movimiento");
     expect(imgElement).toHaveStyle("height: 200px");
@@ -63,12 +70,14 @@ describe("MovCard Component", () => {
 
   it("should call setSelected with the correct cardId on click", () => {
     const { getByAltText } = render(
-      <MovCard
-        cardId={1}
-        type={2}
-        selected={null}
-        setSelected={mockSetSelected}
-      />
+      <CurrentPlayProvider>
+        <MovCard
+          cardId={1}
+          type={2}
+          selected={null}
+          setSelected={mockSetSelected}
+          />
+        </CurrentPlayProvider>
     );
     const imgElement = getByAltText("carta de movimiento");
     fireEvent.click(imgElement);
@@ -77,7 +86,9 @@ describe("MovCard Component", () => {
 
   it("should toggle selection state when clicked", () => {
     const { getByAltText } = render(
-      <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+      <CurrentPlayProvider>
+        <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+      </CurrentPlayProvider>
     );
     const imgElement = getByAltText("carta de movimiento");
     fireEvent.click(imgElement);
