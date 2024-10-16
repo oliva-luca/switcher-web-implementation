@@ -4,6 +4,7 @@ from sqlalchemy.exc import NoResultFound
 from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 
+from figuras_dibujos import *
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
 from typing import List,Dict
 
@@ -258,3 +259,33 @@ def obtener_componentes_conexas(tablero : List):
                 nueva_comp = obtener_componente_de_casilla(tablero, visited, (fila, columna))
                 componentes.append(nueva_comp)
     return componentes
+
+#--------------------------- DETECTAR FIGURAS  -------------------------------------------------------------
+# Toma un dibujo (como los de figuras_dibujos) y lo rota 90 grados
+# en sentido antihorario
+# La rotacion es (x, y) -> (-y, x)
+def rotar_dibujo(dibujo: List):
+    alto = len(dibujo)      # del dibujo original
+    ancho = len(dibujo[0])  # del dibujo original
+    nuevo_dibujo = []
+    for columna in range(ancho):
+        nuevo_dibujo.append("")
+        for fila in range(alto):
+            nuevo_dibujo[-1] += (dibujo[fila][-columna-1])
+    return nuevo_dibujo
+
+# Dado un dibujo, obtiene las coordenas de las casillas
+# La casilla (0, 0) será la más alta, si empatan
+# la de más a la izquierda
+def obtener_coordenadas_de_dibujo(dibujo: List):
+    coordenadas = []
+    alto = len(dibujo)
+    ancho = len(dibujo[0])
+    origen = None
+    for fila in range(alto):
+        for columna in range(ancho):
+            if(dibujo[fila][columna] == 'O'):   # es una parte de la figura
+                if origen is None:
+                    origen = (fila, columna)
+                coordenadas.append((fila - origen[0], columna - origen[1]))
+    return coordenadas

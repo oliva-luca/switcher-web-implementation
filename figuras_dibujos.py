@@ -1,4 +1,7 @@
-figuras = {
+# Dibujos con caracteres de las figuras
+# "O" representa una casilla de la figura
+# "." no forman parte de la figura, solo están para que la forma sea rectangular
+dibujos = {
     1 : [
         "O..",
         "OOO",
@@ -106,3 +109,8 @@ figuras = {
         "OOO"
     ],
 }
+
+# Funcion auxiliar para visualizar dibujos
+def mostrar(dibujo):
+    for line in dibujo:
+        print(line)
