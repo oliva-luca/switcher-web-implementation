@@ -1,6 +1,7 @@
 import "./FigureBoard.css";
 import FigureCard from "./FigureCard";
 import { Player, FigCard } from "../../utils/interfaces";
+import React from "react";
 
 interface FigureBoardProp {
   pos: string;

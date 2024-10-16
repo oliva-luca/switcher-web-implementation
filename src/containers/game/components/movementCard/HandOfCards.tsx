@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Row } from "react-bootstrap";
 import "./HandOfCards.css"; // Importa el archivo CSS
 import MovCard from "./MovCard";
-import { SelectedCardProvider } from "../../hooks/CurrentPlay.context";
+//import { SelectedCardProvider } from "../../hooks/CurrentPlay.context";
 
 interface MovCardType {
   id_partida: number;
