@@ -397,4 +397,22 @@ class Operations:
 
         finally:
             session.close()
+
+    async def cancel_partial_moves(self , game_id :int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if game is None:
+                raise GameNotFoundError(f"The game with id:{game_id} does not exist.")
+
+            
+            modificates.clear_modifies(game.id_tablero)
+            
+
+            await manager_game.broadcast(game_id, "The partial moves has been cancelled") 
+
+            return {"message": f"The partial moves has been cancelled"} 
+
+        finally: 
+            session.close()
             

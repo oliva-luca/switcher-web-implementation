@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from exception import GameNotFoundError, PlayerNotFoundError, GameStartedError, PlayerAlreadyInGameError
 from operations import Operations
 from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla 
+from utils import modificates
 
 Session = sessionmaker(bind=engine)
 
@@ -301,6 +302,30 @@ async def test_playmovcard(operation : Operations):
         new_cant_mov_cards = len(player.movcards)
         assert cant_mov_cards - 1 == new_cant_mov_cards
 
+    finally:
+        session.close()
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_cancel_partial_moves(operation: Operations):
+    session = Session()
+    game = session.query(Game).filter(Game.id_partida == 1).first()
+    try:
+        assert game is not None
+        id_tablero = game.id_tablero
+
+        modificates.add_modify(id_tablero, 1, 2, 3)
+        modificates.add_modify(id_tablero, 4, 5, 6)
+
+        assert len(modificates.get_game_modifies(id_tablero)) == 2
+    finally:
+        session.close()
+
+    await operation.cancel_partial_moves(id_tablero)
+
+    try:
+        assert game is not None
+        assert len(modificates.get_game_modifies(game.id_tablero)) == 0
     finally:
         session.close()
 
