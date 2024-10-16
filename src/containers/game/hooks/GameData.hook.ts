@@ -7,15 +7,34 @@ export const useGame = () => {
 
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
+    const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
 
-    axios
-      .get(`/gamelist/${gameId}`)
-      .then((response) => {
-        setGame(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching the game list:", error);
-      });
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    socket.onmessage = () => {
+      axios
+        .get(`/gamelist/${gameId}`)
+        .then((response) => {
+          setGame(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching the game list:", error);
+        });
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error: ", error);
+    };
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   return game;

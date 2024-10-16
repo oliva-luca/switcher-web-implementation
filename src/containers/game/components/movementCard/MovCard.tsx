@@ -8,7 +8,7 @@ interface MovCardProp {
 }
 
 const MovCard = ({ cardId, type }: MovCardProp) => {
-  const { selectedCard, setSelectedCard } = useCurrentPlay();
+  const { selectedCard, setSelectedCard, playedCards } = useCurrentPlay();
   return (
     <img
       id={cardId.toString()}
