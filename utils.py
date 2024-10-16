@@ -22,8 +22,10 @@ class Modifies:
         if id_tablero not in self.modify:
             self.modify[id_tablero] = []
         self.modify[id_tablero].append(Modify(movcard_id, casilla1, casilla2))
+
     def get_game_modifies(self, id_tablero: int):
         return self.modify.get(id_tablero, [])
+    
     def clear_modifies(self, id_tablero: int):
         self.modify[id_tablero] = []
 

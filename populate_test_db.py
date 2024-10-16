@@ -8,7 +8,7 @@ Session = sessionmaker(bind=engine)
 def load_data_for_test():
     games = [
         (1, 'game1', 1, False, False, 'as', None, 1),
-        (2, 'game2', 3, True, False, 'as', None, None),
+        (2, 'game2', 3, True, False, 'as', None, 2),
         (3, 'game3', 2, False, False, 'as', None, None),
         (4, 'game4', 3, False, False, 'as', None, None),
         (5, 'game5', 2, True, False, 'as', 4, None),

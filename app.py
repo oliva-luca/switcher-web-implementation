@@ -156,3 +156,11 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int):
             await manager_game.broadcast(game_id, f"Message text was: {data}")
     except WebSocketDisconnect:
         manager_game.disconnect(game_id, websocket)
+
+@app.put("/gamelist/cancelmoves/{game_id}")
+async def cancel_partial_move(game_id: int):
+    operation = Operations()
+    try: 
+        return await operation.cancel_partial_moves(game_id = game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
