@@ -334,7 +334,7 @@ class Operations:
             
             game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
             if game.turn == player_id:
-                self.end_turn(player.id_partida)
+                await self.end_turn(player.id_partida)
                 
             id_game = player.id_partida
             player.in_game = False
@@ -348,8 +348,13 @@ class Operations:
                 
             # Contar cuántos jugadores quedan en la partida
             remaining_players = session.query(Player).filter(Player.id_partida == id_game, Player.in_game == True).count()
+            remaining_player = session.query(Player).filter(Player.id_partida == id_game).first()
             session.commit()
             if remaining_players == 1:
+                print("primer print")
+                remaining_player.id_partida = None 
+                session.commit()
+                print("segundo print")
                 await manager_game.broadcast(id_game, "winner")
             else:
                 await manager_game.broadcast(id_game, "Player has left the game") 
