@@ -5,21 +5,23 @@ import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 interface MovCardProp {
   cardId: number;
   type: number;
+  state: boolean
 }
 
-const MovCard = ({ cardId, type }: MovCardProp) => {
-  const { selectedCard, setSelectedCard, playedCards } = useCurrentPlay();
+const MovCard = ({ cardId, type, state }: MovCardProp) => {
+  const { selectedCard, setSelectedCard, playedCards} = useCurrentPlay();
+  console.log("MovCard: ", cardId, type, state);
   return (
     <img
       id={cardId.toString()}
-      className={playedCards.includes(cardId) ? "used" : "movCard"}
+      className={(state) ? "used" : "movCard"}
       src={"/mov" + type + ".svg"}
       style={{
         opacity: selectedCard == null || selectedCard[0] == cardId ? 1 : 0.5,
         height: selectedCard != null && selectedCard[0] == cardId ? 200 : 180,
       }}
       onClick={() => {
-        if (!playedCards.includes(cardId)) {
+        if (!state) {
           setSelectedCard(
             selectedCard != null && selectedCard[0] == cardId
               ? null

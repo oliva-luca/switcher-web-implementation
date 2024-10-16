@@ -9,6 +9,7 @@ interface MovCardType {
   type: number;
   id_movcard: number;
   id_jugador: number;
+  state: boolean;
 }
 
 interface HandProp {
@@ -23,6 +24,7 @@ const HandOfCards = ({ cards }: HandProp) => {
           key={card.id_movcard}
           cardId={card.id_movcard}
           type={card.type}
+          state={card.state}
         />
       ))}
     </Row>

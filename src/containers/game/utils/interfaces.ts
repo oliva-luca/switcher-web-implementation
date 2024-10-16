@@ -26,6 +26,7 @@ export interface MovCard {
   type: number;
   id_movcard: number;
   id_jugador: number;
+  state: boolean;
 }
 
 export interface FigCard {
