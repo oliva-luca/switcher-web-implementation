@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { GameData, Player } from "../utils/interfaces";
+import { GameData } from "../utils/interfaces";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const useGame = () => {
   const [game, setGame] = useState<GameData | null>(null);
+  const [gameInfoKey, setGameInfoKey] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
     const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
-
-    socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
-    socket.onmessage = () => {
-      axios
+    const getData = async () => {
+      await axios
         .get(`/gamelist/${gameId}`)
         .then((response) => {
           setGame(response.data);
@@ -22,6 +21,34 @@ export const useGame = () => {
         .catch((error) => {
           console.error("Error fetching the game list:", error);
         });
+    };
+
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+      getData();
+    };
+
+    socket.onmessage = (event) => {
+      console.log("WebSocket message received");
+      setGameInfoKey((prevKey) => prevKey + 1); // Update key to force re-render
+      const message = event.data;
+      switch (message) {
+        case "winner":
+          Swal.fire({
+            title: "¡Ganaste!",
+            text: "Felicidades, has ganado la partida.",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+          });
+          navigate("/lobby");
+          break;
+
+        default:
+          // alert("Actualizar info partida");
+          console.log(message);
+          getData();
+          break;
+      }
     };
 
     socket.onclose = () => {
@@ -32,10 +59,10 @@ export const useGame = () => {
       console.error("WebSocket error: ", error);
     };
 
+    // Cleanup on component unmount
     return () => {
       socket.close();
     };
   }, []);
-
-  return game;
+  return { game, gameInfoKey };
 };

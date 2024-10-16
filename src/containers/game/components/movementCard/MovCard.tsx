@@ -27,14 +27,6 @@ const MovCard = ({ cardId, type }: MovCardProp) => {
           );
         }
       }}
-      alt="carta de movimiento"
-      onClick={() =>
-        setSelectedCard(
-          selectedCard != null && selectedCard[0] == cardId
-            ? null
-            : [cardId, type]
-        )
-      }
       alt={undefined}
     />
   );

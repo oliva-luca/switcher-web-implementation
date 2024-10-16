@@ -5,13 +5,24 @@ export function ParsePlayers(players: Player[]) {
   order[0] = players.find(
     (ply) => ply.id_jugador.toString() == localStorage.getItem("userId")
   );
+
+  const findPlayer = (n: number) => {
+    n = n == players.length - 1 ? -1 : n;
+    var candidate = players.length;
+    var pos = 0;
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].position < candidate && players[i].position > n) {
+        candidate = players[i].position;
+        pos = i;
+      }
+    }
+    return players[pos];
+  };
+
   for (let i = 1; i < players.length; i++) {
-    order[i] = players.find(
-      (ply) =>
-        ply.position == order[i - 1].position + 1 ||
-        (order[i - 1].position == players.length - 1 && ply.position == 0)
-    );
+    order[i] = findPlayer(order[i - 1].position);
   }
+
   console.log(order);
   return order;
 }

@@ -4,7 +4,7 @@ import "./Timer.css";
 import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 
 const Timer: React.FC = () => {
-  const { setSelectedCard, setSelectedTyle } = useCurrentPlay();
+  const { setSelectedCard, setSelectedTyle, setPlayedCards } = useCurrentPlay();
   const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const Timer: React.FC = () => {
       endTurn();
       setSelectedCard(null);
       setSelectedTyle(null);
+      setPlayedCards([]);
     }
   }, [timeLeft]);
 
