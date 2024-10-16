@@ -4,19 +4,24 @@ interface CurrentPlayContextProps {
 
   selectedCard: [number, number] | null;
   setSelectedCard: React.Dispatch<
-    React.SetStateAction<[number, number] | null>
-  >;
+    React.SetStateAction<[number, number] | null>>;
 
   selectedTyle: [number, number, number] | null;
   setSelectedTyle: React.Dispatch<
-    React.SetStateAction<[number, number, number] | null>
-  >;
+    React.SetStateAction<[number, number, number] | null>>;
 
   currentTurn: number | null;
   setCurrentTurn: React.Dispatch<React.SetStateAction<number | null>>;
 
   playedCards: number[];
-  setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;  
+  setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;
+
+  selectedFigureCard:[number, number] | null;
+  setSelectedFigureCard:React.Dispatch<
+  React.SetStateAction<[number, number] | null>>;
+
+  playedFigureCard: number[];
+  setPlayedFigureCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
@@ -24,15 +29,21 @@ const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
 );
 
 export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
+
   const [selectedCard, setSelectedCard] = useState<[number, number] | null>(
     null
   );
+
   const [selectedTyle, setSelectedTyle] = useState<
     [number, number, number] | null
   >(null);
+
   const [currentTurn, setCurrentTurn] = useState<number | null>(null);
   
   const [playedCards, setPlayedCards] = useState<number[]>([]);
+
+  const [selectedFigureCard,setSelectedFigureCard] = useState<[number, number] | null> (null);
+  const [playedFigureCard, setPlayedFigureCard] = useState<number[]>([]);
 
   
 
@@ -46,7 +57,11 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
         currentTurn,
         setCurrentTurn,
         playedCards,
-        setPlayedCards
+        setPlayedCards,
+        playedFigureCard,
+        setPlayedFigureCard,
+        selectedFigureCard,
+        setSelectedFigureCard
       }}
     >
       {children}

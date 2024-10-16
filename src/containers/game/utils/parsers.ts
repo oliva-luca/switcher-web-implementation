@@ -17,9 +17,7 @@ export function ParsePlayers(players: Player[]) {
 }
 
 export function ParsePlayerFigCards(plyId: number, figcards: FigCard[]) {
-  return figcards
-    .filter((fig) => fig.id_jugador == plyId && fig.shown)
-    .map((fig) => fig.type);
+  return figcards.filter((fig) => fig.id_jugador == plyId && fig.shown);
 }
 
 export function ParsePlayerFigDeck(plyId: number, figcards: FigCard[]) {
