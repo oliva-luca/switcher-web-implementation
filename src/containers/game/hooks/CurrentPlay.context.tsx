@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CurrentPlayContextProps {
-
   selectedCard: [number, number] | null;
   setSelectedCard: React.Dispatch<
     React.SetStateAction<[number, number] | null>>;
@@ -39,7 +38,7 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
   >(null);
 
   const [currentTurn, setCurrentTurn] = useState<number | null>(null);
-  
+
   const [playedCards, setPlayedCards] = useState<number[]>([]);
 
   const [selectedFigureCard,setSelectedFigureCard] = useState<[number, number] | null> (null);

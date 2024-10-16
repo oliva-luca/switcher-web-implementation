@@ -8,7 +8,7 @@ interface MovCardProp {
 }
 
 const MovCard = ({ cardId, type }: MovCardProp) => {
-  const { selectedCard, setSelectedCard, playedCards} = useCurrentPlay();
+  const { selectedCard, setSelectedCard, playedCards } = useCurrentPlay();
   return (
     <img
       id={cardId.toString()}
@@ -27,7 +27,7 @@ const MovCard = ({ cardId, type }: MovCardProp) => {
           );
         }
       }}
-      alt="carta de movimiento"
+      alt={undefined}
     />
   );
 };

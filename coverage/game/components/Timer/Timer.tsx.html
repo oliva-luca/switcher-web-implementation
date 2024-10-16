@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.3% </span>
+                <span class="strong">93.1% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/26</span>
+                <span class='fraction'>27/29</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">92.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/24</span>
+                <span class='fraction'>25/27</span>
             </div>
         
             
@@ -114,12 +114,19 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -140,6 +147,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -165,65 +174,71 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Timer.css';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Timer.css";
+import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 &nbsp;
 const Timer: React.FC = () =&gt; {
-    const [timeLeft, setTimeLeft] = useState(120);
+  const { setSelectedCard, setSelectedTyle } = useCurrentPlay();
+  const [timeLeft, setTimeLeft] = useState(120);
 &nbsp;
-    useEffect(() =&gt; {
+  useEffect(() =&gt; {
+    const gameId = localStorage.getItem("gameId");
+    const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
+    socket.onmessage = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >      setTimeLeft(120);</span>
+    };
+    const intervalId = setInterval(() =&gt; {
+      setTimeLeft((prevTime) =&gt; prevTime - 1);
+    }, 1000);
+&nbsp;
+    return () =&gt; clearInterval(intervalId);
+  }, []);
+&nbsp;
+  useEffect(() =&gt; {
+    const endTurn = async () =&gt; {
+      try {
         const gameId = localStorage.getItem("gameId");
-        const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
-        socket.onmessage = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >            setTimeLeft(120);</span>
-        }
-        const intervalId = setInterval(() =&gt; {
-            setTimeLeft(prevTime =&gt; prevTime - 1);
-        }, 1000);
-&nbsp;
-        return () =&gt; clearInterval(intervalId);
-    }, []);
-&nbsp;
-    useEffect(() =&gt; {
-        const endTurn = async () =&gt; {
-            try {
-                const gameId = localStorage.getItem("gameId");
-                await axios.put(`/end_turn/${gameId}`);
-                setTimeLeft(120);
-            } catch (error) {
-<span class="cstat-no" title="statement not covered" >                console.error('Error ending turn:', error);</span>
-            }
-        };
-&nbsp;
-        if (timeLeft === 0) {
-            endTurn();
-        }
-    }, [timeLeft]);
-&nbsp;
-    const formatTime = (seconds: number) =&gt; {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds &lt; 10 ? '0' : ''}${remainingSeconds}`;
+        await axios.put(`/end_turn/${gameId}`);
+        setSelectedCard(null);
+        setSelectedTyle(null);
+        setTimeLeft(120);
+      } catch (error) {
+<span class="cstat-no" title="statement not covered" >        console.error("Error ending turn:", error);</span>
+      }
     };
 &nbsp;
-    return (
-        &lt;div className='timer'&gt;
-            &lt;h1 className="text-center"&gt;TIEMPO&lt;/h1&gt;
-            &lt;h1 className="text-center"&gt; RESTANTE&lt;/h1&gt;
-            &lt;h1 className="text-center"&gt;{formatTime(timeLeft)}&lt;/h1&gt;
-        &lt;/div&gt;
-    );
+    if (timeLeft === 0) {
+      endTurn();
+    }
+  }, [timeLeft]);
+&nbsp;
+  const formatTime = (seconds: number) =&gt; {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds &lt; 10 ? "0" : ""}${remainingSeconds}`;
+  };
+&nbsp;
+  return (
+    &lt;div className="timer"&gt;
+      &lt;h1 className="text-center"&gt;TIEMPO&lt;/h1&gt;
+      &lt;h1 className="text-center"&gt; RESTANTE&lt;/h1&gt;
+      &lt;h1 className="text-center"&gt;{formatTime(timeLeft)}&lt;/h1&gt;
+    &lt;/div&gt;
+  );
 };
 &nbsp;
-export default Timer;</pre></td></tr></table></pre>
+export default Timer;
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-12T18:14:02.277Z
+                at 2024-10-15T14:33:15.736Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
