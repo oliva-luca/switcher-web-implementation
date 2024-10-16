@@ -1,7 +1,8 @@
 import pytest
 import asyncio
-from  sqlalchemy.orm import sessionmaker
-from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError
+from sqlalchemy.orm import sessionmaker
+from exception import GameNotFoundError, PlayerNotFoundError, GameStartedError, PlayerAlreadyInGameError
+from operations import Operations
 from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla 
 
 Session = sessionmaker(bind=engine)
@@ -108,7 +109,11 @@ async def test_join_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         await operation.join_game(1000, 1)
         
-    
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_join_game_player_already_in_game(operation: Operations):
+    with pytest.raises(PlayerAlreadyInGameError):
+        await operation.join_game(3, 6)
         
 @pytest.mark.integration_test
 @pytest.mark.asyncio

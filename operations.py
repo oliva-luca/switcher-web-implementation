@@ -80,6 +80,10 @@ class Operations:
             if not new_player:
                 raise PlayerNotFoundError(f"Player with id {player_id} not found.")
 
+            # Verficar si el jugador ya está en alguna partida
+            if new_player.id_partida != None:
+                raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
+
             if not game.players:
                 game.owner = new_player.id_jugador
 
@@ -91,8 +95,19 @@ class Operations:
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
 
+            #Por si el jugador tiene cartas de anteriores partidas se borran 
+            if new_player.movcards is not None:
+                for movcard in new_player.movcards:
+                    movcard.id_jugador = None
+
+
+            if new_player.figcards is not None:
+                for figcard in new_player.figcards:
+                    figcard.id_jugador = None
+
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
+
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
@@ -197,7 +212,9 @@ class Operations:
                 repartir_cartas_figura(game_id, session)
 
                 # Hacer visibles tres cartas de figura de cada uno de ellos
-                mostrar_cartas_figura_incial(game_id, session)
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    mostrar_cartas_figura(player.id_jugador, session)
 
                 await manager_game.broadcast(game_id, "Game has started")
                 await manager.broadcast("game start")
@@ -222,8 +239,12 @@ class Operations:
             # Obtengo el jugador actual
             current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
 
+            # Le revelo cartas de figura hasta tener tres (si le quedan suficientes)
+            mostrar_cartas_figura(current_player.id_jugador, session)
+
             # Le reparto sus cartas de movimiento faltantes
             repartir_cartas_movimiento(game_id, current_player.id_jugador, session)
+
             
             # Calculo la posicion del proximo jugador
             next_player_position = (current_player.position + 1) % game.cant_jugadores
@@ -283,8 +304,13 @@ class Operations:
 
             if game.owner == player.id_jugador:
                 for player_i in game.players: 
+                    player_i.id_partida = None
                     player_i.in_game=False
+                await manager_game.broadcast(game.id_partida, "Owner cancelled the game") 
                 session.delete(game)
+                session.commit()
+                session.close()
+                return {"message": f"Game cancelled"}
 
             player.id_partida = None
             player.in_game = False
@@ -308,7 +334,7 @@ class Operations:
             
             game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
             if game.turn == player_id:
-                self.end_turn(player.id_partida)
+                await self.end_turn(player.id_partida)
                 
             id_game = player.id_partida
             player.in_game = False
@@ -322,8 +348,13 @@ class Operations:
                 
             # Contar cuántos jugadores quedan en la partida
             remaining_players = session.query(Player).filter(Player.id_partida == id_game, Player.in_game == True).count()
+            remaining_player = session.query(Player).filter(Player.id_partida == id_game).first()
             session.commit()
             if remaining_players == 1:
+                print("primer print")
+                remaining_player.id_partida = None 
+                session.commit()
+                print("segundo print")
                 await manager_game.broadcast(id_game, "winner")
             else:
                 await manager_game.broadcast(id_game, "Player has left the game") 
