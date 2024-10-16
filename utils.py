@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconne
 
 from figuras_dibujos import *
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
-from typing import List,Dict
+from typing import List, Dict, Tuple
 
 
 #--------------------------- TABLERO -------------------------------------------------------------
@@ -289,3 +289,28 @@ def obtener_coordenadas_de_dibujo(dibujo: List):
                     origen = (fila, columna)
                 coordenadas.append((fila - origen[0], columna - origen[1]))
     return coordenadas
+
+# Mueve todas las casillas de 'casillas' en
+# la dirección 'direccion'
+def mover_casillas(casillas: List, direccion: Tuple):
+    nuevas_casillas = []
+    for casilla in casillas:
+        nuevas_casillas.append(mover_en_direccion(casilla, direccion))
+    return nuevas_casillas
+
+# Dada una componente de casillas (cada una de la forma (fila, columna))
+# detecta si ellas forman la figura de tipo 'figure_tye'
+# Los 25 tipos de figuras se muestran en 'figuras_dibujos.py'
+def detectar_figura(casillas: List, figure_type: int):
+    if not 1 <= figure_type <= 25:
+        return False    # cambiar por excepcion???
+    casillas.sort()
+    dibujo = dibujos[figure_type]
+    coincidencia = False
+    for _ in range(4):              # para las 4 rotaciones
+        coords = obtener_coordenadas_de_dibujo(dibujo)
+        figura_correcta = mover_casillas(coords, casillas[0])
+        if figura_correcta == casillas:
+            coincidencia = True     # esta rotación coincide con la figura
+        dibujo = rotar_dibujo(dibujo)
+    return coincidencia
