@@ -1,0 +1,18 @@
+.bottom-cancel {
+    position: fixed;
+    bottom: 10vw; /* Ajusta el valor según el margen deseado */
+    right: 20px;  /* Ajusta el valor según el margen deseado */
+    margin: 5px;
+    background-color: orange;
+    color: white
+}
+
+.bottom-cancel:hover {
+    background-color: orangered;
+    color: black;
+}
+
+.bottom-cancel:active {
+    background-color: orange !important; 
+    color: white !important;
+}

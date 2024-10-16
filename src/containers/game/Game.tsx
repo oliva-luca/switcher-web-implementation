@@ -1,3 +1,4 @@
+import React from "react";
 import "./Game.css";
 import QuitBtn from "./components/QuitBtn/QuitBtn";
 import PassTurn from "./components/passTurn/passTurn";
@@ -7,6 +8,7 @@ import MainBoard from "./components/mainBoard/MainBoard";
 import { useGameInfoKey } from "./hooks/GameInfoKey.hook";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
+import CancelMov from "./components/cancelMov/cancelMov";
 
 function Game() {
   const game = useGame();
@@ -33,6 +35,7 @@ function Game() {
                   card.id_jugador.toString() == localStorage.getItem("userId")
               )}
             />
+            <CancelMov />
             <QuitBtn />
           </div>
         </CurrentPlayProvider>
