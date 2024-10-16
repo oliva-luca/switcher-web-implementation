@@ -370,16 +370,28 @@ class Operations:
             game = session.query(Game).filter(Game.id_partida == game_id).first()
             if not game: 
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
-
+            
             mov_card = session.query(MovCard).filter(MovCard.id_movcard == mov_card_id).first()
             if not mov_card: 
                 raise CardNotFoundError(f"MovCard with ID {mov_card_id} not found.")
 
             player = mov_card.player
-
+            
+            if not player:
+                raise PlayerNotFoundError(f"Player associated with MovCard ID {mov_card_id} not found.")
+            
             if game.turn != player.id_jugador:
                 raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
             
+            casilla_1 = session.query(Casilla).filter(Casilla.id_casilla == casilla_id1).first()
+            if not casilla_1:
+                raise CasillaNotFoundError(f"Casilla with ID {casilla_id1} not found.")
+            
+            casilla_2 = session.query(Casilla).filter(Casilla.id_casilla == casilla_id2).first()
+            if not casilla_2:
+                raise CasillaNotFoundError(f"Casilla with ID {casilla_id2} not found.")
+
+            modificates.add_modify(game.id_tablero,mov_card_id,casilla_id1,casilla_id2)
             mov_card.id_jugador = None 
             session.commit()
 
