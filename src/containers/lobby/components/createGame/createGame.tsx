@@ -48,6 +48,8 @@ const CreateGame = () => {
     const gameData = {
       name: name,
       cant_players: players,
+      priv: isPrivate,
+      psw: password,
     };
 
     const queryString = new URLSearchParams(gameData as any).toString();
@@ -122,6 +124,7 @@ const CreateGame = () => {
                   className="form-control"
                   value={name}
                   onChange={handleNameChange}
+                  maxLength={16}
                   required
                 />
               </div>

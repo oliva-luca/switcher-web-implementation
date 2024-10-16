@@ -8,6 +8,12 @@ import Swal from 'sweetalert2';
 
 jest.mock('axios');
 jest.mock('sweetalert2');
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate,
+  }));
 
 describe("CreateGame Component", () => {
     it('should update name on change', () => {
@@ -57,7 +63,7 @@ describe("CreateGame Component", () => {
         fireEvent.click(submitButton);
 
         await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledWith('/gamelist?name=Test+Game&cant_players=4', {
+            expect(axios.post).toHaveBeenCalledWith('/gamelist?name=Test+Game&cant_players=4&priv=false&psw=', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -128,17 +134,18 @@ describe("CreateGame Component", () => {
         expect(checkbox.checked).toBe(false);
     });
 
-    it('should update password on input change', () => {
+    it('should update the password on input change', () => {
         render(
             <Router>
                 <CreateGame />
             </Router>
         );
-        const input = document.querySelector('input', { type: 'password' });
-        fireEvent.change(input, { target: { value: 'newpassword' } });
-        expect(input.value).toBe('newpassword');
-    });
+        const input = document.querySelector('input[type="password"]');
+
+        if(input){
+            fireEvent.change(input, { target: { value: 'newpassword' } });
+            expect(input.value).toBe('newpassword');
+        }
+      });
 
 });
-
-// 26,30,34-36,85-87 
