@@ -7,6 +7,7 @@ interface FigureCardProp {
 const FigureCard = ({ card }: FigureCardProp) => {
   return (
     <img
+      className="figCard"
       src={
         card > 18
           ? "/fige0" + (card - 18) + ".svg"

@@ -5,15 +5,12 @@ import PassTurn from "./components/passTurn/passTurn";
 import HandOfCards from "./components/movementCard/HandOfCards";
 import { useGame } from "./hooks/GameData.hook";
 import MainBoard from "./components/mainBoard/MainBoard";
-import { useGameInfoKey } from "./hooks/GameInfoKey.hook";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 import CancelMov from "./components/cancelMov/cancelMov";
 
 function Game() {
-  const game = useGame();
-  const gameInfoKey = useGameInfoKey();
-
+  const { game, gameInfoKey } = useGame();
   return (
     <>
       {game == null ? (
@@ -23,7 +20,7 @@ function Game() {
           <div>
             <MainBoard
               players={game.players}
-              num_players={game.cant_jugadores}
+              num_players={game.players.length}
               figcards={game.figcards}
             />
             <Timer />

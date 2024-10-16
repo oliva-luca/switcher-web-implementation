@@ -5,12 +5,17 @@ interface CurrentPlayContextProps {
   setSelectedCard: React.Dispatch<
     React.SetStateAction<[number, number] | null>
   >;
+
   selectedTyle: [number, number, number] | null;
   setSelectedTyle: React.Dispatch<
     React.SetStateAction<[number, number, number] | null>
   >;
+
   currentTurn: number | null;
   setCurrentTurn: React.Dispatch<React.SetStateAction<number | null>>;
+
+  playedCards: number[];
+  setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
@@ -25,6 +30,9 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
     [number, number, number] | null
   >(null);
   const [currentTurn, setCurrentTurn] = useState<number | null>(null);
+
+  const [playedCards, setPlayedCards] = useState<number[]>([]);
+
   return (
     <CurrentPlayContext.Provider
       value={{
@@ -34,6 +42,8 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
         setSelectedTyle,
         currentTurn,
         setCurrentTurn,
+        playedCards,
+        setPlayedCards,
       }}
     >
       {children}

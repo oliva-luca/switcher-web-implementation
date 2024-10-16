@@ -6,8 +6,13 @@ import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 import { useEffect, useState } from "react";
 
 const PassTurn = () => {
-  const { setSelectedCard, setSelectedTyle, currentTurn, setCurrentTurn } =
-    useCurrentPlay();
+  const {
+    setSelectedCard,
+    setSelectedTyle,
+    currentTurn,
+    setCurrentTurn,
+    setPlayedCards,
+  } = useCurrentPlay();
   const [nameTurn, setNameTurn] = useState<string | null>(null);
 
   useEffect(() => {
@@ -53,6 +58,7 @@ const PassTurn = () => {
             await axios.put(`/end_turn/${gameId}`);
             setSelectedCard(null);
             setSelectedTyle(null);
+            setPlayedCards([]);
           } catch (error) {
             console.error("Error ending turn:", error);
           }

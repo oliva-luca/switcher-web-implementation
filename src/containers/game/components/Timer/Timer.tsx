@@ -4,7 +4,7 @@ import "./Timer.css";
 import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 
 const Timer: React.FC = () => {
-  const { setSelectedCard, setSelectedTyle } = useCurrentPlay();
+  const { setSelectedCard, setSelectedTyle, setPlayedCards } = useCurrentPlay();
   const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
@@ -25,8 +25,6 @@ const Timer: React.FC = () => {
       try {
         const gameId = localStorage.getItem("gameId");
         await axios.put(`/end_turn/${gameId}`);
-        setSelectedCard(null);
-        setSelectedTyle(null);
         setTimeLeft(120);
       } catch (error) {
         console.error("Error ending turn:", error);
@@ -35,6 +33,9 @@ const Timer: React.FC = () => {
 
     if (timeLeft === 0) {
       endTurn();
+      setSelectedCard(null);
+      setSelectedTyle(null);
+      setPlayedCards([]);
     }
   }, [timeLeft]);
 
