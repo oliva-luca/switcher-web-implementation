@@ -78,6 +78,11 @@ class Tablero(Base):
             'color_principal': self.color_principal,
             'casillas': [casilla.to_dict() for casilla in self.casillas]
         }
+    def __init__(self, id_tablero,color_principal, casillas):
+        self.id_tablero = id_tablero
+        self.color_principal = color_principal
+        self.casillas = casillas
+        
 
 # Tabla de Casillas
 class Casilla(Base):
@@ -96,6 +101,12 @@ class Casilla(Base):
             'color': self.color,
             'id_tablero': self.id_tablero
         }
+    def __init__(self, id_casilla, fila, columna, color, id_tablero):
+        self.id_casilla = id_casilla
+        self.fila = fila
+        self.columna = columna
+        self.color = color
+        self.id_tablero = id_tablero
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'
