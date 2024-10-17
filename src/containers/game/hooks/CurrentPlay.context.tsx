@@ -3,13 +3,11 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface CurrentPlayContextProps {
   selectedCard: [number, number] | null;
   setSelectedCard: React.Dispatch<
-    React.SetStateAction<[number, number] | null>
-  >;
+    React.SetStateAction<[number, number] | null>>;
 
   selectedTyle: [number, number, number] | null;
   setSelectedTyle: React.Dispatch<
-    React.SetStateAction<[number, number, number] | null>
-  >;
+    React.SetStateAction<[number, number, number] | null>>;
 
   currentTurn: number | null;
   setCurrentTurn: React.Dispatch<React.SetStateAction<number | null>>;
@@ -17,6 +15,15 @@ interface CurrentPlayContextProps {
   playedCards: number[];
   setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;
 
+<<<<<<< HEAD
+=======
+  selectedFigureCard:[number, number] | null;
+  setSelectedFigureCard:React.Dispatch<
+  React.SetStateAction<[number, number] | null>>;
+
+  playedFigureCard: number[];
+  setPlayedFigureCard: React.Dispatch<React.SetStateAction<number[]>>;
+>>>>>>> 253a599ea6fba409a29fd882b8c24cc845529f3b
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
@@ -24,15 +31,23 @@ const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
 );
 
 export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
+
   const [selectedCard, setSelectedCard] = useState<[number, number] | null>(
     null
   );
+
   const [selectedTyle, setSelectedTyle] = useState<
     [number, number, number] | null
   >(null);
+
   const [currentTurn, setCurrentTurn] = useState<number | null>(null);
 
   const [playedCards, setPlayedCards] = useState<number[]>([]);
+
+  const [selectedFigureCard,setSelectedFigureCard] = useState<[number, number] | null> (null);
+  const [playedFigureCard, setPlayedFigureCard] = useState<number[]>([]);
+
+  
 
   return (
     <CurrentPlayContext.Provider
@@ -45,6 +60,10 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
         setCurrentTurn,
         playedCards,
         setPlayedCards,
+        playedFigureCard,
+        setPlayedFigureCard,
+        selectedFigureCard,
+        setSelectedFigureCard
       }}
     >
       {children}
