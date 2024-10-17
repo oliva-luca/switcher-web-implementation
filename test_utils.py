@@ -371,7 +371,7 @@ async def test_show_figcards_having_just_1_shown_1_not_shown():
 
 #-------------------TESTS DE COMPONENTES-------------------
 @pytest.fixture
-def colores_de_tablero_a():
+def colores_de_tablero():
     return [
         ["B", "B", "B", "D", "D", "D"],
         ["C", "A", "B", "C", "C", "D"],
@@ -409,7 +409,7 @@ def test_all_tiles_in_component_have_same_color(colores_de_tablero):
 
 # Ver que si dos casillas comparten un lado y son del mismo color,
 # entonces están en la misma componente.
-def test_all_tiles_in_component_have_same_color(colores_de_tablero):
+def test_adyacent_equal_tiles_in_same_component(colores_de_tablero):
     componentes = obtener_componentes_conexas(colores_de_tablero)
     comp_of_tile = [[0] * 6 for i in range(6)]
     id_componente = 0
