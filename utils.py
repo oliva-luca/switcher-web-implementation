@@ -4,8 +4,9 @@ from sqlalchemy.exc import NoResultFound
 from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 
+from figuras_dibujos import *
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
-from typing import List,Dict
+from typing import List, Dict, Tuple
 
 
 #--------------------------- TABLERO -------------------------------------------------------------
@@ -275,3 +276,107 @@ def obtener_componentes_conexas(tablero : List):
                 nueva_comp = obtener_componente_de_casilla(tablero, visited, (fila, columna))
                 componentes.append(nueva_comp)
     return componentes
+
+# Dado un tablero de la clase Tablero, se queda solo con los colores de las casillas
+# Y devuelve una matriz de 6 x 6 con los colores (lista de listas)
+def simplificar_tablero(tablero: Tablero):
+    colores = [[None] * 6 for i in range(6)]
+    casillas = tablero.casillas
+    for casilla in casillas:
+        colores[casilla.fila][casilla.columna] = casilla.color
+    return colores
+
+
+#--------------------------- DETECTAR FIGURAS  -------------------------------------------------------------
+# Toma un dibujo (como los de figuras_dibujos) y lo rota 90 grados
+# en sentido antihorario
+# La rotacion es (x, y) -> (-y, x)
+def rotar_dibujo(dibujo: List):
+    alto = len(dibujo)      # del dibujo original
+    ancho = len(dibujo[0])  # del dibujo original
+    nuevo_dibujo = []
+    for columna in range(ancho):
+        nuevo_dibujo.append("")
+        for fila in range(alto):
+            nuevo_dibujo[-1] += (dibujo[fila][-columna-1])
+    return nuevo_dibujo
+
+# Dado un dibujo, obtiene las coordenas de las casillas
+# La casilla (0, 0) será la más alta, si empatan
+# la de más a la izquierda
+def obtener_coordenadas_de_dibujo(dibujo: List):
+    coordenadas = []
+    alto = len(dibujo)
+    ancho = len(dibujo[0])
+    origen = None
+    for fila in range(alto):
+        for columna in range(ancho):
+            if(dibujo[fila][columna] == 'O'):   # es una parte de la figura
+                if origen is None:
+                    origen = (fila, columna)
+                coordenadas.append((fila - origen[0], columna - origen[1]))
+    return coordenadas
+
+# Mueve todas las casillas de 'casillas' en
+# la dirección 'direccion'
+def mover_casillas(casillas: List, direccion: Tuple):
+    nuevas_casillas = []
+    for casilla in casillas:
+        nuevas_casillas.append(mover_en_direccion(casilla, direccion))
+    return nuevas_casillas
+
+# Dada una componente de casillas (cada una de la forma (fila, columna))
+# detecta si ellas forman la figura de tipo 'figure_type'
+# Los 25 tipos de figuras se muestran en 'figuras_dibujos.py'
+def detectar_figura(componente: List, figure_type: int):
+    if not 1 <= figure_type <= 25:
+        return False    # cambiar por excepcion???
+    componente.sort()
+    dibujo = dibujos[figure_type]
+    coincidencia = False
+    for _ in range(4):              # para las 4 rotaciones
+        coords = obtener_coordenadas_de_dibujo(dibujo)
+        figura_correcta = mover_casillas(coords, componente[0])
+        if figura_correcta == componente:
+            coincidencia = True     # esta rotación coincide con la figura
+        dibujo = rotar_dibujo(dibujo)
+    return coincidencia
+
+# Dadas muchas componentes de casillas (cada una como lista de pares (fila, columna))
+# y multiples tipos de figura, devuelve solo aquellas componentes que formen 
+# una figura en figure_types como pares (tipo, componente)
+def detectar_multiples_figuras(componentes: List, figure_types: List):
+    resultado = []
+    for comp in componentes:
+        for type in figure_types:
+            if detectar_figura(comp, type):
+                resultado.append((type, comp))
+    return resultado
+
+# Obtiene los tipos de figura que hay que buscar en el tablero en una partida
+def obtener_figuras_de_jugadores(id_partida: int, session):
+    # Obtengo las cartas de figura mostradas de la partida
+    figcards = session.query(FigCard).filter((FigCard.id_partida == id_partida) &
+                                             (FigCard.shown)).all()
+    # Me quedo solo con sus tipos
+    figcards_types = [figcard.type for figcard in figcards]
+    return figcards_types
+
+# Toma el id de la partida, la lista de colores del tablero y una session
+# 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
+# Devuelve una lista de pares de la forma (tipo, componente)
+# que representan todas las figuras que se encuentran en el tablero
+# y como carta de figura (visible) de algún jugador
+# tipo es el tipo de la carta de figura (entre 1 y 25)
+# componente son las coordenadas de la casilla que la conforman 
+def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, session):
+    try:
+        # Calculo las componentes
+        componentes = obtener_componentes_conexas(colores_de_tablero)
+        # Obtengo los tipos de figura relevantes
+        figuras_types = obtener_figuras_de_jugadores(id_partida, session)
+        # Calcula la lista resultado
+        resultado = detectar_multiples_figuras(componentes, figuras_types)
+    finally:
+        pass
+    return resultado

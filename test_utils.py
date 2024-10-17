@@ -457,7 +457,7 @@ def test_all_tiles_in_component_have_same_color(colores_de_tablero):
 
 # Ver que si dos casillas comparten un lado y son del mismo color,
 # entonces están en la misma componente.
-def test_all_tiles_in_component_have_same_color(colores_de_tablero):
+def test_adyacent_equal_tiles_in_same_component(colores_de_tablero):
     componentes = obtener_componentes_conexas(colores_de_tablero)
     comp_of_tile = [[0] * 6 for i in range(6)]
     id_componente = 0
@@ -481,3 +481,154 @@ def test_all_tiles_in_component_have_same_color(colores_de_tablero):
             color_b = colores_de_tablero[fila + 1][columna]
             comp_b = comp_of_tile[fila + 1][columna]
             assert color_a != color_b or comp_a == comp_b
+
+#-------------------TESTS DE DETECTAR FIGURAS ----------------------
+@pytest.fixture
+def dibujo_a():
+    return [
+        "OOOO",
+        "...O"
+    ]
+
+@pytest.fixture
+def dibujo_a_rot():
+    return [
+        "OO",
+        "O.",
+        "O.",
+        "O."
+    ]
+
+@pytest.fixture
+def dibujo_a_coords_shifted():
+    return [
+        (3, 2),
+        (3, 3),
+        (3, 4),
+        (3, 5),
+        (4, 5)
+    ]
+
+@pytest.fixture
+def dibujo_a_rot_coords_shifted():
+    return [
+        (1, 2),
+        (1, 3),
+        (2, 2),
+        (3, 2),
+        (4, 2)
+    ]
+
+@pytest.fixture
+def dibujo_a_rot_rot_coords_shifted():
+    return [
+        (0, 1),
+        (1, 1),
+        (1, 2),
+        (1, 3),
+        (1, 4)
+    ]
+
+@pytest.fixture
+def dibujo_a_flipped():
+    return [
+        (0, 0),
+        (0, 1),
+        (0, 2),
+        (0, 3),
+        (1, 0),
+    ]
+
+@pytest.fixture
+def dibujo_b():
+    return [
+        "..O.",
+        "OOOO",
+        "..O."
+    ]
+
+@pytest.fixture
+def dibujo_b_coords():
+    return [
+        (0, 0),
+        (1, -2),
+        (1, -1),
+        (1, 0),
+        (1, 1),
+        (2, 0)
+    ]
+
+@pytest.fixture
+def dibujo_b_coords_shifted():
+    return [
+        (2, 1),
+        (3, -1),
+        (3, 0),
+        (3, 1),
+        (3, 2),
+        (4, 1)
+    ]
+
+# Ver que la rotación funcione como se espera
+def test_rotation(dibujo_a, dibujo_a_rot):
+    dibujo_a = rotar_dibujo(dibujo_a)
+    assert dibujo_a == dibujo_a_rot
+
+# Ver que al rotar 4 veces obtenemos la figura original
+def test_rotate_4_times_eq_original(dibujo_a):
+    dibujo_a_copy = dibujo_a.copy()
+    for _ in range(4):
+        dibujo_a_copy = rotar_dibujo(dibujo_a_copy)
+    assert dibujo_a_copy == dibujo_a
+
+# Ver que la funcion 'obtener_coordenadas_de_dibujo' funcione correctamente
+def test_get_coordinates(dibujo_b, dibujo_b_coords):
+    coordenadas = obtener_coordenadas_de_dibujo(dibujo_b)
+    coordenadas.sort()
+    assert coordenadas == dibujo_b_coords
+
+# Ver que la funcion 'mover_casillas' funcione correctamente
+def test_move_tiles(dibujo_b_coords, dibujo_b_coords_shifted):
+    nuevas_coords = mover_casillas(dibujo_b_coords, (2, 1))
+    assert nuevas_coords == dibujo_b_coords_shifted
+
+# # Ver que la funcion 'detectar_figura' funcione correctamente
+def test_detect_figures(dibujo_a_coords_shifted):
+    assert detectar_figura(dibujo_a_coords_shifted, 7)
+
+# Ver que la funcion 'detectar_figura' funcione correctamente
+# cuando la figura está rotada
+def test_detect_figures_rotated(dibujo_a_rot_coords_shifted):
+    assert detectar_figura(dibujo_a_rot_coords_shifted, 7)
+
+# Ver que la funcion 'detectar_figura' funcione correctamente
+# cuando la figura está rotada dos veces
+def test_detect_figures_twice_rotated(dibujo_a_rot_rot_coords_shifted):
+    assert detectar_figura(dibujo_a_rot_rot_coords_shifted, 7)
+
+# Ver que la funcion 'detectar_figura' funcione correctamente
+# cuando la figura está espejada y no es una rotación
+def test_detect_figures_flipped(dibujo_a_flipped):
+    assert not detectar_figura(dibujo_a_flipped, 7)
+
+@pytest.fixture
+def colores_de_tablero_b():
+    return [
+        ["V", "M", "R", "Z", "M", "M"],
+        ["M", "M", "M", "Z", "R", "V"],
+        ["Z", "R", "V", "Z", "R", "R"],
+        ["Z", "V", "V", "V", "R", "R"],
+        ["Z", "V", "M", "Z", "M", "V"],
+        ["Z", "R", "R", "V", "M", "Z"],
+    ]
+
+@pytest.mark.integration_test
+def test_detected_figures_are_shown(colores_de_tablero_b):
+    session = Session()
+    try:
+        figure_types = obtener_figuras_de_jugadores(6, session)
+        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, session)
+        for type, _ in matching_figures:
+            assert type in figure_types
+    finally:
+        session.close()
