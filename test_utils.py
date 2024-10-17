@@ -371,7 +371,7 @@ async def test_show_figcards_having_just_1_shown_1_not_shown():
 
 #-------------------TESTS DE COMPONENTES-------------------
 @pytest.fixture
-def colores_de_tablero():
+def colores_de_tablero_a():
     return [
         ["B", "B", "B", "D", "D", "D"],
         ["C", "A", "B", "C", "C", "D"],
@@ -562,3 +562,25 @@ def test_detect_figures_twice_rotated(dibujo_a_rot_rot_coords_shifted):
 # cuando la figura está espejada y no es una rotación
 def test_detect_figures_flipped(dibujo_a_flipped):
     assert not detectar_figura(dibujo_a_flipped, 7)
+
+@pytest.fixture
+def colores_de_tablero_b():
+    return [
+        ["V", "M", "R", "Z", "M", "M"],
+        ["M", "M", "M", "Z", "R", "V"],
+        ["Z", "R", "V", "Z", "R", "R"],
+        ["Z", "V", "V", "V", "R", "R"],
+        ["Z", "V", "M", "Z", "M", "V"],
+        ["Z", "R", "R", "V", "M", "Z"],
+    ]
+
+@pytest.mark.integration_test
+def test_detected_figures_are_shown(colores_de_tablero_b):
+    session = Session()
+    try:
+        figure_types = obtener_figuras_de_jugadores(6, session)
+        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, session)
+        for type, _ in matching_figures:
+            assert type in figure_types
+    finally:
+        session.close()

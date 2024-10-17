@@ -345,21 +345,17 @@ def obtener_figuras_de_jugadores(id_partida: int, session):
     figcards_types = [figcard.type for figcard in figcards]
     return figcards_types
 
+# Toma el id de la partida, la lista de colores del tablero y una session
+# 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
 # Devuelve una lista de pares de la forma (tipo, componente)
 # que representan todas las figuras que se encuentran en el tablero
 # y como carta de figura (visible) de algún jugador
 # tipo es el tipo de la carta de figura (entre 1 y 25)
 # componente son las coordenadas de la casilla que la conforman 
-def obtener_figuras_tablero(id_partida: int, session):
+def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, session):
     try:
-        # Obtengo la partida
-        game = session.query(Game).filter(Game.id_partida == id_partida).one()
-        # Obtengo el tablero de la partida
-        tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one()
-        # Obtengo los colores del tablero
-        colores = simplificar_tablero(tablero)
         # Calculo las componentes
-        componentes = obtener_componentes_conexas(colores)
+        componentes = obtener_componentes_conexas(colores_de_tablero)
         # Obtengo los tipos de figura relevantes
         figuras_types = obtener_figuras_de_jugadores(id_partida, session)
         # Calcula la lista resultado
