@@ -4,6 +4,7 @@ export interface Casilla {
   columna: number;
   fila: number;
   id_tablero: number;
+  figura: number;
 }
 
 export interface BoardData {
