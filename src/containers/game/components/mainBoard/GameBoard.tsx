@@ -17,7 +17,7 @@ const GameBoard = () => {
   return (
     <>
       {board == null ? (
-        "Couldn't load board"
+        ""
       ) : (
         <div className="boardSquare boardGrid">
           {board.casillas.map((tyle) => (
