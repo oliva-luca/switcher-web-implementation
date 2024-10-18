@@ -398,6 +398,34 @@ class Operations:
         finally:
             session.close()
 
+    def discard_figcard(self, game_id : int, figcard_id : int):
+        session = Session()
+
+        try: 
+            
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            
+            figcard = session.query(FigCard).filter(FigCard.id_figcard == figcard_id).first()
+            if not figcard: 
+                raise CardNotFoundError(f"FigCard with ID {figcard_id} not found.")
+
+            player = figcard.player
+            
+            if not player:
+                raise PlayerNotFoundError(f"Player associated with FigCard ID {figcard_id} not found.")
+            
+            if game.turn != player.id_jugador:
+                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
+            
+            figcard.id_jugador = None
+
+            session.commit()
+            return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
+        finally:
+            session.close()
+
     async def cancel_partial_moves(self , game_id :int):
         session = Session()
         try:
