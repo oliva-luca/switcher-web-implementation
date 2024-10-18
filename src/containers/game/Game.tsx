@@ -22,6 +22,7 @@ function Game() {
               players={game.players}
               num_players={game.players.length}
               figcards={game.figcards}
+              key={gameInfoKey} 
             />
             <Timer />
             <PassTurn key={gameInfoKey} />
