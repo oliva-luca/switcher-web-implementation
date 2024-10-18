@@ -8,7 +8,7 @@ import {
   getAllByRole,
 } from "@testing-library/react";
 import { describe, it, expect, jest } from "@jest/globals";
-import GameBoard from "../mainBoard/GameBoard";
+import GameBoard from "../components/mainBoard/GameBoard";
 import axios from "axios";
 import { BrowserRouter as Router } from "react-router-dom";
 import Swal from "sweetalert2";

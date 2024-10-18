@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, jest } from "@jest/globals";
-import ColorTyle from "../mainBoard/ColorTyle";
+import ColorTyle from "../components/mainBoard/ColorTyle";
 
 describe("ColorTyle Component", () => {
   const defaultProps = {
