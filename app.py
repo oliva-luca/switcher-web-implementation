@@ -145,7 +145,9 @@ async def discard_figcard(game_id: int, figcard_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except CardNotFoundError as e: 
-        raise HTTPException(status_code=404, detail=str(e)) 
+        raise HTTPException(status_code=404, detail=str(e))
+    except InvalidCardError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except NotTheirTurnError as e:

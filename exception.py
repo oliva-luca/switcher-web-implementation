@@ -18,10 +18,14 @@ class GameNotStartedError(Exception):
 class CardNotFoundError(Exception):
     pass
 
+class InvalidCardError(Exception):
+    pass
+
 class NotTheirTurnError(Exception):
     pass
   
 class CasillaNotFoundError(Exception):
     pass
+
 class PlayerAlreadyInGameError(Exception):
     pass

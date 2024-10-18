@@ -407,7 +407,8 @@ class Operations:
             if not game: 
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
             
-            figcard = session.query(FigCard).filter(FigCard.id_figcard == figcard_id).first()
+            figcard = session.query(FigCard).filter((FigCard.id_figcard == figcard_id) &
+                                                    (FigCard.id_partida == game_id)).first()
             if not figcard: 
                 raise CardNotFoundError(f"FigCard with ID {figcard_id} not found.")
 
@@ -415,6 +416,9 @@ class Operations:
             
             if not player:
                 raise PlayerNotFoundError(f"Player associated with FigCard ID {figcard_id} not found.")
+            
+            if not figcard.shown:
+                raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
             
             if game.turn != player.id_jugador:
                 raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
