@@ -1,30 +1,18 @@
 import { Player, FigCard } from "./interfaces";
 
 export function ParsePlayers(players: Player[]) {
-  var order = new Array(players.length);
-  order[0] = players.find(
+  const firstPlayer = players.find(
     (ply) => ply.id_jugador.toString() == localStorage.getItem("userId")
-  );
+  )?.position;
 
-  const findPlayer = (n: number) => {
-    n = n == players.length - 1 ? -1 : n;
-    var candidate = players.length;
-    var pos = 0;
-    for (let i = 0; i < players.length; i++) {
-      if (players[i].position < candidate && players[i].position > n) {
-        candidate = players[i].position;
-        pos = i;
-      }
-    }
-    return players[pos];
-  };
+  const order1 = players
+    .filter((ply) => ply.position >= firstPlayer)
+    .sort((a, b) => a.position - b.position);
+  const order2 = players
+    .filter((ply) => ply.position < firstPlayer)
+    .sort((a, b) => a.position - b.position);
 
-  for (let i = 1; i < players.length; i++) {
-    order[i] = findPlayer(order[i - 1].position);
-  }
-
-  console.log(order);
-  return order;
+  return order1.concat(order2);
 }
 
 export function ParsePlayerFigCards(plyId: number, figcards: FigCard[]) {
