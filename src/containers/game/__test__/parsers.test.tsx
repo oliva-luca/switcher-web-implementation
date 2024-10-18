@@ -1,4 +1,3 @@
-// ParseFunctions.test.ts
 import {
   ParsePlayers,
   ParsePlayerFigCards,
@@ -76,7 +75,7 @@ describe("ParsePlayers", () => {
         nombre: "Player 2",
         in_game: true,
         position: 1,
-      }, // current user
+      },
       {
         id_jugador: 3,
         block: false,

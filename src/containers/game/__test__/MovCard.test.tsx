@@ -18,7 +18,7 @@ describe("MovCard Component", () => {
     expect(card).toBeInTheDocument();
     expect(card).toHaveAttribute("src", `/mov${type}.svg`);
     expect(card).toHaveClass("movCard");
-    expect(card).toHaveStyle("opacity: 1"); // Initially, opacity should be 1
+    expect(card).toHaveStyle("opacity: 1");
   });
 
   it("should update opacity on click", () => {
@@ -29,11 +29,8 @@ describe("MovCard Component", () => {
     );
 
     const card = document.getElementById(cardId.toString());
-
-    // Click the card to select it
     fireEvent.click(card);
 
-    // After clicking, the opacity should remain 1 if it's selected
     expect(card).toHaveStyle("opacity: 1");
   });
 
@@ -48,12 +45,9 @@ describe("MovCard Component", () => {
     const card1 = document.getElementById(cardId.toString());
     const card2 = document.getElementById("2");
 
-    // Click the first card to select it
     fireEvent.click(card1);
 
-    // The first card should have full opacity
     expect(card1).toHaveStyle("opacity: 1");
-    // The second card should have lower opacity (0.5) since it was not selected
     expect(card2).toHaveStyle("opacity: 0.5");
   });
 
@@ -66,13 +60,9 @@ describe("MovCard Component", () => {
 
     const card = document.getElementById(cardId.toString());
 
-    // Click the card to select it
+    fireEvent.click(card);
     fireEvent.click(card);
 
-    // Click it again to deselect
-    fireEvent.click(card);
-
-    // After deselecting, the opacity should return to 1
     expect(card).toHaveStyle("opacity: 1");
   });
 });
