@@ -122,18 +122,27 @@ async def leave_lobby(player_id: int):
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@app.put("/game/{game_id}/playcard/{mov_card_id}/casillas/{casilla_id1}/{casilla_id2}")
+@app.put("/gamelist/{game_id}/playcard/{mov_card_id}/casillas/{casilla_id1}/{casilla_id2}")
 async def play_card(game_id: int ,mov_card_id: int, casilla_id1: int , casilla_id2: int):
     operation = Operations()
     try:
-        return operation.playmovcard(game_id, mov_card_id ,casilla_id1, casilla_id2)
+        return await operation.playmovcard(game_id, mov_card_id ,casilla_id1, casilla_id2)
 
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except CardNotFoundError as e: 
         raise HTTPException(status_code=404, detail=str(e)) 
     except NotTheirTurnError as e:
-        raise HTTPException(status_code=400, detail=str(e))   
+        raise HTTPException(status_code=400, detail=str(e)) 
+
+
+@app.put("/gamelist/cancelmoves/{game_id}")
+async def cancel_partial_move(game_id: int):
+    operation = Operations()
+    try: 
+        return await operation.cancel_partial_moves(game_id = game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))  
 
 
 
@@ -157,10 +166,3 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int):
     except WebSocketDisconnect:
         manager_game.disconnect(game_id, websocket)
 
-@app.put("/gamelist/cancelmoves/{game_id}")
-async def cancel_partial_move(game_id: int):
-    operation = Operations()
-    try: 
-        return await operation.cancel_partial_moves(game_id = game_id)
-    except GameNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
