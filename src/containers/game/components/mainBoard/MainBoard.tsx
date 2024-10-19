@@ -27,9 +27,9 @@ const MainBoard = ({ players, num_players, figcards }: MainBoardProp) => {
           ) : (
             <FigureBoard
               pos="top"
-              name={order[2].nombre}
               deck={ParsePlayerFigDeck(order[2].id_jugador, figcards)}
               cards={ParsePlayerFigCards(order[2].id_jugador, figcards)}
+              name={order[2].nombre}
             />
           )}
         </div>

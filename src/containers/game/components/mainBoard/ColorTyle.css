@@ -130,3 +130,23 @@
   width: 30px;
   border-radius: 100%;
 }
+
+@keyframes respirar {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.resaltado {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+  width: 82px;
+  height: 82px;
+  animation: respirar 1.2s infinite;
+}
