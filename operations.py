@@ -427,13 +427,23 @@ class Operations:
             if not figcard.shown:
                 raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
             
-            if game.turn != player.id_jugador:
-                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
-            
             figcard.id_jugador = None
-
+            
+            old_board = session.query(Tablero).filter(id_tablero == game_id).first()
+            new_board = modificar_tablero(old_board.to_dict())
+            for casilla in new_board.casillas:
+                cas = session.query(Casilla).filter(Casilla.id_casilla == casilla['id_casilla']).first()
+                cas.color = casilla['color']
+            
+            for Modificate in modificates.get_game_modifies(game_id):
+                mov_card = session.query(MovCard).filter(MovCard.id_movcard == Modificate['id_movcard']).first()
+                mov_card.state = False
+                mov_card.id_jugador = None
+            
+            
             session.commit()
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
+        
         finally:
             session.close()
 
