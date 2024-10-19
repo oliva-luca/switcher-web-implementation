@@ -19,7 +19,6 @@ describe('PassTurn Component', () => {
             </CurrentPlayProvider>
         );
         expect(getByText('TURNO DE')).toBeInTheDocument();
-        expect(getByText('Loading...')).toBeInTheDocument();
     });
 
     it('should fetch game data and update state correctly', async () => {

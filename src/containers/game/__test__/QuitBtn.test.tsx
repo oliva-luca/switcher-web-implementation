@@ -18,8 +18,8 @@ describe('QuitBtn Component', () => {
     });
 
     it('should render the button correctly', () => {
-        const { getByText } = render(<QuitBtn />);
-        expect(getByText('ABANDORNAR PARTIDA')).toBeInTheDocument();
+        const { getByRole } = render(<QuitBtn />);
+        expect(getByRole('button', { name: 'ABANDONAR PARTIDA' })).toBeInTheDocument();
     });
 
     it('should call quit function on button click', async () => {
@@ -28,8 +28,8 @@ describe('QuitBtn Component', () => {
         localStorage.setItem('userId', '1');
         (axios.put as jest.Mock).mockResolvedValueOnce({ data: {} });
 
-        const { getByText } = render(<QuitBtn />);
-        fireEvent.click(getByText('ABANDORNAR PARTIDA'));
+        const { getByRole } = render(<QuitBtn />);
+        fireEvent.click(getByRole('button', { name: 'ABANDONAR PARTIDA' }));
 
         await waitFor(() => {
             expect(axios.put).toHaveBeenCalledWith('/gamelist/leave/1');
