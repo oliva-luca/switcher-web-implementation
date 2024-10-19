@@ -8,6 +8,7 @@ interface ColorTyleProps {
   col: number;
   row: number;
   color: string;
+  tipo_figura: number;
 }
 
 const movMap = new Map<number, [number, number]>();
@@ -35,7 +36,7 @@ const availableMov = (
         (selectedCol + baseMov[1] == col && selectedRow - baseMov[0] == row);
 };
 
-const ColorTyle = ({ tyleId, color, col, row }: ColorTyleProps) => {
+const ColorTyle = ({ tyleId, color, col, row, tipo_figura }: ColorTyleProps) => {
   const {
     selectedCard,
     setSelectedCard,
@@ -84,24 +85,26 @@ const ColorTyle = ({ tyleId, color, col, row }: ColorTyleProps) => {
   };
 
   return (
-    <button
-      className={`colorTyle ${color} ${
-        selectedTyle != null && selectedTyle[2] == tyleId ? "selectedTyle" : ""
-      }`}
-      onClick={handleClick}
-      disabled={
-        selectedTyle != null &&
-        selectedTyle[2] != tyleId &&
-        !availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
-      }
-    >
-      {selectedTyle != null && selectedTyle[2] == tyleId ? (
-        <div className="squareMarker" />
-      ) : selectedTyle != null &&
-        availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1]) ? (
-        <div className="circleMarker" />
-      ) : null}
-    </button>
+    <div className={ tipo_figura != -1 ? "resaltado salto"  : "" } >
+      <button
+        className={`colorTyle ${color} ${
+          selectedTyle != null && selectedTyle[2] == tyleId ? "selectedTyle" : ""
+        }`}
+        onClick={handleClick}
+        disabled={
+          selectedTyle != null &&
+          selectedTyle[2] != tyleId &&
+          !availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
+        }
+      >
+        {selectedTyle != null && selectedTyle[2] == tyleId ? (
+          <div className="squareMarker" />
+        ) : selectedTyle != null &&
+          availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1]) ? (
+          <div className="circleMarker" />
+        ) : null}
+      </button>
+    </div>
   );
 };
 

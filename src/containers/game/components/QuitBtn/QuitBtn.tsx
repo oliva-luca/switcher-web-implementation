@@ -24,7 +24,7 @@ const QuitBtn = () => {
         type="submit" 
         className="btn btn-lg w-20 bottom-quit" 
         onClick={quit}>
-        ABANDORNAR PARTIDA
+        ABANDONAR PARTIDA
         </button>
     );
     

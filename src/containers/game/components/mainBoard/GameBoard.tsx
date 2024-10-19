@@ -7,9 +7,6 @@ import { Casilla } from "../../utils/interfaces";
 
 const GameBoard = () => {
   const { board } = useBoard();
-  const [selectedTyle, setSelectedTyle] = useState<[number, number] | null>(
-    null
-  );
   board?.casillas.sort((a: Casilla, b: Casilla) =>
     a.fila == b.fila ? a.columna - b.columna : a.fila - b.fila
   );
@@ -17,7 +14,7 @@ const GameBoard = () => {
   return (
     <>
       {board == null ? (
-        "Couldn't load board"
+        ""
       ) : (
         <div className="boardSquare boardGrid">
           {board.casillas.map((tyle) => (
@@ -27,8 +24,7 @@ const GameBoard = () => {
               col={tyle.columna}
               row={tyle.fila}
               color={tyle.color}
-              selected={selectedTyle}
-              setSelected={setSelectedTyle}
+              tipo_figura={tyle.figura}
             />
           ))}
         </div>

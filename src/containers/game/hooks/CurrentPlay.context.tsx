@@ -21,6 +21,7 @@ interface CurrentPlayContextProps {
 
   playedFigureCard: number[];
   setPlayedFigureCard: React.Dispatch<React.SetStateAction<number[]>>;
+
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(

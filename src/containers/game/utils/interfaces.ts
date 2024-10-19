@@ -1,6 +1,7 @@
 export interface Casilla {
   id_casilla: number;
   color: string;
+  figura: number;
   columna: number;
   fila: number;
   id_tablero: number;
@@ -26,6 +27,7 @@ export interface MovCard {
   type: number;
   id_movcard: number;
   id_jugador: number;
+  state: boolean;
 }
 
 export interface FigCard {

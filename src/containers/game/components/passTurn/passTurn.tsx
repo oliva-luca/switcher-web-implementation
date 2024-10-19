@@ -40,7 +40,7 @@ const PassTurn = () => {
       <div className="text-center top-right-text"> TURNO DE</div>
       <div className="text-center top-right-text">
         {" "}
-        {nameTurn ? nameTurn : "Loading..."}{" "}
+        {nameTurn ? nameTurn : ""}{" "}
       </div>
       <Button
         variant="primary"

@@ -6,13 +6,13 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 const CancelMov = () => {
-    const cancel = () => {
-        alert('Movimientos cancelados');
-        // hacer el get del tablero
-
-        // desblurear las cartas
-
-        // animacion del luca
+    const cancel = async () => {
+        const gameId = localStorage.getItem('gameId');
+        try {
+            await axios.put(`/gamelist/cancelmoves/${gameId}`);
+        } catch (error) {
+            console.log(error);
+        }
     }
     
     return (
