@@ -19,8 +19,8 @@ async def print_games():
 @app.get("/tableros/{game_id}")
 async def print_tablero_by_id(game_id : int):
     operation = Operations()
-    
-    return operation.get_board_by_id(game_id=game_id)
+    board = operation.get_board_by_id(game_id=game_id)
+    return modificar_tablero(board)
 
 @app.post("/gamelist")
 async def create_game(name: str, cant_players: int, priv: bool, psw: str):
