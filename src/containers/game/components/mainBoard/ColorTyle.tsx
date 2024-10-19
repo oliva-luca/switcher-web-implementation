@@ -85,8 +85,8 @@ const ColorTyle = ({ tyleId, color, col, row, tipo_figura }: ColorTyleProps) => 
   };
 
   return (
-    <div className={ tipo_figura != -1 ? "border" : "" } >
-      <button>
+    <div className={ tipo_figura != -1 ? "resaltado salto"  : "" } >
+      <button
         className={`colorTyle ${color} ${
           selectedTyle != null && selectedTyle[2] == tyleId ? "selectedTyle" : ""
         }`}

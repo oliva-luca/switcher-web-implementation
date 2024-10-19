@@ -1,10 +1,10 @@
 export interface Casilla {
   id_casilla: number;
   color: string;
+  figura: number;
   columna: number;
   fila: number;
   id_tablero: number;
-  figura: number;
 }
 
 export interface BoardData {

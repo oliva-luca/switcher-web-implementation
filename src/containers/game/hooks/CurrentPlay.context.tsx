@@ -15,15 +15,13 @@ interface CurrentPlayContextProps {
   playedCards: number[];
   setPlayedCards: React.Dispatch<React.SetStateAction<number[]>>;
 
-<<<<<<< HEAD
-=======
   selectedFigureCard:[number, number] | null;
   setSelectedFigureCard:React.Dispatch<
   React.SetStateAction<[number, number] | null>>;
 
   playedFigureCard: number[];
   setPlayedFigureCard: React.Dispatch<React.SetStateAction<number[]>>;
->>>>>>> 253a599ea6fba409a29fd882b8c24cc845529f3b
+
 }
 
 const CurrentPlayContext = createContext<CurrentPlayContextProps | undefined>(
