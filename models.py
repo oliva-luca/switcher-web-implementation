@@ -88,6 +88,7 @@ class Casilla(Base):
     color = Column(String, nullable=False)  # Color de la casilla
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'))  # Relación con el tablero
     tablero = relationship("Tablero", back_populates="casillas")
+    figura = Column(Integer, nullable = False, default = -1)
     def to_dict(self):
         return {
             'id_casilla': self.id_casilla,
@@ -109,6 +110,8 @@ class MovCard(Base):
     # Jugador al que pertence
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="movcards")
+
+    state = Column(Boolean, nullable = False , default = False)
 
 # Carta de figura
 class FigCard(Base):

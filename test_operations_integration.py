@@ -292,15 +292,14 @@ async def test_playmovcard(operation : Operations):
     finally:
         session.close()
 
-    operation.playmovcard(3,carta.id_movcard, 10, 11)
+    await operation.playmovcard(3,carta.id_movcard, 10, 11)
 
     try:
         session = Session()
 
-        player = session.query(Player).filter(Player.id_jugador == actual_turn).first()
-        player.movcards = player.movcards
-        new_cant_mov_cards = len(player.movcards)
-        assert cant_mov_cards - 1 == new_cant_mov_cards
+        carta_por_id = session.query(MovCard).filter(MovCard.id_movcard == carta.id_movcard).one()
+
+        assert carta_por_id.state == True 
 
     finally:
         session.close()
@@ -360,7 +359,7 @@ async def test_discard_figcard(operation : Operations):
 @pytest.mark.asyncio
 async def test_cancel_partial_moves(operation: Operations):
     session = Session()
-    game = session.query(Game).filter(Game.id_partida == 1).first()
+    game = session.query(Game).filter(Game.id_partida == 7).first()
     try:
         assert game is not None
         id_tablero = game.id_tablero

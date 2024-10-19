@@ -239,6 +239,12 @@ class Operations:
             # Obtengo el jugador actual
             current_player = session.query(Player).filter(Player.id_jugador == game.turn).first()
 
+            
+            for movcard in current_player.movcards:
+                if movcard.state == True:
+                    movcard.state = False
+            
+
             # Le revelo cartas de figura hasta tener tres (si le quedan suficientes)
             mostrar_cartas_figura(current_player.id_jugador, session)
 
@@ -351,10 +357,8 @@ class Operations:
             remaining_player = session.query(Player).filter(Player.id_partida == id_game).first()
             session.commit()
             if remaining_players == 1:
-                print("primer print")
                 remaining_player.id_partida = None 
                 session.commit()
-                print("segundo print")
                 await manager_game.broadcast(id_game, "winner")
             else:
                 await manager_game.broadcast(id_game, "Player has left the game") 
@@ -362,7 +366,7 @@ class Operations:
         finally:
             session.close()
 
-    def playmovcard(self , game_id : int , mov_card_id : int , casilla_id1 : int, casilla_id2 : int):
+    async def playmovcard(self , game_id : int , mov_card_id : int , casilla_id1 : int, casilla_id2 : int):
         session = Session()
 
         try: 
@@ -392,8 +396,11 @@ class Operations:
                 raise CasillaNotFoundError(f"Casilla with ID {casilla_id2} not found.")
 
             modificates.add_modify(game.id_tablero,mov_card_id,casilla_id1,casilla_id2)
-            mov_card.id_jugador = None 
+            mov_card.state = True 
+
             session.commit()
+
+            await manager_game.broadcast(game_id, "Board change") 
 
         finally:
             session.close()
@@ -436,9 +443,15 @@ class Operations:
             game = session.query(Game).filter(Game.id_partida == game_id).first()
             if game is None:
                 raise GameNotFoundError(f"The game with id:{game_id} does not exist.")
+        
+            current_player = session.query(Player).filter(Player.id_jugador == game.turn).one()
 
             
             modificates.clear_modifies(game.id_tablero)
+
+            for movcard in current_player.movcards:
+                if movcard.state == True:
+                    movcard.state = False
             
 
             await manager_game.broadcast(game_id, "The partial moves has been cancelled") 
