@@ -20,7 +20,7 @@ async def print_games():
 async def print_tablero_by_id(game_id : int):
     operation = Operations()
     board = operation.get_board_by_id(game_id=game_id)
-    return modificar_tablero(board.to_dict())
+    return modificar_tablero(board)
 
 @app.post("/gamelist")
 async def create_game(name: str, cant_players: int):

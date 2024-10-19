@@ -523,24 +523,6 @@ def tablero_b():
   ]
 }
 
-@pytest.fixture
-def board_a(tablero_a):
-  lista_casillas = []
-  for casilla in tablero_a['casillas']:
-      casilla = Casilla(
-        id_casilla=casilla['id_casilla'],
-        fila=casilla['fila'],
-        columna=casilla['columna'],
-        color=casilla['color'],
-        id_tablero=casilla['id_tablero']
-      )
-      lista_casillas.append(casilla)
-  return Tablero(
-    id_tablero=tablero_a['id_tablero'],
-    color_principal=tablero_a['color_principal'],
-    casillas = lista_casillas
-  )
-
 
 
 

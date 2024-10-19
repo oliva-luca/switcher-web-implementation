@@ -74,16 +74,15 @@ def test_get_only_one_game(mock_Get_games, game_a):
 
 @patch("app.Operations") 
 @patch("app.modificar_tablero")
-def test_get_tablero_by_id(mock_Get_board, mock_New_board, board_a, tablero_b):
-    mock_board = MagicMock()
-    mock_board.get_board_by_id.return_value = board_a
-    mock_Get_board.return_value = mock_board
-    mock_New_board.return_value = tablero_b
+def test_get_tablero_by_id(mock_modificar_tablero, mock_Operations, tablero_a, tablero_b):
+    mock_operations = MagicMock()
+    mock_operations.get_board_by_id.return_value = tablero_a
+    mock_Operations.return_value = mock_operations
+    mock_modificar_tablero.return_value = tablero_b
     
     response = client.get("/tableros/1")
     assert response.status_code == 200
     assert response.json() == tablero_b
-
 
 
 

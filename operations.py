@@ -121,7 +121,7 @@ class Operations:
                 tablero.casillas = session.query(Casilla).filter(Casilla.id_tablero == tablero.id_tablero).all()
             finally:
                 session.close()
-            return tablero
+            return tablero.to_dict()
         finally:
             session.close()
 
