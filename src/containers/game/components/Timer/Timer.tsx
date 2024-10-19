@@ -10,8 +10,14 @@ const Timer: React.FC = () => {
   useEffect(() => {
     const gameId = localStorage.getItem("gameId");
     const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
-    socket.onmessage = () => {
-      setTimeLeft(120);
+    socket.onmessage = async (event) => {
+      switch (event.data) {
+        case "Turno del jugador":
+          setTimeLeft(120);
+          break;
+        default:
+          break;
+      }
     };
     const intervalId = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
