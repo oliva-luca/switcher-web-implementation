@@ -453,7 +453,8 @@ class Operations:
                 if movcard.state == True:
                     movcard.state = False
             
-
+            session.commit()
+            
             await manager_game.broadcast(game_id, "The partial moves has been cancelled") 
 
             return {"message": f"The partial moves has been cancelled"} 
