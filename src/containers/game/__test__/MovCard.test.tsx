@@ -1,97 +1,68 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, jest } from "@jest/globals";
+import { render, fireEvent } from "@testing-library/react";
+import { CurrentPlayProvider } from "../hooks/CurrentPlay.context";
 import MovCard from "../components/movementCard/MovCard";
-import { CurrentPlayProvider } from "../hooks/CurrentPlay.context"
 
 describe("MovCard Component", () => {
-  const mockSetSelected = jest.fn();
+  const cardId = 1;
+  const type = 1;
 
-  it("should render all the MovCards correctly", () => {
-    const allMovCards = [];
-    for (var i = 1; i <= 7; i++) {
-      allMovCards.push({
-        cardId: i,
-        type: i,
-        selected: null,
-        setSelected: jest.fn(),
-      });
-    }
-    const { getAllByAltText } = render(
+  it("should render the card with the correct properties", () => {
+    const { getById } = render(
       <CurrentPlayProvider>
-        {allMovCards.map((card) => (
-          <MovCard
-            cardId={card.cardId}
-            type={card.type}
-            selected={card.selected}
-            setSelected={card.setSelected}
-          />
-        ))}
+        <MovCard cardId={cardId} type={type} />
       </CurrentPlayProvider>
     );
-    const MovCards = getAllByAltText("carta de movimiento");
-    expect(MovCards.length).toBe(7);
+
+    const card = document.getElementById(cardId.toString());
+    expect(card).toBeInTheDocument();
+    expect(card).toHaveAttribute("src", `/mov${type}.svg`);
+    expect(card).toHaveClass("movCard");
+    expect(card).toHaveStyle("opacity: 1");
   });
 
-  it("should have full opacity when selected or no card is selected", () => {
-    const { getByAltText } = render(
+  it("should update opacity on click", () => {
+    const { getById } = render(
       <CurrentPlayProvider>
-        <MovCard
-          cardId={1}
-          type={2}
-          selected={null}
-          setSelected={mockSetSelected}
-          />
-        </CurrentPlayProvider>
-    );
-    const imgElement = getByAltText("carta de movimiento");
-    expect(imgElement).toHaveStyle("opacity: 1");
-  });
-
-  it("should have lower opacity when another card is selected", () => {
-    const { getByAltText } = render(
-      <CurrentPlayProvider>
-        <MovCard cardId={1} type={2} selected={2} setSelected={mockSetSelected} />
+        <MovCard cardId={cardId} type={type} />
       </CurrentPlayProvider>
     );
-    const imgElement = getByAltText("carta de movimiento");
-    expect(imgElement).toHaveStyle("opacity: 0.5");
+
+    const card = document.getElementById(cardId.toString());
+    fireEvent.click(card);
+
+    expect(card).toHaveStyle("opacity: 1");
   });
 
-  it("should change height when selected", () => {
-    const { getByAltText } = render(
+  it("should change opacity of other cards when clicked", () => {
+    const { getById } = render(
       <CurrentPlayProvider>
-        <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+        <MovCard cardId={cardId} type={type} />
+        <MovCard cardId={2} type={2} />
       </CurrentPlayProvider>
     );
-    const imgElement = getByAltText("carta de movimiento");
-    expect(imgElement).toHaveStyle("height: 200px");
+
+    const card1 = document.getElementById(cardId.toString());
+    const card2 = document.getElementById("2");
+
+    fireEvent.click(card1);
+
+    expect(card1).toHaveStyle("opacity: 1");
+    expect(card2).toHaveStyle("opacity: 0.5");
   });
 
-  it("should call setSelected with the correct cardId on click", () => {
-    const { getByAltText } = render(
+  it("should deselect card when clicked again", () => {
+    const { getById } = render(
       <CurrentPlayProvider>
-        <MovCard
-          cardId={1}
-          type={2}
-          selected={null}
-          setSelected={mockSetSelected}
-          />
-        </CurrentPlayProvider>
-    );
-    const imgElement = getByAltText("carta de movimiento");
-    fireEvent.click(imgElement);
-    expect(mockSetSelected).toHaveBeenCalledWith(1);
-  });
-
-  it("should toggle selection state when clicked", () => {
-    const { getByAltText } = render(
-      <CurrentPlayProvider>
-        <MovCard cardId={1} type={2} selected={1} setSelected={mockSetSelected} />
+        <MovCard cardId={cardId} type={type} />
       </CurrentPlayProvider>
     );
-    const imgElement = getByAltText("carta de movimiento");
-    fireEvent.click(imgElement);
-    expect(mockSetSelected).toHaveBeenCalledWith(null); // If selected, deselect
+
+    const card = document.getElementById(cardId.toString());
+
+    fireEvent.click(card);
+    fireEvent.click(card);
+
+    expect(card).toHaveStyle("opacity: 1");
   });
 });
