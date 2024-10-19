@@ -145,6 +145,23 @@ async def cancel_partial_move(game_id: int):
         raise HTTPException(status_code=404, detail=str(e))  
 
 
+@app.put("/game/{game_id}/discard_figcard/{figcard_id}")
+async def discard_figcard(game_id: int, figcard_id: int):
+    operation = Operations()
+    try:
+        return operation.discard_figcard(game_id, figcard_id)
+
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except CardNotFoundError as e: 
+        raise HTTPException(status_code=404, detail=str(e))
+    except InvalidCardError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except NotTheirTurnError as e:
+        raise HTTPException(status_code=400, detail=str(e))   
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

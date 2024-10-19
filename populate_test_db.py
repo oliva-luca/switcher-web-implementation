@@ -14,6 +14,8 @@ def load_data_for_test():
         (5, 'game5', 2, True, False, 'as', 4, None),
         (6, 'game6', 2, True, False, 'as', 7, None),
         (7, 'game7', 2, False, False, 'as', 8, 7),
+        (8, 'game8', 2, True, False, 'as', 10, None),
+
     ]
     
     players = [
@@ -26,6 +28,8 @@ def load_data_for_test():
         (7, 'player7', True, False, 0, 6),
         (8, 'player8', True, False, 0, 7),
         (9, 'player9', True, False, 1, 7),
+        (10, 'player10', True, False, 0, 8),
+        (11, 'player11', True, False, 1, 8),
     ]
 
     tableros = [( None, 1 )]
@@ -171,7 +175,58 @@ def load_data_for_test():
         {"type": 22, "id_partida": 6, "shown": False, "id_figcard": 47, "id_jugador": 6}, 
         {"type": 23, "id_partida": 6, "shown": False, "id_figcard": 48, "id_jugador": 7}, 
         {"type": 24, "id_partida": 6, "shown": False, "id_figcard": 49, "id_jugador": 6}, 
-        {"type": 25, "id_partida": 6, "shown": False, "id_figcard": 50, "id_jugador": 6}
+        {"type": 25, "id_partida": 6, "shown": False, "id_figcard": 50, "id_jugador": 6},
+
+        {"type": 1, "id_partida": 8, "shown": False, "id_figcard": 101, "id_jugador": 11}, 
+        {"type": 2, "id_partida": 8, "shown": False, "id_figcard": 102, "id_jugador": 10}, 
+        {"type": 3, "id_partida": 8, "shown": False, "id_figcard": 103, "id_jugador": 11}, 
+        {"type": 4, "id_partida": 8, "shown": False, "id_figcard": 104, "id_jugador": None}, 
+        {"type": 5, "id_partida": 8, "shown": False, "id_figcard": 105, "id_jugador": None}, 
+        {"type": 6, "id_partida": 8, "shown": False, "id_figcard": 106, "id_jugador": 11}, 
+        {"type": 7, "id_partida": 8, "shown": False, "id_figcard": 107, "id_jugador": 11}, 
+        {"type": 8, "id_partida": 8, "shown": False, "id_figcard": 108, "id_jugador": 10}, 
+        {"type": 9, "id_partida": 8, "shown": True, "id_figcard": 109, "id_jugador": 10}, 
+        {"type": 10, "id_partida": 8, "shown": False, "id_figcard": 110, "id_jugador": 11}, 
+        {"type": 11, "id_partida": 8, "shown": False, "id_figcard": 111, "id_jugador": 10}, 
+        {"type": 12, "id_partida": 8, "shown": False, "id_figcard": 112, "id_jugador": 11}, 
+        {"type": 13, "id_partida": 8, "shown": False, "id_figcard": 113, "id_jugador": 11}, 
+        {"type": 14, "id_partida": 8, "shown": False, "id_figcard": 114, "id_jugador": 10}, 
+        {"type": 15, "id_partida": 8, "shown": True, "id_figcard": 115, "id_jugador": 10}, 
+        {"type": 16, "id_partida": 8, "shown": False, "id_figcard": 116, "id_jugador": 11}, 
+        {"type": 17, "id_partida": 8, "shown": False, "id_figcard": 117, "id_jugador": 10}, 
+        {"type": 18, "id_partida": 8, "shown": True, "id_figcard": 118, "id_jugador": 11}, 
+        {"type": 19, "id_partida": 8, "shown": False, "id_figcard": 119, "id_jugador": 11}, 
+        {"type": 20, "id_partida": 8, "shown": True, "id_figcard": 120, "id_jugador": 10}, 
+        {"type": 21, "id_partida": 8, "shown": False, "id_figcard": 121, "id_jugador": 10}, 
+        {"type": 22, "id_partida": 8, "shown": False, "id_figcard": 122, "id_jugador": 11}, 
+        {"type": 23, "id_partida": 8, "shown": False, "id_figcard": 123, "id_jugador": 10}, 
+        {"type": 24, "id_partida": 8, "shown": False, "id_figcard": 124, "id_jugador": 11}, 
+        {"type": 25, "id_partida": 8, "shown": False, "id_figcard": 125, "id_jugador": 11}, 
+        {"type": 1, "id_partida": 8, "shown": False, "id_figcard": 126, "id_jugador": 11}, 
+        {"type": 2, "id_partida": 8, "shown": False, "id_figcard": 127, "id_jugador": 11}, 
+        {"type": 3, "id_partida": 8, "shown": False, "id_figcard": 128, "id_jugador": 11}, 
+        {"type": 4, "id_partida": 8, "shown": False, "id_figcard": 129, "id_jugador": 10}, 
+        {"type": 5, "id_partida": 8, "shown": False, "id_figcard": 130, "id_jugador": 11}, 
+        {"type": 6, "id_partida": 8, "shown": False, "id_figcard": 131, "id_jugador": 11}, 
+        {"type": 7, "id_partida": 8, "shown": False, "id_figcard": 132, "id_jugador": 10}, 
+        {"type": 8, "id_partida": 8, "shown": False, "id_figcard": 133, "id_jugador": 10}, 
+        {"type": 9, "id_partida": 8, "shown": False, "id_figcard": 134, "id_jugador": 10}, 
+        {"type": 10, "id_partida": 8, "shown": False, "id_figcard": 135, "id_jugador": 10}, 
+        {"type": 11, "id_partida": 8, "shown": False, "id_figcard": 136, "id_jugador": 10}, 
+        {"type": 12, "id_partida": 8, "shown": False, "id_figcard": 137, "id_jugador": 10}, 
+        {"type": 13, "id_partida": 8, "shown": False, "id_figcard": 138, "id_jugador": 10}, 
+        {"type": 14, "id_partida": 8, "shown": False, "id_figcard": 139, "id_jugador": 10}, 
+        {"type": 15, "id_partida": 8, "shown": False, "id_figcard": 140, "id_jugador": 11}, 
+        {"type": 16, "id_partida": 8, "shown": False, "id_figcard": 141, "id_jugador": 11}, 
+        {"type": 17, "id_partida": 8, "shown": False, "id_figcard": 142, "id_jugador": 11}, 
+        {"type": 18, "id_partida": 8, "shown": False, "id_figcard": 143, "id_jugador": 10}, 
+        {"type": 19, "id_partida": 8, "shown": True, "id_figcard": 144, "id_jugador": 11}, 
+        {"type": 20, "id_partida": 8, "shown": False, "id_figcard": 145, "id_jugador": 10}, 
+        {"type": 21, "id_partida": 8, "shown": True, "id_figcard": 146, "id_jugador": 11}, 
+        {"type": 22, "id_partida": 8, "shown": False, "id_figcard": 147, "id_jugador": 10}, 
+        {"type": 23, "id_partida": 8, "shown": False, "id_figcard": 148, "id_jugador": 11}, 
+        {"type": 24, "id_partida": 8, "shown": False, "id_figcard": 149, "id_jugador": 10}, 
+        {"type": 25, "id_partida": 8, "shown": False, "id_figcard": 150, "id_jugador": 10}
     ]
 
     # Agregar partidas
