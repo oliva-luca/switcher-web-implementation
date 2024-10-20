@@ -86,7 +86,7 @@ const ColorTyle = ({
       const game_id = localStorage.getItem("gameId");
 
       const response = await axios.put(
-        `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[1]}`
+        `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}`
       );
       console.log("Response:", response);
 
