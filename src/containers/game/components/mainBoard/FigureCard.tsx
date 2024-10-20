@@ -1,20 +1,25 @@
 import React from "react";
 import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
-import "./FigureCard.css"; 
+import "./FigureCard.css";
 
 interface FigureCardProp {
-  cardID:number,
-  type: number,
-  playerID?: number
+  cardID: number;
+  type: number;
+  playerID?: number;
 }
 
-const FigureCard = ({ cardID, type, playerID = 0 }: FigureCardProp) => {
-  const {selectedFigureCard,  setSelectedFigureCard,  playedFigureCard} = useCurrentPlay();
-  
-  return(
+const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
+  const {
+    selectedFigureCard,
+    setSelectedFigureCard,
+    setSelectedCard,
+    setSelectedTyle,
+  } = useCurrentPlay();
+
+  return (
     <img
       id={type.toString()}
-      className={playedFigureCard.includes(cardID) ? "used" : "figCard"}
+      className={"figCard"}
       src={
         type > 18
           ? "/fige0" + (type - 18) + ".svg"
@@ -23,11 +28,18 @@ const FigureCard = ({ cardID, type, playerID = 0 }: FigureCardProp) => {
           : "/fig" + type + ".svg"
       }
       style={{
-        opacity:  playerID==0 ? 1:
-                  (selectedFigureCard == null || selectedFigureCard[0] == cardID) && playerID != 0 ? 1 : 0.5,
+        opacity:
+          playerID?.toString() != localStorage.getItem("userId")
+            ? 1
+            : (selectedFigureCard == null || selectedFigureCard[0] == cardID) &&
+              playerID != 0
+            ? 1
+            : 0.5,
       }}
       onClick={() => {
-        if (!playedFigureCard.includes(cardID) && playerID != 0) {
+        if (playerID?.toString() == localStorage.getItem("userId")) {
+          setSelectedTyle(null);
+          setSelectedCard(null);
           setSelectedFigureCard(
             selectedFigureCard != null && selectedFigureCard[0] == cardID
               ? null

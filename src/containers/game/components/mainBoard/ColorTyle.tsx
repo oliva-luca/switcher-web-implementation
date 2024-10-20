@@ -36,19 +36,26 @@ const availableMov = (
         (selectedCol + baseMov[1] == col && selectedRow - baseMov[0] == row);
 };
 
-const ColorTyle = ({ tyleId, color, col, row, tipo_figura }: ColorTyleProps) => {
+const ColorTyle = ({
+  tyleId,
+  color,
+  col,
+  row,
+  tipo_figura,
+}: ColorTyleProps) => {
   const {
     selectedCard,
     setSelectedCard,
     selectedTyle,
     setSelectedTyle,
     currentTurn,
-    setPlayedCards,
+    selectedFigureCard,
+    setSelectedFigureCard,
   } = useCurrentPlay();
   const cardType = selectedCard == null ? 0 : selectedCard[1];
   const cardId = selectedCard == null ? 0 : selectedCard[0];
 
-  const handleFinalSelect = async () => {
+  const handleTyleSwap = async () => {
     try {
       const game_id = localStorage.getItem("gameId");
       const casilla_id1 = selectedTyle[2];
@@ -63,7 +70,6 @@ const ColorTyle = ({ tyleId, color, col, row, tipo_figura }: ColorTyleProps) => 
       );
       console.log("Response:", response);
 
-      setPlayedCards((playedCards) => [...playedCards, cardId]);
       setSelectedCard(null);
       setSelectedTyle(null);
     } catch (error) {
@@ -75,20 +81,44 @@ const ColorTyle = ({ tyleId, color, col, row, tipo_figura }: ColorTyleProps) => 
     );
   };
 
+  const handleFigureDiscard = async () => {
+    try {
+      const game_id = localStorage.getItem("gameId");
+
+      const response = await axios.put(
+        `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}`
+      );
+      console.log("Response:", response);
+
+      setSelectedFigureCard(null);
+    } catch (error) {
+      console.error("Error swapping tyles:", error);
+    }
+  };
+
   const handleClick = () => {
-    if (!currentTurn || currentTurn == Number(localStorage.getItem("userId"))) {
-      selectedTyle != null &&
-      availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
-        ? handleFinalSelect()
+    if (currentTurn == Number(localStorage.getItem("userId"))) {
+      selectedTyle == null &&
+      selectedCard == null &&
+      selectedFigureCard != null &&
+      selectedFigureCard[1] == tipo_figura
+        ? handleFigureDiscard()
+        : selectedTyle != null &&
+          selectedCard != null &&
+          selectedFigureCard == null &&
+          availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
+        ? handleTyleSwap()
         : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
     }
   };
 
   return (
-    <div className={ tipo_figura != -1 ? "resaltado salto"  : "" } >
+    <div className={tipo_figura != -1 ? "resaltado salto" : ""}>
       <button
         className={`colorTyle ${color} ${
-          selectedTyle != null && selectedTyle[2] == tyleId ? "selectedTyle" : ""
+          selectedTyle != null && selectedTyle[2] == tyleId
+            ? "selectedTyle"
+            : ""
         }`}
         onClick={handleClick}
         disabled={
