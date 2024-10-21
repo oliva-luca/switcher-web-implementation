@@ -506,7 +506,7 @@ class Operations:
             if game.turn != player.id_jugador:
                 raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
             figcard.id_jugador = None
-        
+            figcard.shown = False
             await confirmar_cambios(session, game.id_tablero)
             
             
