@@ -78,6 +78,18 @@ async def start_game(game_id: int):
     except NumberOfPlayersError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.put("/gamelist/start_just_one_figcard/{game_id}")
+async def start_game_just_one_figcard(game_id: int):
+    operation = Operations()
+    try:
+        return await operation.start_game_just_one_figcard(game_id=game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except GameStartedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except NumberOfPlayersError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.get("/gamelist/{game_id}")
 async def get_game_by_id(game_id: int):
     operation = Operations()
