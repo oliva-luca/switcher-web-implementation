@@ -342,7 +342,8 @@ class Operations:
                 for player_i in game.players: 
                     player_i.id_partida = None
                     player_i.in_game=False
-                await manager_game.broadcast(game.id_partida, "Owner cancelled the game") 
+                await manager_game.broadcast(game.id_partida, "Owner cancelled the game")
+                await manager.broadcast("Owner cancelled the game")
                 session.delete(game)
                 session.commit()
                 session.close()
