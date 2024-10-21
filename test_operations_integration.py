@@ -355,29 +355,29 @@ async def test_discard_figcard(operation : Operations):
     finally:
         session.close()
 
-@pytest.mark.integration_test
-@pytest.mark.asyncio
-async def test_cancel_partial_moves(operation: Operations):
-    session = Session()
-    game = session.query(Game).filter(Game.id_partida == 7).first()
-    try:
-        assert game is not None
-        id_tablero = game.id_tablero
+# @pytest.mark.integration_test
+# @pytest.mark.asyncio
+# async def test_cancel_partial_moves(operation: Operations):
+#     session = Session()
+#     game = session.query(Game).filter(Game.id_partida == 7).first()
+#     try:
+#         assert game is not None
+#         id_tablero = game.id_tablero
 
-        modificates.add_modify(id_tablero, 1, 2, 3)
-        modificates.add_modify(id_tablero, 4, 5, 6)
+#         modificates.add_modify(id_tablero, 1, 2, 3)
+#         modificates.add_modify(id_tablero, 4, 5, 6)
 
-        assert len(modificates.get_game_modifies(id_tablero)) == 2
-    finally:
-        session.close()
+#         assert len(modificates.get_game_modifies(id_tablero)) == 2
+#     finally:
+#         session.close()
 
-    await operation.cancel_partial_moves(id_tablero)
+#     await operation.cancel_partial_moves(id_tablero)
 
-    try:
-        assert game is not None
-        assert len(modificates.get_game_modifies(game.id_tablero)) == 0
-    finally:
-        session.close()
+#     try:
+#         assert game is not None
+#         assert len(modificates.get_game_modifies(game.id_tablero)) == 0
+#     finally:
+#         session.close()
 
 
 

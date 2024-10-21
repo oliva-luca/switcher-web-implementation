@@ -396,3 +396,35 @@ def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, session):
     finally:
         pass
     return resultado
+
+
+#--------------------------- INFROMACION DE CASILLA  -------------------------------------------------------
+def actualizar_informacion_casillas(id_partida: int, tablero : Tablero, session, modificaciones = None):
+    session.refresh(tablero)
+
+    colores = simplificar_tablero(tablero)
+
+    # Hacer las modificacion si hay
+    if modificaciones != None:
+        for modif in modificaciones:
+            casilla1 = session.query(Casilla).filter(Casilla.id_casilla == modif.id_casilla1).one()
+            casilla2 = session.query(Casilla).filter(Casilla.id_casilla == modif.id_casilla2).one()
+            
+            ubi_1 = (casilla1.fila, casilla1.columna)   # ubicacion casilla 1
+            ubi_2 = (casilla2.fila, casilla2.columna)   # ubicacion casilla 2
+            colores[ubi_1[0]][ubi_1[1]], colores[ubi_2[0]][ubi_2[1]] = colores[ubi_2[0]][ubi_2[1]], colores[ubi_1[0]][ubi_1[1]]
+
+
+    figuras = obtener_figuras_tablero(id_partida, colores, session)
+
+    for casilla in tablero.casillas:
+        casilla.figura = -1
+
+    for tipo_figura, componente in figuras:
+        for fila, columna in componente:
+            casilla = session.query(Casilla).filter((Casilla.id_tablero == tablero.id_tablero) & 
+                                                    (Casilla.fila == fila) & 
+                                                    (Casilla.columna == columna)).one()
+            casilla.figura = tipo_figura
+
+    session.commit()
