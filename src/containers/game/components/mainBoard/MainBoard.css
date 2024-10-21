@@ -6,7 +6,7 @@
   transform: translate(-50%, -50%);
   justify-items: center;
   align-items: center;
-  grid-template-columns: 100px 504px 100px;
-  grid-template-rows: 100px 504px 100px;
+  grid-template-columns: 100px 528px 100px;
+  grid-template-rows: 100px 528px 100px;
   gap: 10px;
 }
