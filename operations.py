@@ -470,6 +470,8 @@ class Operations:
             number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
 
             if number_of_figcards == 0:
+                for player in game.players:
+                    player.id_partida = None
                 await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
             await manager_game.broadcast(game_id, "discard figcard") 
 
