@@ -204,8 +204,8 @@ def validar_tablero(Dict : dict):
         posiciones.append([casilla['fila'], casilla['columna']])
     return (verde == 9 and amarillo == 9 and rojo == 9 and azul == 9)
     
-
-def test_modificar_tablero(tablero_a, modify_1, modify_3):
+@pytest.mark.asyncio
+async def test_modificar_tablero(tablero_a, modify_1, modify_3):
     modificates = {1: [modify_1, modify_3]}
     for casillas in tablero_a['casillas']:
         if casillas['id_casilla'] == 1 :
@@ -216,7 +216,7 @@ def test_modificar_tablero(tablero_a, modify_1, modify_3):
             color_3= casillas['color'] #rojo
     
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
         
     for casillas in modified_board['casillas']:
         if casillas['id_casilla'] == 1 :
@@ -226,50 +226,57 @@ def test_modificar_tablero(tablero_a, modify_1, modify_3):
         if casillas['id_casilla'] == 3 :
             assert casillas['color'] == color_1
             
-def test_modificar_tablero_no_modifies(tablero_a):
+@pytest.mark.asyncio
+async def test_modificar_tablero_no_modifies(tablero_a):
     modificates = {1: []}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     assert modified_board == tablero_a
     
-def test_modificar_tablero_casilla_no_encontrada(tablero_a, modify_7):
+@pytest.mark.asyncio
+async def test_modificar_tablero_casilla_no_encontrada(tablero_a, modify_7):
     modificates = {1: [modify_7]}
     with patch('utils.modificates.modify', modificates):
         with pytest.raises(HTTPException) as excinfo:
-                modificar_tablero(tablero_a)
+                await modificar_tablero(tablero_a)
                 assert excinfo.value.status_code == 404
                 assert excinfo.value.detail == "Casilla no encontrada"
                 
-def test_modificar_tablero_mismas_casillas(tablero_a, modify_1):
+@pytest.mark.asyncio
+async def test_modificar_tablero_mismas_casillas(tablero_a, modify_1):
     modificates = {1: [modify_1, modify_1]}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     assert modified_board == tablero_a
     
-def test_modificar_tablero_movimientos_equivalentes(tablero_a, modify_1, modify_2):
+@pytest.mark.asyncio
+async def test_modificar_tablero_movimientos_equivalentes(tablero_a, modify_1, modify_2):
     modificates = {1: [modify_1, modify_2]}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     assert modified_board == tablero_a
     
-def test_modificar_tablero_movimientos_equivalentes2(tablero_a, modify_1, modify_2):
+@pytest.mark.asyncio
+async def test_modificar_tablero_movimientos_equivalentes2(tablero_a, modify_1, modify_2):
     modificates = {1: [modify_1, modify_2]}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     with patch('utils.modificates.modify', modificates):
-        modified_board2 = modificar_tablero(tablero_a)
+        modified_board2 = await modificar_tablero(tablero_a)
     assert modified_board == modified_board2
     
-def test_modificar_tablero_valid_board(tablero_a,modify_3,modify_6,modify_8):
+@pytest.mark.asyncio
+async def test_modificar_tablero_valid_board(tablero_a,modify_3,modify_6,modify_8):
     modificates = {1: [modify_3,modify_6,modify_8]}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     assert validar_tablero(modified_board)
 
-def test_modificar_tablero_colores_iguales(tablero_a,modify_9):
+@pytest.mark.asyncio
+async def test_modificar_tablero_colores_iguales(tablero_a,modify_9):
     modificates = {1: [modify_9]}
     with patch('utils.modificates.modify', modificates):
-        modified_board = modificar_tablero(tablero_a)
+        modified_board = await modificar_tablero(tablero_a)
     assert modified_board == tablero_a
 
 @pytest.mark.integration_test
