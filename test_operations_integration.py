@@ -345,7 +345,7 @@ async def test_discard_figcard(operation : Operations):
     finally:
         session.close()
 
-    operation.discard_figcard(8, 109)
+    await operation.discard_figcard(8, 109)
 
     session = Session()
     try:
