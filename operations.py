@@ -137,7 +137,10 @@ class Operations:
                 tablero.casillas = session.query(Casilla).filter(Casilla.id_tablero == tablero.id_tablero).all()
             finally:
                 session.close()
-            return tablero.to_dict()
+            response = tablero.to_dict()
+            if 'id_tablero' not in response:
+                print("Error: id_tablero not found in response")
+            return response
         finally:
             session.close()
 
@@ -500,9 +503,11 @@ class Operations:
             
             if game.turn != player.id_jugador:
                 raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
-            
             figcard.id_jugador = None
-
+        
+            await confirmar_cambios(session, game.id_tablero)
+            
+            
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
@@ -512,6 +517,7 @@ class Operations:
                 await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
 
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
+        
         finally:
             session.close()
 

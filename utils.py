@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconne
 from figuras_dibujos import *
 from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
 from typing import List, Dict, Tuple
-
+import logging
 
 #--------------------------- TABLERO -------------------------------------------------------------
 class Modify:
@@ -91,8 +91,9 @@ def asignar_turno_primer_jugador(id_partida: int, session):
         return {"message": "Turno del primer jugador asignado con éxito"}
 
 
-def modificar_tablero(board: Dict):
+async def modificar_tablero(board: Dict):
     modifies = modificates.get_game_modifies(board["id_tablero"])
+    print(len(modifies))
     print(len(modifies))
     print(len(modificates.modify.get(1, [])))
     for modify in modifies:
@@ -104,11 +105,26 @@ def modificar_tablero(board: Dict):
             casilla2['color'] = temp_color
         else:
             raise HTTPException(status_code=404, detail="Casilla no encontrada")
+    logging.debug(f"Modified board: {board}")
     return board
     
 
+async def confirmar_cambios(session, game_id: int):
+    old_board = session.query(Tablero).filter(Tablero.id_tablero == game_id).first()
+    if old_board is None:
+        raise HTTPException(status_code=404, detail="Board not found")
+    new_board = await modificar_tablero(old_board.to_dict())
+    for casilla in new_board['casillas']:
+        cas = session.query(Casilla).filter(Casilla.id_casilla == casilla['id_casilla']).first()
+        cas.color = casilla['color']
+            
+    for Modificate in modificates.get_game_modifies(game_id):
+        mov_card = session.query(MovCard).filter(MovCard.id_movcard == Modificate.id_cartamov).first()
+        mov_card.state = False
+        mov_card.shown = False
+        mov_card.id_jugador = None
+    modificates.clear_modifies(game_id)
 
-    
 
 #--------------------------- CARTAS DE MOVIMIENTO -------------------------------------------------------------
 

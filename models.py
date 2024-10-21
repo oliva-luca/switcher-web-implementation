@@ -79,8 +79,7 @@ class Tablero(Base):
             'color_principal': self.color_principal,
             'casillas': [casilla.to_dict() for casilla in self.casillas]
         }
-    
-        
+
 
 # Tabla de Casillas
 class Casilla(Base):
@@ -101,7 +100,6 @@ class Casilla(Base):
             'id_tablero': self.id_tablero,
             'figura': self.figura
         }
-    
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'
