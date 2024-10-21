@@ -430,8 +430,10 @@ class Operations:
             if not figcard.shown:
                 raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
             
+            if game.turn != player.id_jugador:
+                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
             figcard.id_jugador = None
-            
+        
             await confirmar_cambios(session, game.id_tablero)
             
             
