@@ -544,6 +544,7 @@ class Operations:
             if number_of_figcards == 0:
                 for player in game.players:
                     player.id_partida = None
+                session.commit()
                 await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
             await manager_game.broadcast(game_id, "discard figcard") 
 
