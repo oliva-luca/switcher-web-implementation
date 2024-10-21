@@ -136,7 +136,10 @@ class Operations:
                 tablero.casillas = session.query(Casilla).filter(Casilla.id_tablero == tablero.id_tablero).all()
             finally:
                 session.close()
-            return tablero.to_dict()
+            response = tablero.to_dict()
+            if 'id_tablero' not in response:
+                print("Error: id_tablero not found in response")
+            return response
         finally:
             session.close()
 
@@ -405,7 +408,7 @@ class Operations:
         finally:
             session.close()
 
-    def discard_figcard(self, game_id : int, figcard_id : int):
+    async def discard_figcard(self, game_id : int, figcard_id : int):
         session = Session()
 
         try: 
@@ -429,16 +432,7 @@ class Operations:
             
             figcard.id_jugador = None
             
-            old_board = session.query(Tablero).filter(id_tablero == game_id).first()
-            new_board = modificar_tablero(old_board.to_dict())
-            for casilla in new_board.casillas:
-                cas = session.query(Casilla).filter(Casilla.id_casilla == casilla['id_casilla']).first()
-                cas.color = casilla['color']
-            
-            for Modificate in modificates.get_game_modifies(game_id):
-                mov_card = session.query(MovCard).filter(MovCard.id_movcard == Modificate['id_movcard']).first()
-                mov_card.state = False
-                mov_card.id_jugador = None
+            await confirmar_cambios(session, game.id_tablero)
             
             
             session.commit()
