@@ -1,8 +1,10 @@
 import pytest
 import asyncio
-from  sqlalchemy.orm import sessionmaker
-from operations import Operations, GameNotFoundError, PlayerNotFoundError, GameStartedError
+from sqlalchemy.orm import sessionmaker
+from exception import *
+from operations import Operations
 from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla 
+from utils import modificates
 
 Session = sessionmaker(bind=engine)
 
@@ -108,7 +110,11 @@ async def test_join_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         await operation.join_game(1000, 1)
         
-    
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_join_game_player_already_in_game(operation: Operations):
+    with pytest.raises(PlayerAlreadyInGameError):
+        await operation.join_game(3, 6)
         
 @pytest.mark.integration_test
 @pytest.mark.asyncio
@@ -194,7 +200,7 @@ def test_get_player(operation: Operations):
     assert player.in_game == False
     assert player.block == False
     assert player.position == None
-    assert player.id_partida == None
+    assert player.id_partida == 3
 
 
 @pytest.mark.integration_test
@@ -262,3 +268,118 @@ async def test_leave_lobby(operation: Operations):
         assert player not in players_in_1
     finally:
         session.close()
+
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_playmovcard(operation : Operations):
+    session = Session()
+    try:
+        await operation.start_game(3)
+        assert session.query(Game).filter(Game.id_partida == 3).one().started == True
+        assert session.query(Game).filter(Game.id_partida == 3).one().tablero is not None
+        game = session.query(Game).filter(Game.id_partida == 3).one()
+
+        actual_turn = game.turn 
+
+        player = session.query(Player).filter(Player.id_jugador == actual_turn).first()
+
+        player.movcards = player.movcards
+        cant_mov_cards = len(player.movcards)
+        carta = player.movcards[0]
+
+        assert cant_mov_cards == 3
+    finally:
+        session.close()
+
+    await operation.playmovcard(3,carta.id_movcard, 10, 11)
+
+    try:
+        session = Session()
+
+        carta_por_id = session.query(MovCard).filter(MovCard.id_movcard == carta.id_movcard).one()
+
+        assert carta_por_id.state == True 
+
+    finally:
+        session.close()
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        await operation.discard_figcard(1000, 1)
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard_card_not_found(operation: Operations):
+    with pytest.raises(CardNotFoundError):
+        await operation.discard_figcard(8, 1)   # is from another game
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard_player_not_found(operation: Operations):
+    with pytest.raises(PlayerNotFoundError):
+        await operation.discard_figcard(8, 104)
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard_invalid_card(operation: Operations):
+    with pytest.raises(InvalidCardError):
+        await operation.discard_figcard(8, 101)
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard_not_their_turn(operation: Operations):
+    with pytest.raises(NotTheirTurnError):
+        await operation.discard_figcard(8, 118)
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_discard_figcard(operation : Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 10).first()
+        cant_figcards = len(player.figcards)
+        assert cant_figcards == 24
+    finally:
+        session.close()
+
+    await operation.discard_figcard(8, 109)
+
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 10).first()
+        new_cant_figcards = len(player.figcards)
+        assert cant_figcards - 1 == new_cant_figcards
+    finally:
+        session.close()
+
+# @pytest.mark.integration_test
+# @pytest.mark.asyncio
+# async def test_cancel_partial_moves(operation: Operations):
+#     session = Session()
+#     game = session.query(Game).filter(Game.id_partida == 7).first()
+#     try:
+#         assert game is not None
+#         id_tablero = game.id_tablero
+
+#         modificates.add_modify(id_tablero, 1, 2, 3)
+#         modificates.add_modify(id_tablero, 4, 5, 6)
+
+#         assert len(modificates.get_game_modifies(id_tablero)) == 2
+#     finally:
+#         session.close()
+
+#     await operation.cancel_partial_moves(id_tablero)
+
+#     try:
+#         assert game is not None
+#         assert len(modificates.get_game_modifies(game.id_tablero)) == 0
+#     finally:
+#         session.close()
+
+
+
+
+

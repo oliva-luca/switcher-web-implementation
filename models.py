@@ -1,7 +1,7 @@
 from typing import Optional, List
 from enum import Enum as PyEnum
 
-from sqlalchemy import create_engine, Column, Integer, Boolean, String, ForeignKey 
+from sqlalchemy import create_engine, Column, Integer, Boolean, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from config import DATABASE_FILENAME
@@ -26,6 +26,7 @@ class Game(Base):
     password = Column(String,nullable=False)
     turn = Column(Integer, nullable=True)
     owner = Column(Integer, nullable=True)
+    turn_time = Column(DateTime, nullable=True, default=None)
 
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'), nullable=True) 
     tablero = relationship("Tablero", backref="game")
@@ -72,6 +73,12 @@ class Tablero(Base):
     id_tablero = Column(Integer, primary_key=True, autoincrement=True)
     color_principal = Column(String, nullable=True)  # Mantienes el color principal si es necesario
     casillas = relationship("Casilla", back_populates="tablero")  # Relación con las casillas
+    def to_dict(self):
+        return {
+            'id_tablero': self.id_tablero,
+            'color_principal': self.color_principal,
+            'casillas': [casilla.to_dict() for casilla in self.casillas]
+        }
 
 
 # Tabla de Casillas
@@ -83,7 +90,16 @@ class Casilla(Base):
     color = Column(String, nullable=False)  # Color de la casilla
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'))  # Relación con el tablero
     tablero = relationship("Tablero", back_populates="casillas")
-
+    figura = Column(Integer, nullable = False, default = -1)
+    def to_dict(self):
+        return {
+            'id_casilla': self.id_casilla,
+            'fila': self.fila,
+            'columna': self.columna,
+            'color': self.color,
+            'id_tablero': self.id_tablero,
+            'figura': self.figura
+        }
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'
@@ -97,6 +113,8 @@ class MovCard(Base):
     # Jugador al que pertence
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="movcards")
+
+    state = Column(Boolean, nullable = False , default = False)
 
 # Carta de figura
 class FigCard(Base):
@@ -112,10 +130,6 @@ class FigCard(Base):
     # Jugador al que pertence
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="figcards")
-
-# Validar color con Enum en Python
-def set_color(self, color: Color):
-    self.color = color.value
 
 
 # Crear las tablas en la base de datos
