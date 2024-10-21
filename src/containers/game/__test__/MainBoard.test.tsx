@@ -1,15 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import MainBoard from "../components/mainBoard/MainBoard"; // Adjust the path
+import MainBoard from "../components/mainBoard/MainBoard";
 import {
   ParsePlayers,
   ParsePlayerFigDeck,
   ParsePlayerFigCards,
-} from "../utils/parsers"; // Adjust the path
+} from "../utils/parsers";
 import GameBoard from "../components/mainBoard/GameBoard";
 import FigureBoard from "../components/mainBoard/FigureBoard";
 
-// Mocking external dependencies
 jest.mock("../utils/parsers");
 jest.mock("../components/mainBoard/GameBoard");
 jest.mock("../components/mainBoard/FigureBoard", () =>
