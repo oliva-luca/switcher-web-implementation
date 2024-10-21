@@ -31,24 +31,21 @@ export const useGame = () => {
 
     socket.onmessage = (event) => {
       console.log("WebSocket message received");
-      setGameInfoKey((prevKey) => prevKey + 1); // Update key to force re-render
+      setGameInfoKey((prevKey) => prevKey + 1);
       const message = event.data;
-      switch (message) {
-        case "winner":
+
+      if (message.includes("winner")) {
+        const winner = message.replace("winner ", "");
+        if (winner == localStorage.getItem("userId"))
           Swal.fire({
             title: "¡Ganaste!",
             text: "Felicidades, has ganado la partida.",
             icon: "success",
             confirmButtonText: "Aceptar",
           });
-          navigate("/lobby");
-          break;
-
-        default:
-          // alert("Actualizar info partida");
-          console.log(message);
-          getData();
-          break;
+        navigate("/lobby");
+      } else {
+        getData();
       }
     };
 
