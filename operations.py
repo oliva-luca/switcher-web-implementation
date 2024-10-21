@@ -249,6 +249,7 @@ class Operations:
 
 
     async def end_turn(self, game_id: int):
+        await self.cancel_partial_moves(game_id)
         session = Session()
         try:
             # Obtengo la partida
@@ -515,6 +516,7 @@ class Operations:
 
             if number_of_figcards == 0:
                 await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
+            await manager_game.broadcast(game_id, "discard figcard") 
 
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
         
