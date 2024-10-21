@@ -219,23 +219,10 @@ class Operations:
                 players = session.query(Player).filter(Player.id_partida == game_id).all()
                 for player in players:
                     mostrar_cartas_figura(player.id_jugador, session)
-
-
-                session.refresh(nuevo_tablero)
-
-                colores = simplificar_tablero(nuevo_tablero)
-
-                figuras = obtener_figuras_tablero(game_id, colores, session)
-
-                if figuras != []:
-                    print("Hay figuras")
-                    for tipo_figura, componente in figuras:
-                        for fila, columna in componente:
-                            casilla = session.query(Casilla).filter((Casilla.id_tablero == nuevo_tablero.id_tablero) & 
-                                                                    (Casilla.fila == fila) & 
-                                                                    (Casilla.columna == columna)).one()
-                            casilla.figura = tipo_figura
         
+                # Identificar las figuras en las casillas
+                actualizar_informacion_casillas(game_id, nuevo_tablero, session)
+
                 # Actualizo el tiempo del turno
                 game.turn_time = datetime.now()
 
@@ -291,6 +278,9 @@ class Operations:
                                                            (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
+
+            # Recalculo la informacion de las casillas
+            actualizar_informacion_casillas(game_id, game.tablero, session)
 
             # Actualizo el tiempo del turno
             game.turn_time = datetime.now()
@@ -432,46 +422,9 @@ class Operations:
 
             tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one()      
 
-            colores_bidimensional = simplificar_tablero(tablero)
-
             modificaciones = modificates.get_game_modifies(tablero.id_tablero)
 
-            color_unidimensional = []
-
-            for fila in colores_bidimensional:
-                for color in fila:
-                    color_unidimensional.append(color)
-
-            for mod in modificaciones:
-                idx1 = mod.id_casilla1 - 1 
-                idx2 = mod.id_casilla2 - 1
-
-                temp = color_unidimensional[idx2] 
-                color_unidimensional[idx2] = color_unidimensional[idx1]
-                color_unidimensional[idx1] = temp 
-            
-            colores = []
-
-            for i in range(0 , len(color_unidimensional), 6):
-                fila = color_unidimensional[i:i+6]
-                colores.append(fila) 
-
-            for casilla in tablero.casillas:
-                casilla.figura = - 1 
-            
-            session.commit()
-
-            figuras = obtener_figuras_tablero(game_id, colores, session)
-
-            if figuras != []:
-                    print("Hay figuras")
-                    for tipo_figura, componente in figuras:
-                        for fila, columna in componente:
-                            casilla = session.query(Casilla).filter((Casilla.id_tablero == tablero.id_tablero) & 
-                                                                    (Casilla.fila == fila) & 
-                                                                    (Casilla.columna == columna)).one()
-                            casilla.figura = tipo_figura
-
+            actualizar_informacion_casillas(game_id, tablero, session, modificaciones)
 
             session.commit()
 
@@ -508,8 +461,9 @@ class Operations:
             figcard.id_jugador = None
             figcard.shown = False
             await confirmar_cambios(session, game.id_tablero)
-            
-            
+
+            actualizar_informacion_casillas(game_id, game.tablero, session)
+
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
@@ -544,18 +498,7 @@ class Operations:
             for casilla in tablero.casillas:
                 casilla.figura = - 1
 
-            colores = simplificar_tablero(tablero)
-
-            figuras = obtener_figuras_tablero(game_id, colores, session)
-
-            if figuras != []:
-                print("Hay figuras")
-                for tipo_figura, componente in figuras:
-                    for fila, columna in componente:
-                        casilla = session.query(Casilla).filter((Casilla.id_tablero == tablero.id_tablero) & 
-                                                                (Casilla.fila == fila) & 
-                                                                (Casilla.columna == columna)).one()
-                        casilla.figura = tipo_figura
+            actualizar_informacion_casillas(game_id, tablero, session)
     
             session.commit()
             
