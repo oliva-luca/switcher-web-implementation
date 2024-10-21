@@ -33,6 +33,7 @@ describe("useGame hook", () => {
     };
 
     (global as any).WebSocket = jest.fn(() => mockWebSocket);
+    localStorage.setItem("userId", "1");
     localStorage.setItem("gameId", "1");
   });
 
@@ -52,7 +53,7 @@ describe("useGame hook", () => {
     });
 
     await act(async () => {
-      mockWebSocket.onmessage({ data: "winner" });
+      mockWebSocket.onmessage({ data: "winner 1" });
     });
 
     expect(Swal.fire).toHaveBeenCalledWith({
