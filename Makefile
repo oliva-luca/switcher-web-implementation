@@ -9,11 +9,6 @@ run_integration_tests:
 	ENVIRONMENT=test pytest -m integration_test -vv
 	rm database_test.sqlite
 
-run_end2end_tests:
-	env ENVIRONMENT=test python3 populate_test_db.py
-	ENVIRONMENT=test pytest -m end2end_test -vv
-	rm database_test.sqlite
-
 run_all_tests:
 	ENVIRONMENT=test python3 populate_test_db.py
 	pytest --cov=.  --cov-report=term-missing -vv
