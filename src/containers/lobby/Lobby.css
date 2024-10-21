@@ -11,7 +11,7 @@
 
 .join-game-section {
   width: 100%;
-  max-width: 800px; /* Ajusta según sea necesario */
+  max-width: 1000px; /* Ajusta según sea necesario */
   display: flex;
   flex-direction: column;
   align-items: center;
