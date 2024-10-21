@@ -221,6 +221,23 @@ def repartir_cartas_figura(id_partida: int, session):
     finally:
         return {"message": "Repartidas las cartas de figura"}
 
+def repartir_una_carta_figura(id_partida: int, session):
+    try:
+        # Obtengo la partida
+        game = session.query(Game).filter(Game.id_partida == id_partida).first()
+        # Obtengo los jugadores de la partida
+        players = session.query(Player).filter(Player.id_partida == id_partida).all()
+        # Obtengo las cartas de figura de la partida
+        figcards = session.query(FigCard).filter(FigCard.id_partida == id_partida).all()
+
+        # Reparto la carta
+        for player in players:
+            new_figcard = figcards.pop()
+            new_figcard.id_jugador = player.id_jugador
+        session.commit()
+    finally:
+        return {"message": "Repartidas las cartas de figura"}
+
 def mostrar_cartas_figura(id_jugador : int, session):
     try:
         # Obtengo las cartas de figura del jugador

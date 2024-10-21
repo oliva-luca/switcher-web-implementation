@@ -234,6 +234,78 @@ class Operations:
             finally:
                 session.close()
 
+    async def start_game_just_one_figcard(self,game_id: int):
+            session = Session()
+            try:
+                # Buscar la partida por su ID
+                game = session.query(Game).filter(Game.id_partida == game_id).first()
+                
+                # Verificar si la partida existe
+                if not game:
+                    raise GameNotFoundError(f"Game with ID {game_id} not found.")
+                
+                # Verificar si la partida ya ha comenzado
+                if game.started:
+                    raise GameStartedError(f"Game already on course.")
+                
+                # Verificar si la cantidad de jugadores es correcta
+                if(len(game.players) != game.cant_jugadores):
+                    raise NumberOfPlayersError(f"Game with ID {game_id} needs {game.cant_jugadores} "\
+                                                f"players to start, but {len(game.players)} found")
+
+                # Crear un nuevo tablero para la partida
+                nuevo_tablero = Tablero()
+                session.add(nuevo_tablero)
+                session.commit()  # Guardar el tablero y obtener su id
+                session.refresh(nuevo_tablero)
+                
+                # Asignar el tablero a la partida
+                game.id_tablero = nuevo_tablero.id_tablero
+                game.started = True  # Marcar que la partida ha comenzado
+                session.commit()  # Guardar los cambios en la partida
+                
+                # Generar los casilleros y asignar colores aleatorios al tablero
+                generar_tablero_aleatorio(nuevo_tablero.id_tablero, session)
+                
+                # Asignar las posiciones de los jugadores en la ronda
+                asignar_posiciones(game_id, session)
+
+                # Indicar que es el turno del primer jugador
+                asignar_turno_primer_jugador(game_id, session)
+
+                # Crear las cartas de movimiento de la partida
+                crear_cartas_movimiento(game_id, session)
+                
+                # Repartir cartas de movimiento entre los jugadores
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    repartir_cartas_movimiento(game_id, player.id_jugador, session)
+                
+                # Crear las cartas de figura de la partida
+                crear_cartas_figura(game_id, session)
+
+                # Repartir cartas de figura entre los jugadores
+                repartir_una_carta_figura(game_id, session)
+
+                # Hacer visible la carta de figura de cada uno de ellos
+                players = session.query(Player).filter(Player.id_partida == game_id).all()
+                for player in players:
+                    mostrar_cartas_figura(player.id_jugador, session)
+        
+                # Identificar las figuras en las casillas
+                actualizar_informacion_casillas(game_id, nuevo_tablero, session)
+
+                # Actualizo el tiempo del turno
+                game.turn_time = datetime.now()
+
+                session.commit()
+
+                await manager_game.broadcast(game_id, "Game has started")
+                await manager.broadcast("game start")
+                return {"message": f"Game {game_id} has started successfully!"}
+            finally:
+                session.close()
+
 
     async def end_turn(self, game_id: int):
         await self.cancel_partial_moves(game_id)
