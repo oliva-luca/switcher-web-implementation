@@ -10,6 +10,7 @@ from fastapi   import FastAPI, HTTPException, status, WebSocket, WebSocketDiscon
 from exception import * 
 from utils     import * 
 from websockts import * 
+from datetime  import datetime
 
 Session = sessionmaker(bind = engine)
 
@@ -232,6 +233,9 @@ class Operations:
                                                                     (Casilla.columna == columna)).one()
                             casilla.figura = tipo_figura
         
+                # Actualizo el tiempo del turno
+                game.turn_time = datetime.now()
+
                 session.commit()
 
                 await manager_game.broadcast(game_id, "Game has started")
@@ -283,6 +287,9 @@ class Operations:
                                                            (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
+
+            # Actualizo el tiempo del turno
+            game.turn_time = datetime.now()
 
             session.commit()
             
@@ -550,3 +557,13 @@ class Operations:
         finally: 
             session.close()
             
+    def get_turn_time(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            diff = int((datetime.now() - game.turn_time).total_seconds())
+            return diff
+        finally:
+            session.close()
