@@ -469,7 +469,7 @@ class Operations:
             session.close()
             
 
-    def discard_figcard(self, game_id : int, figcard_id : int):
+    async def discard_figcard(self, game_id : int, figcard_id : int):
         session = Session()
 
         try: 
@@ -497,6 +497,13 @@ class Operations:
             figcard.id_jugador = None
 
             session.commit()
+
+            # Detectar si el jugador que descartó esta carta ganó
+            number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
+
+            if number_of_figcards == 0:
+                await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
+
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
         finally:
             session.close()
