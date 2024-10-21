@@ -148,7 +148,7 @@ async def cancel_partial_move(game_id: int):
         raise HTTPException(status_code=404, detail=str(e))  
 
 
-@app.put("/game/{game_id}/discard_figcard/{figcard_id}")
+@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}")
 async def discard_figcard(game_id: int, figcard_id: int):
     operation = Operations()
     try:
@@ -164,6 +164,16 @@ async def discard_figcard(game_id: int, figcard_id: int):
         raise HTTPException(status_code=404, detail=str(e))
     except NotTheirTurnError as e:
         raise HTTPException(status_code=400, detail=str(e))   
+    
+@app.get("/gamelist/turn_time/{game_id}")
+async def get_turn_time(game_id: int):
+    operation = Operations()
+    try:
+        return operation.get_turn_time(game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except GameNotStartedError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.websocket("/ws")

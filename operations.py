@@ -10,6 +10,7 @@ from fastapi   import FastAPI, HTTPException, status, WebSocket, WebSocketDiscon
 from exception import * 
 from utils     import * 
 from websockts import * 
+from datetime  import datetime
 
 Session = sessionmaker(bind = engine)
 
@@ -219,11 +220,33 @@ class Operations:
                 for player in players:
                     mostrar_cartas_figura(player.id_jugador, session)
 
+
+                session.refresh(nuevo_tablero)
+
+                colores = simplificar_tablero(nuevo_tablero)
+
+                figuras = obtener_figuras_tablero(game_id, colores, session)
+
+                if figuras != []:
+                    print("Hay figuras")
+                    for tipo_figura, componente in figuras:
+                        for fila, columna in componente:
+                            casilla = session.query(Casilla).filter((Casilla.id_tablero == nuevo_tablero.id_tablero) & 
+                                                                    (Casilla.fila == fila) & 
+                                                                    (Casilla.columna == columna)).one()
+                            casilla.figura = tipo_figura
+        
+                # Actualizo el tiempo del turno
+                game.turn_time = datetime.now()
+
+                session.commit()
+
                 await manager_game.broadcast(game_id, "Game has started")
                 await manager.broadcast("game start")
                 return {"message": f"Game {game_id} has started successfully!"}
             finally:
                 session.close()
+
 
     async def end_turn(self, game_id: int):
         session = Session()
@@ -267,6 +290,9 @@ class Operations:
                                                            (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
+
+            # Actualizo el tiempo del turno
+            game.turn_time = datetime.now()
 
             session.commit()
             
@@ -399,7 +425,51 @@ class Operations:
                 raise CasillaNotFoundError(f"Casilla with ID {casilla_id2} not found.")
 
             modificates.add_modify(game.id_tablero,mov_card_id,casilla_id1,casilla_id2)
-            mov_card.state = True 
+
+            mov_card.state = True
+
+            tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one()      
+
+            colores_bidimensional = simplificar_tablero(tablero)
+
+            modificaciones = modificates.get_game_modifies(tablero.id_tablero)
+
+            color_unidimensional = []
+
+            for fila in colores_bidimensional:
+                for color in fila:
+                    color_unidimensional.append(color)
+
+            for mod in modificaciones:
+                idx1 = mod.id_casilla1 - 1 
+                idx2 = mod.id_casilla2 - 1
+
+                temp = color_unidimensional[idx2] 
+                color_unidimensional[idx2] = color_unidimensional[idx1]
+                color_unidimensional[idx1] = temp 
+            
+            colores = []
+
+            for i in range(0 , len(color_unidimensional), 6):
+                fila = color_unidimensional[i:i+6]
+                colores.append(fila) 
+
+            for casilla in tablero.casillas:
+                casilla.figura = - 1 
+            
+            session.commit()
+
+            figuras = obtener_figuras_tablero(game_id, colores, session)
+
+            if figuras != []:
+                    print("Hay figuras")
+                    for tipo_figura, componente in figuras:
+                        for fila, columna in componente:
+                            casilla = session.query(Casilla).filter((Casilla.id_tablero == tablero.id_tablero) & 
+                                                                    (Casilla.fila == fila) & 
+                                                                    (Casilla.columna == columna)).one()
+                            casilla.figura = tipo_figura
+
 
             session.commit()
 
@@ -407,6 +477,7 @@ class Operations:
 
         finally:
             session.close()
+            
 
     async def discard_figcard(self, game_id : int, figcard_id : int):
         session = Session()
@@ -436,6 +507,13 @@ class Operations:
             
             
             session.commit()
+
+            # Detectar si el jugador que descartó esta carta ganó
+            number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
+
+            if number_of_figcards == 0:
+                await manager_game.broadcast(game_id, f"winner {player.id_jugador}")
+
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
         
         finally:
@@ -450,13 +528,30 @@ class Operations:
         
             current_player = session.query(Player).filter(Player.id_jugador == game.turn).one()
 
-            
+            tablero = session.query(Tablero).filter(Tablero.id_tablero == game.id_tablero).one()
+
             modificates.clear_modifies(game.id_tablero)
 
             for movcard in current_player.movcards:
                 if movcard.state == True:
                     movcard.state = False
-            
+
+            for casilla in tablero.casillas:
+                casilla.figura = - 1
+
+            colores = simplificar_tablero(tablero)
+
+            figuras = obtener_figuras_tablero(game_id, colores, session)
+
+            if figuras != []:
+                print("Hay figuras")
+                for tipo_figura, componente in figuras:
+                    for fila, columna in componente:
+                        casilla = session.query(Casilla).filter((Casilla.id_tablero == tablero.id_tablero) & 
+                                                                (Casilla.fila == fila) & 
+                                                                (Casilla.columna == columna)).one()
+                        casilla.figura = tipo_figura
+    
             session.commit()
             
             await manager_game.broadcast(game_id, "The partial moves has been cancelled") 
@@ -466,3 +561,13 @@ class Operations:
         finally: 
             session.close()
             
+    def get_turn_time(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            diff = int((datetime.now() - game.turn_time).total_seconds())
+            return diff
+        finally:
+            session.close()

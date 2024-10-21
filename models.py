@@ -1,7 +1,7 @@
 from typing import Optional, List
 from enum import Enum as PyEnum
 
-from sqlalchemy import create_engine, Column, Integer, Boolean, String, ForeignKey 
+from sqlalchemy import create_engine, Column, Integer, Boolean, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from config import DATABASE_FILENAME
@@ -26,6 +26,7 @@ class Game(Base):
     password = Column(String,nullable=False)
     turn = Column(Integer, nullable=True)
     owner = Column(Integer, nullable=True)
+    turn_time = Column(DateTime, nullable=True, default=None)
 
     id_tablero = Column(Integer, ForeignKey('tablero.id_tablero'), nullable=True) 
     tablero = relationship("Tablero", backref="game")
@@ -79,6 +80,7 @@ class Tablero(Base):
             'casillas': [casilla.to_dict() for casilla in self.casillas]
         }
 
+
 # Tabla de Casillas
 class Casilla(Base):
     __tablename__ = 'casilla'
@@ -95,7 +97,8 @@ class Casilla(Base):
             'fila': self.fila,
             'columna': self.columna,
             'color': self.color,
-            'id_tablero': self.id_tablero
+            'id_tablero': self.id_tablero,
+            'figura': self.figura
         }
 # Carta de movimiento
 class MovCard(Base):
