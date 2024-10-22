@@ -26,33 +26,18 @@
   border-radius: 10px;
 }
 
-.figureGridBtm {
+.figureGrid {
   display: grid;
   grid-template-columns: repeat(5, 80px);
   grid-template-rows: 50px;
-  gap: 5px;
+  gap: 15px;
 }
 
-.figureGridTop {
-  display: grid;
-  grid-template-columns: repeat(5, 80px);
-  grid-template-rows: 50px;
-  gap: 5px;
-  justify-items: center;
-}
-
-.figureGridLft {
+.figureGridSide {
   display: grid;
   grid-template-columns: 80px;
-  grid-template-rows: 110px repeat(3, 80px);
-  gap: 10px;
-}
-
-.figureGridRgt {
-  display: grid;
-  grid-template-columns: 80px;
-  grid-template-rows: repeat(3, 80px) 110px;
-  gap: 10px;
+  grid-template-rows: repeat(5, 80px);
+  gap: 15px;
 }
 
 .figureDeck {

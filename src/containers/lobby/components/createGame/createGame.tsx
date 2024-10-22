@@ -32,8 +32,12 @@ const CreateGame = () => {
 
   const handlePlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    if (value >= 2 && value <= 4) {
-      setPlayers(value);
+    if (value < 2) {
+      setPlayers(2);
+    } else if (value > 4) {
+        setPlayers(4);
+    } else {
+        setPlayers(value);
     }
   };
 
@@ -44,6 +48,8 @@ const CreateGame = () => {
     const gameData = {
       name: name,
       cant_players: players,
+      priv: isPrivate,
+      psw: password,
     };
 
     const queryString = new URLSearchParams(gameData as any).toString();
@@ -118,6 +124,7 @@ const CreateGame = () => {
                   className="form-control"
                   value={name}
                   onChange={handleNameChange}
+                  maxLength={16}
                   required
                 />
               </div>

@@ -1,0 +1,17 @@
+/* filter.css */
+.nameFilter {
+    display: flex;
+    gap: 10px; /* Espacio entre los inputs */
+}
+
+#nameInput,
+#playerCountInput {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    box-sizing: border-box;
+    width: 32vh;
+    margin: 2vh 1vh;
+}
