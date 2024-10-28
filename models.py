@@ -39,6 +39,14 @@ class Game(Base):
 
 
 
+class User(Base):
+    __tablename__ = 'user'
+
+    id_user = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String, unique=True, nullable=False)  # puedes agregar más columnas relevantes para el usuario
+    players = relationship("Player", back_populates="user")
+
+
 class Player(Base):
     __tablename__ = 'player'
     
@@ -47,6 +55,10 @@ class Player(Base):
     in_game = Column(Boolean, nullable=False, default=False)
     block = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
     position = Column(Integer, nullable=True)  # Posicion en la ronda
+
+    user_id = Column(Integer, ForeignKey('user.id_user'), nullable=True)
+    
+    user = relationship("User", back_populates="players")
 
     # Relación con Game, asumiendo que cada jugador pertenece a una sola partida
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=True)

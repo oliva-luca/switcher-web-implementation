@@ -3,7 +3,7 @@ import asyncio
 from sqlalchemy.orm import sessionmaker
 from exception import *
 from operations import Operations
-from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla 
+from models import Game, engine, Base, User ,  Player, Tablero, MovCard, FigCard, Casilla 
 from utils import modificates
 
 Session = sessionmaker(bind=engine)
@@ -28,16 +28,16 @@ def test_get_games(operation: Operations):
 def test_create_player(operation: Operations):
     session = Session()
     try:
-        N_players = session.query(Player).count()
+        N_users = session.query(User).count()
     finally:
         session.close()
     
-    operation.create_player('player1')
+    operation.create_user('player1')
     
     session = Session()
     try:
-        N_players_new = session.query(Player).count()
-        assert N_players_new  == N_players + 1
+        N_users_new = session.query(User).count()
+        assert N_users_new  == N_users + 1
     finally:
         session.close()
 
@@ -72,7 +72,7 @@ async def test_join_game(operation: Operations):
     finally:
         session.close()
     
-    await operation.join_game(1, 1)
+    player_id =  await  operation.join_game(1, 1)
     
     session = Session()
     try:
@@ -83,7 +83,7 @@ async def test_join_game(operation: Operations):
         
     session = Session()
     try:
-        player = session.query(Player).filter(Player.id_jugador == 1).one()
+        player = session.query(Player).filter(Player.id_jugador == player_id).one()
         assert player.id_partida == 1
     finally:
         session.close()
@@ -100,7 +100,7 @@ async def test_join_game(operation: Operations):
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_join_game_player_not_found(operation: Operations):
-    with pytest.raises(PlayerNotFoundError):
+    with pytest.raises(UserNotFoundError):
         await operation.join_game(1, 1000)
         
         

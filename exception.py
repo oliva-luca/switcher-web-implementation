@@ -29,3 +29,6 @@ class CasillaNotFoundError(Exception):
 
 class PlayerAlreadyInGameError(Exception):
     pass
+
+class UserNotFoundError(Exception):
+    pass

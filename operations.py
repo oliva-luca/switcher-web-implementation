@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
 
-from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
+from models import Game, Player, User , Tablero, Casilla, MovCard, FigCard, engine
 from typing import List,Dict
 
 
@@ -31,6 +31,16 @@ class Operations:
             for game in games:
                 game.figcards = game.figcards
             return games
+        finally:
+            session.close()
+
+    def get_users(self):
+        session = Session()
+        try: 
+            users = session.query(User).all()
+            for user in users:
+                user.players = user.players
+            return users
         finally:
             session.close()
 
@@ -66,7 +76,7 @@ class Operations:
             session.close()
 
 
-    async def join_game(self,game_id: int, player_id: int):
+    async def join_game(self,game_id: int, user_id: int):
         # Crear una sesión de la base de datos
         session = Session()
         
@@ -75,15 +85,21 @@ class Operations:
             game = session.query(Game).filter(Game.id_partida == game_id).first()
             if not game:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
+
+            user = session.query(User).filter(User.id_user == user_id).first()
+            if not user:
+                raise UserNotFoundError(f"User with id {user_id} not found.")
+
+            new_player_id = self.create_player( user_id) 
             
             # Verificar si el jugador existe
-            new_player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            new_player = session.query(Player).filter(Player.id_jugador == new_player_id).first()
             if not new_player:
-                raise PlayerNotFoundError(f"Player with id {player_id} not found.")
+                raise PlayerNotFoundError(f"Player with id {new_player_id} not found.")
 
             # Verficar si el jugador ya está en alguna partida
-            if new_player.id_partida != None:
-                raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
+            #if new_player.id_partida != None:
+            #    raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
 
             if not game.players:
                 game.owner = new_player.id_jugador
@@ -144,23 +160,46 @@ class Operations:
         finally:
             session.close()
 
-    def create_player(self, nombre: str):
-
+    def create_user(self, nombre: str):
         session = Session()
-        try:
-            new_player_entry = Player(
-                nombre=nombre
+
+        try: 
+            new_user_entry = User (
+                nombre = nombre 
             )
-            session.add(new_player_entry)
+
+            session.add(new_user_entry)
             session.commit()
-            session.refresh(new_player_entry)
+            session.refresh(new_user_entry)
             return {
-                'id': new_player_entry.id_jugador,
-                'name': new_player_entry.nombre,
+                'id': new_user_entry.id_user,
+                'name': new_user_entry.nombre,
                 'operation_result': "Successfully created!"
             }
         finally:
             session.close()
+
+
+    def create_player(self, id_user: int):
+
+        session = Session()
+        
+        try:
+            user = session.query(User).filter(User.id_user==id_user).first()
+            if user is None:
+                return {'error': f"User with id {id_user} does not exist"}
+
+            new_player_entry = Player(
+                nombre=user.nombre,
+                id_user=id_user)
+
+            session.add(new_player_entry)
+            session.commit()
+            session.refresh(new_player_entry)
+            return new_player_entry.id_jugador
+        finally:
+            session.close()
+
 
     async def start_game(self,game_id: int):
             session = Session()
