@@ -340,8 +340,8 @@ def load_data_for_test():
     session = Session()
     try: 
         if session.query(Tablero).count() == 0:
-            for color_principal, id_tablero in tableros:
-                tablero = Tablero(color_principal=color_principal, id_tablero=id_tablero)
+            for color_prohibido, id_tablero in tableros:
+                tablero = Tablero(color_prohibido=color_prohibido, id_tablero=id_tablero)
                 for casilla in casillas:
                     if casilla["id_tablero"] == id_tablero:
                         new_casilla = Casilla(

@@ -160,11 +160,11 @@ async def cancel_partial_move(game_id: int):
         raise HTTPException(status_code=404, detail=str(e))  
 
 
-@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}")
-async def discard_figcard(game_id: int, figcard_id: int):
+@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}/color/{color}")
+async def discard_figcard(game_id: int, figcard_id: int, color: str):
     operation = Operations()
     try:
-        return await operation.discard_figcard(game_id, figcard_id)
+        return await operation.discard_figcard(game_id, figcard_id, color)
 
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

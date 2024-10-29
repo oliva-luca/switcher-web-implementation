@@ -136,6 +136,8 @@ async def test_start_game(operation: Operations):
     assert color_count["amarillo"] == 9
     assert color_count["verde"] == 9
 
+    assert tablero_game_1.color_prohibido == None   # No debe haber al inciar
+
     movcards = session.query(MovCard).filter(MovCard.id_partida == 1).all()
     assert len(movcards) == 49
 
@@ -308,31 +310,31 @@ async def test_playmovcard(operation : Operations):
 @pytest.mark.asyncio
 async def test_discard_figcard_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
-        await operation.discard_figcard(1000, 1)
+        await operation.discard_figcard(1000, 1, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_card_not_found(operation: Operations):
     with pytest.raises(CardNotFoundError):
-        await operation.discard_figcard(8, 1)   # is from another game
+        await operation.discard_figcard(8, 1, "rojo")  # is from another game
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_player_not_found(operation: Operations):
     with pytest.raises(PlayerNotFoundError):
-        await operation.discard_figcard(8, 104)
+        await operation.discard_figcard(8, 104, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_invalid_card(operation: Operations):
     with pytest.raises(InvalidCardError):
-        await operation.discard_figcard(8, 101)
+        await operation.discard_figcard(8, 101, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_not_their_turn(operation: Operations):
     with pytest.raises(NotTheirTurnError):
-        await operation.discard_figcard(8, 118)
+        await operation.discard_figcard(8, 118, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
@@ -342,16 +344,20 @@ async def test_discard_figcard(operation : Operations):
         player = session.query(Player).filter(Player.id_jugador == 10).first()
         cant_figcards = len(player.figcards)
         assert cant_figcards == 24
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido != "azul"
     finally:
         session.close()
 
-    await operation.discard_figcard(8, 109)
+    await operation.discard_figcard(8, 109, "azul")
 
     session = Session()
     try:
         player = session.query(Player).filter(Player.id_jugador == 10).first()
         new_cant_figcards = len(player.figcards)
         assert cant_figcards - 1 == new_cant_figcards
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido == "azul"
     finally:
         session.close()
 

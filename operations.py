@@ -506,7 +506,7 @@ class Operations:
             session.close()
             
 
-    async def discard_figcard(self, game_id : int, figcard_id : int):
+    async def discard_figcard(self, game_id : int, figcard_id : int, color : str):
         session = Session()
 
         try: 
@@ -535,6 +535,8 @@ class Operations:
             await confirmar_cambios(session, game.id_tablero)
 
             actualizar_informacion_casillas(game_id, game.tablero, session)
+
+            game.tablero.color_prohibido = color
 
             session.commit()
 
