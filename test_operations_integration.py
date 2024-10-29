@@ -344,10 +344,12 @@ async def test_discard_figcard(operation : Operations):
         player = session.query(Player).filter(Player.id_jugador == 10).first()
         cant_figcards = len(player.figcards)
         assert cant_figcards == 24
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido != "azul"
     finally:
         session.close()
 
-    await operation.discard_figcard(8, 109, "rojo")
+    await operation.discard_figcard(8, 109, "azul")
 
     session = Session()
     try:
@@ -355,7 +357,7 @@ async def test_discard_figcard(operation : Operations):
         new_cant_figcards = len(player.figcards)
         assert cant_figcards - 1 == new_cant_figcards
         tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
-        assert tablero.color_prohibido == "rojo"
+        assert tablero.color_prohibido == "azul"
     finally:
         session.close()
 
