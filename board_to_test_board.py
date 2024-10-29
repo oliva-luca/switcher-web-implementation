@@ -4,7 +4,7 @@ from models import Tablero, Casilla
 @pytest.fixture
 def tablero_a():
     return{
-    "color_principal": None,
+    "color_prohibido": None,
     "id_tablero": 1,
     "casillas": [
     {
@@ -265,7 +265,7 @@ def tablero_a():
 @pytest.fixture
 def tablero_b():
     return{
-    "color_principal": None,
+    "color_prohibido": None,
     "id_tablero": 1,
     "casillas": [
     {
