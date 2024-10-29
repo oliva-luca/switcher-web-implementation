@@ -308,31 +308,31 @@ async def test_playmovcard(operation : Operations):
 @pytest.mark.asyncio
 async def test_discard_figcard_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
-        await operation.discard_figcard(1000, 1)
+        await operation.discard_figcard(1000, 1, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_card_not_found(operation: Operations):
     with pytest.raises(CardNotFoundError):
-        await operation.discard_figcard(8, 1)   # is from another game
+        await operation.discard_figcard(8, 1, "rojo")  # is from another game
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_player_not_found(operation: Operations):
     with pytest.raises(PlayerNotFoundError):
-        await operation.discard_figcard(8, 104)
+        await operation.discard_figcard(8, 104, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_invalid_card(operation: Operations):
     with pytest.raises(InvalidCardError):
-        await operation.discard_figcard(8, 101)
+        await operation.discard_figcard(8, 101, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_discard_figcard_not_their_turn(operation: Operations):
     with pytest.raises(NotTheirTurnError):
-        await operation.discard_figcard(8, 118)
+        await operation.discard_figcard(8, 118, "rojo")
 
 @pytest.mark.integration_test
 @pytest.mark.asyncio
@@ -345,7 +345,7 @@ async def test_discard_figcard(operation : Operations):
     finally:
         session.close()
 
-    await operation.discard_figcard(8, 109)
+    await operation.discard_figcard(8, 109, "rojo")
 
     session = Session()
     try:
