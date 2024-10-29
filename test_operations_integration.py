@@ -136,6 +136,8 @@ async def test_start_game(operation: Operations):
     assert color_count["amarillo"] == 9
     assert color_count["verde"] == 9
 
+    assert tablero_game_1.color_prohibido == None   # No debe haber al inciar
+
     movcards = session.query(MovCard).filter(MovCard.id_partida == 1).all()
     assert len(movcards) == 49
 
@@ -352,6 +354,8 @@ async def test_discard_figcard(operation : Operations):
         player = session.query(Player).filter(Player.id_jugador == 10).first()
         new_cant_figcards = len(player.figcards)
         assert cant_figcards - 1 == new_cant_figcards
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido == "rojo"
     finally:
         session.close()
 
