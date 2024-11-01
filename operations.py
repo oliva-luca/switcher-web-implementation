@@ -90,7 +90,9 @@ class Operations:
             if not user:
                 raise UserNotFoundError(f"User with id {user_id} not found.")
 
-            new_player_id = self.create_player( user_id) 
+            
+
+            new_player_id = create_player( user_id, session) 
             
             # Verificar si el jugador existe
             new_player = session.query(Player).filter(Player.id_jugador == new_player_id).first()
@@ -112,6 +114,7 @@ class Operations:
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
 
+
             #Por si el jugador tiene cartas de anteriores partidas se borran 
             if new_player.movcards is not None:
                 for movcard in new_player.movcards:
@@ -124,7 +127,6 @@ class Operations:
 
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
-
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
@@ -179,26 +181,6 @@ class Operations:
         finally:
             session.close()
 
-
-    def create_player(self, id_user: int):
-
-        session = Session()
-        
-        try:
-            user = session.query(User).filter(User.id_user==id_user).first()
-            if user is None:
-                return {'error': f"User with id {id_user} does not exist"}
-
-            new_player_entry = Player(
-                nombre=user.nombre,
-                id_user=id_user)
-
-            session.add(new_player_entry)
-            session.commit()
-            session.refresh(new_player_entry)
-            return new_player_entry.id_jugador
-        finally:
-            session.close()
 
 
     async def start_game(self,game_id: int):

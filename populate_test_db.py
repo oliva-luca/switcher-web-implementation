@@ -23,6 +23,8 @@ def load_data_for_test():
         (2, 'user2'),
         (3, 'user3'),
         (4, 'user4'),
+        (5, 'user5'),
+        (6, 'user6'),
     ]
 
     players = [

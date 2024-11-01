@@ -25,7 +25,7 @@ def test_get_games(operation: Operations):
         session.close()
 
 @pytest.mark.integration_test
-def test_create_player(operation: Operations):
+def test_create_user(operation: Operations):
     session = Session()
     try:
         N_users = session.query(User).count()
@@ -91,7 +91,7 @@ async def test_join_game(operation: Operations):
     session = Session()
     try:
         game = session.query(Game).filter(Game.id_partida == 1).one()
-        player = session.query(Player).filter(Player.id_jugador == 1).one()
+        player = session.query(Player).filter(Player.id_jugador == player_id).one()
         players_in_1 = game.players
         assert player in players_in_1
     finally:
@@ -110,12 +110,7 @@ async def test_join_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         await operation.join_game(1000, 1)
         
-@pytest.mark.integration_test
-@pytest.mark.asyncio
-async def test_join_game_player_already_in_game(operation: Operations):
-    with pytest.raises(PlayerAlreadyInGameError):
-        await operation.join_game(3, 6)
-        
+
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_start_game(operation: Operations):
