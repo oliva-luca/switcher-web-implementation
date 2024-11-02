@@ -8,6 +8,7 @@ interface ColorTyleProps {
   col: number;
   row: number;
   color: string;
+  blocked: boolean;
   tipo_figura: number;
 }
 
@@ -41,6 +42,7 @@ const ColorTyle = ({
   color,
   col,
   row,
+  blocked,
   tipo_figura,
 }: ColorTyleProps) => {
   const {
@@ -86,7 +88,7 @@ const ColorTyle = ({
       const game_id = localStorage.getItem("gameId");
 
       const response = await axios.put(
-        `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}`
+        `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}/color/${color}`
       );
       console.log("Response:", response);
 
@@ -113,13 +115,13 @@ const ColorTyle = ({
   };
 
   return (
-    <div className={tipo_figura != -1 ? "resaltado salto" : ""}>
+    <div className={tipo_figura != -1 && !blocked ? "resaltado salto" : ""}>
       <button
         className={`colorTyle ${color} ${
           selectedTyle != null && selectedTyle[2] == tyleId
             ? "selectedTyle"
             : ""
-        }`}
+        } ${blocked ? "blocked" : ""}`}
         onClick={handleClick}
         disabled={
           selectedTyle != null &&
