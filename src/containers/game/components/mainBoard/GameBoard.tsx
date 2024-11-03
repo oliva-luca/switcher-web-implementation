@@ -24,6 +24,7 @@ const GameBoard = () => {
               col={tyle.columna}
               row={tyle.fila}
               color={tyle.color}
+              blocked={board.color_prohibido == tyle.color}
               tipo_figura={tyle.figura}
             />
           ))}

@@ -8,7 +8,7 @@ export interface Casilla {
 }
 
 export interface BoardData {
-  color_principal: number;
+  color_prohibido: string;
   id_tablero: number;
   casillas: Casilla[];
 }
