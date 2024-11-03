@@ -15,7 +15,6 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
     setSelectedCard,
     setSelectedTyle,
   } = useCurrentPlay();
-
   return (
     <img
       id={type.toString()}
@@ -28,16 +27,15 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
           : "/fig" + type + ".svg"
       }
       style={{
-        opacity:
-          playerID?.toString() != localStorage.getItem("userId")
-            ? 1
-            : (selectedFigureCard == null || selectedFigureCard[0] == cardID) &&
-              playerID != 0
+        opacity: (selectedFigureCard == null || selectedFigureCard[0] == cardID) && playerID != 0
             ? 1
             : 0.5,
+        border: selectedFigureCard != null && selectedFigureCard[0] == cardID
+            ? "3px solid white"
+            : "none",
+        borderRadius: "10px",
       }}
       onClick={() => {
-        if (playerID?.toString() == localStorage.getItem("userId")) {
           setSelectedTyle(null);
           setSelectedCard(null);
           setSelectedFigureCard(
@@ -45,7 +43,6 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
               ? null
               : [cardID, type]
           );
-        }
       }}
       alt={`${cardID}`}
     />
@@ -53,3 +50,5 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
 };
 
 export default FigureCard;
+
+
