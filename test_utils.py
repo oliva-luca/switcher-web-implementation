@@ -634,7 +634,7 @@ def test_detected_figures_are_shown(colores_de_tablero_b):
     session = Session()
     try:
         figure_types = obtener_figuras_de_jugadores(6, session)
-        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, session)
+        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, None, session)
         for type, _ in matching_figures:
             assert type in figure_types
     finally:

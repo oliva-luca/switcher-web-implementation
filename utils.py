@@ -433,6 +433,7 @@ def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, color_pro
 
 
 #--------------------------- INFROMACION DE CASILLA  -------------------------------------------------------
+# Para cada casilla de un tablero, la actualiza indicando la componente a la que pertence
 def actualizar_informacion_casillas(id_partida: int, tablero : Tablero, session, modificaciones = None):
     session.refresh(tablero)
 
@@ -449,7 +450,7 @@ def actualizar_informacion_casillas(id_partida: int, tablero : Tablero, session,
             colores[ubi_1[0]][ubi_1[1]], colores[ubi_2[0]][ubi_2[1]] = colores[ubi_2[0]][ubi_2[1]], colores[ubi_1[0]][ubi_1[1]]
 
 
-    figuras = obtener_figuras_tablero(id_partida, colores, session)
+    figuras = obtener_figuras_tablero(id_partida, colores, tablero.color_prohibido, session)
 
     for casilla in tablero.casillas:
         casilla.figura = -1
