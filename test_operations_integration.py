@@ -200,7 +200,7 @@ def test_get_player(operation: Operations):
     assert player.id_jugador == 2
     assert player.nombre == 'player2'
     assert player.in_game == False
-    assert player.block == False
+    assert player.blocked == False
     assert player.position == None
     assert player.id_partida == 3
 
