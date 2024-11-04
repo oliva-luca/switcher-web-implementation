@@ -555,6 +555,56 @@ class Operations:
         finally:
             session.close()
 
+    async def block_figcard(self, game_id : int, figcard_id : int, color : str):
+        session = Session()
+
+        try: 
+            
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            
+            figcard = session.query(FigCard).filter((FigCard.id_figcard == figcard_id) &
+                                                    (FigCard.id_partida == game_id)).first()
+            if not figcard: 
+                raise CardNotFoundError(f"FigCard with ID {figcard_id} not found.")
+
+            player = figcard.player
+            
+            if not player:
+                raise PlayerNotFoundError(f"Player associated with FigCard ID {figcard_id} not found.")
+            
+            if not figcard.shown:
+                raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
+            
+            if game.turn != player.id_jugador:
+                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
+        
+            if player.blocked:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} is already blocked.")
+            
+            number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
+            
+            # El jugador no puede ser bloqueado si le quedan menos de 3 figcards
+            if number_of_figcards < 3:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} has less than three figcards.")
+            
+            
+            player.blocked = True
+            figcard.blocked = True
+            await confirmar_cambios(session, game.id_tablero)
+
+            actualizar_informacion_casillas(game_id, game.tablero, session)
+
+            game.tablero.color_prohibido = color
+
+            session.commit()
+
+            return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was blocked"}
+        
+        finally:
+            session.close()
+
     async def cancel_partial_moves(self , game_id :int):
         session = Session()
         try:

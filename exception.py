@@ -1,5 +1,4 @@
 
-
 class GameNotFoundError(Exception):
     pass
 
@@ -28,4 +27,7 @@ class CasillaNotFoundError(Exception):
     pass
 
 class PlayerAlreadyInGameError(Exception):
+    pass
+
+class InvalidBlockError(Exception):
     pass
