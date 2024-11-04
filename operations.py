@@ -577,8 +577,8 @@ class Operations:
             if not figcard.shown:
                 raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
             
-            if game.turn != player.id_jugador:
-                raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
+            if game.turn == player.id_jugador:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} cannot block theirself.")
         
             if player.blocked:
                 raise InvalidBlockError(f"Player with ID {player.id_jugador} is already blocked.")

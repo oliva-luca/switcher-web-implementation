@@ -191,8 +191,6 @@ async def block_figcard(game_id: int, figcard_id: int, color: str):
         raise HTTPException(status_code=404, detail=str(e))
     except InvalidCardError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except NotTheirTurnError as e:
-        raise HTTPException(status_code=400, detail=str(e))
     except InvalidBlockError as e:
         raise HTTPException(status_code=400, detail=str(e))
     

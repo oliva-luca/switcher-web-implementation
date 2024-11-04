@@ -361,6 +361,42 @@ async def test_discard_figcard(operation : Operations):
     finally:
         session.close()
 
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        await operation.block_figcard(1000, 1, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_card_not_found(operation: Operations):
+    with pytest.raises(CardNotFoundError):
+        await operation.block_figcard(8, 1, "rojo")  # is from another game
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_player_not_found(operation: Operations):
+    with pytest.raises(PlayerNotFoundError):
+        await operation.block_figcard(8, 104, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_invalid_card(operation: Operations):
+    with pytest.raises(InvalidCardError):
+        await operation.block_figcard(8, 101, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_not_block_theirself(operation: Operations):
+    with pytest.raises(InvalidBlockError):
+        await operation.block_figcard(8, 115, "rojo")
+
+# Test de no bloquear si ya está bloqueado
+
+# Test de no bloquear si quedan menos de 3 cartas
+
+# Test de que se bloquee todo correctamente
+
 # @pytest.mark.integration_test
 # @pytest.mark.asyncio
 # async def test_cancel_partial_moves(operation: Operations):
