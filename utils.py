@@ -394,21 +394,39 @@ def obtener_figuras_de_jugadores(id_partida: int, session):
     figcards_types = [figcard.type for figcard in figcards]
     return figcards_types
 
-# Toma el id de la partida, la lista de colores del tablero y una session
+# Elimina las figuras detectadas que son del color prohibido
+# 'figuras_detectadas' debe respetar el formato del output de detectar_multiples_figuras
+# 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
+# color_prohibido es un string que indica el color prohibido o None si no existe
+def filtrar_color_prohibido(figuras_detectadas: List, colores_de_tablero: List, color_prohibido: str):
+    figuras_filtradas = []
+    for type, comp in figuras_detectadas:
+        # Obtengo cualquier casilla de la componente
+        casilla = (comp[0][0], comp[0][1])
+        # Obtengo su color
+        color = colores_de_tablero[casilla[0]][casilla[1]]
+        # Veo que no sea el color prohibido
+        if(color != color_prohibido):
+            figuras_filtradas.append((type, comp))
+    return figuras_filtradas
+
+# Toma el id de la partida, la lista de colores del tablero, el color prohibido y una session
 # 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
 # Devuelve una lista de pares de la forma (tipo, componente)
 # que representan todas las figuras que se encuentran en el tablero
 # y como carta de figura (visible) de algún jugador
 # tipo es el tipo de la carta de figura (entre 1 y 25)
-# componente son las coordenadas de la casilla que la conforman 
-def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, session):
+# componente son las coordenadas de las casillas que la conforman 
+def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, color_prohibido: str, session):
     try:
         # Calculo las componentes
         componentes = obtener_componentes_conexas(colores_de_tablero)
         # Obtengo los tipos de figura relevantes
         figuras_types = obtener_figuras_de_jugadores(id_partida, session)
         # Calcula la lista resultado
-        resultado = detectar_multiples_figuras(componentes, figuras_types)
+        resultado_parcial = detectar_multiples_figuras(componentes, figuras_types)
+        # Sacar las del color prohibido
+        resultado = filtrar_color_prohibido(resultado_parcial, colores_de_tablero, color_prohibido)
     finally:
         pass
     return resultado
