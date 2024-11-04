@@ -94,23 +94,46 @@ const ColorTyle = ({
 
       setSelectedFigureCard(null);
     } catch (error) {
-      console.error("Error swapping tyles:", error);
+      console.error("Error discarding card:", error);
+    }
+  };
+
+  const handleFigureBlock = async () => {
+    try {
+      const game_id = localStorage.getItem("gameId");
+
+      const response = await axios.put(
+        `/gamelist/${game_id}/block_figcard/${selectedFigureCard[0]}`
+      );
+      console.log("Response:", response);
+
+      setSelectedFigureCard(null);
+    } catch (error) {
+      console.error("Error blocking card:", error);
     }
   };
 
   const handleClick = () => {
     if (currentTurn == Number(localStorage.getItem("userId"))) {
+      //descartar
       selectedTyle == null &&
       selectedCard == null &&
       selectedFigureCard != null &&
-      selectedFigureCard[1] == tipo_figura
+      selectedFigureCard[1] == tipo_figura && selectedFigureCard[2]
         ? handleFigureDiscard()
-        : selectedTyle != null &&
-          selectedCard != null &&
-          selectedFigureCard == null &&
-          availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
-        ? handleTyleSwap()
-        : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
+        //bloquear
+        : selectedTyle == null &&
+          selectedCard == null &&
+          selectedFigureCard != null &&
+          selectedFigureCard[1] == tipo_figura && selectedFigureCard[2]
+            ? handleFigureBlock()
+            //mover fichas
+            : selectedTyle != null 
+              && selectedCard != null 
+              && selectedFigureCard == null 
+              && availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
+              ? handleTyleSwap()
+              : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
     }
   };
 

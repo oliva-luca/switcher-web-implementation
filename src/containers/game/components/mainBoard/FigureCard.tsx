@@ -6,21 +6,24 @@ interface FigureCardProp {
   cardID: number;
   type: number;
   playerID?: number;
+  blocked?: boolean;
 }
 
-const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
+const FigureCard = ({ cardID, type, playerID, blocked = false }: FigureCardProp) => {
   const {
     selectedFigureCard,
     setSelectedFigureCard,
     setSelectedCard,
     setSelectedTyle,
   } = useCurrentPlay();
+
   return (
     <img
       id={type.toString()}
       className={"figCard"}
-      src={
-        type > 18
+      src={ blocked
+        ? "/back.svg"
+        :type > 18
           ? "/fige0" + (type - 18) + ".svg"
           : type < 10
           ? "/fig0" + type + ".svg"
@@ -41,7 +44,7 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
           setSelectedFigureCard(
             selectedFigureCard != null && selectedFigureCard[0] == cardID
               ? null
-              : [cardID, type]
+              : [cardID, type, playerID.toString() === localStorage.getItem("playerID") ? true : false],
           );
       }}
       alt={`${cardID}`}
