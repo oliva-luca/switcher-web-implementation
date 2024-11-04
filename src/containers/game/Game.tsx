@@ -8,6 +8,7 @@ import MainBoard from "./components/mainBoard/MainBoard";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 import CancelMov from "./components/cancelMov/cancelMov";
+import Chat from "./components/chat/chat";
 
 function Game() {
   const { game, gameInfoKey } = useGame();
@@ -33,6 +34,7 @@ function Game() {
                   card.id_jugador.toString() == localStorage.getItem("userId")
               )}
             />
+            <Chat />
             <CancelMov />
             <QuitBtn />
           </div>
