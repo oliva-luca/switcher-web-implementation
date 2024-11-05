@@ -36,6 +36,8 @@ class Game(Base):
     movcards = relationship("MovCard", back_populates="game")
 
     figcards = relationship("FigCard", back_populates="game")
+    
+    mensajes = relationship("Mensaje", back_populates="game")
 
 
 
@@ -131,6 +133,15 @@ class FigCard(Base):
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="figcards")
 
+class Mensaje(Base):
+    __tablename__ = 'mensaje'
+    id_mensaje = Column(Integer, primary_key=True, autoincrement=True)
+    type = Column(Integer, nullable=False)
+    mensaje = Column(String, nullable=False)
+    autor = Column(String, nullable=True)
+    id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
+    time = Column(DateTime, nullable=False)
+    game = relationship("Game", back_populates="mensajes")
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(engine)
@@ -138,6 +149,4 @@ Base.metadata.create_all(engine)
 # Crea una sesión
 Session = sessionmaker(bind=engine)
 session = Session()
-
-
 
