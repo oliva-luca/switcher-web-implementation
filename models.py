@@ -137,7 +137,7 @@ class Mensaje(Base):
     __tablename__ = 'mensaje'
     id_mensaje = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(Integer, nullable=False)
-    mensaje = Column(String, nullable=False)
+    content = Column(String, nullable=False)
     autor = Column(String, nullable=True)
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
     time = Column(DateTime, nullable=False)
