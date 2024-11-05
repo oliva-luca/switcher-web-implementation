@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
 
-from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
+from models import Game, Player, Tablero, Casilla, MovCard, FigCard, Mensaje, engine
 from typing import List,Dict
 
 
@@ -350,7 +350,17 @@ class Operations:
                                                            (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
-
+            
+            # Registro nuevo turno
+            new_log = Mensaje(
+                type=0,
+                autor = "Sistema",
+                content=f"Turno del jugador {next_player.nombre}",
+                id_partida=game_id,
+                time = datetime.now()
+            )
+            session.add(new_log)
+            
             # Recalculo la informacion de las casillas
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
