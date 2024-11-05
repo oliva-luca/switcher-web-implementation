@@ -360,7 +360,7 @@ class Operations:
                 time = datetime.now()
             )
             session.add(new_log)
-            
+            session.commit()
             # Recalculo la informacion de las casillas
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
