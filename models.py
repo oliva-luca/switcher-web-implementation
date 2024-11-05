@@ -47,7 +47,7 @@ class Player(Base):
     id_jugador = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String, nullable=False)
     in_game = Column(Boolean, nullable=False, default=False)
-    block = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
+    blocked = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
     position = Column(Integer, nullable=True)  # Posicion en la ronda
 
     # Relación con Game, asumiendo que cada jugador pertenece a una sola partida
@@ -61,13 +61,6 @@ class Player(Base):
 
     # Cartas de figura del jugador
     figcards = relationship("FigCard", back_populates="player")
-
-# Definir los colores como un Enum
-class Color(PyEnum):
-    ROJO = "rojo"
-    AZUL = "azul"
-    VERDE = "verde"
-    AMARILLO = "amarillo"
 
 # Definir la clase Tablero
 class Tablero(Base):
@@ -102,6 +95,7 @@ class Casilla(Base):
             'id_tablero': self.id_tablero,
             'figura': self.figura
         }
+    
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'
@@ -124,6 +118,7 @@ class FigCard(Base):
     id_figcard = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(Integer, nullable=False)
     shown = Column(Boolean, nullable=False, default=False)
+    blocked = Column(Boolean, nullable=False, default=False)
 
     # Partida a la que pertenece
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
