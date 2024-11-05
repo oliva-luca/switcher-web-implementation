@@ -391,11 +391,87 @@ async def test_block_figcard_not_block_theirself(operation: Operations):
     with pytest.raises(InvalidBlockError):
         await operation.block_figcard(8, 115, "rojo")
 
-# Test de no bloquear si ya está bloqueado
+# Test de no bloquear si el jugador ya está bloqueado
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_already_blocked_player(operation : Operations):
+    session = Session()
+    # Bloqueo al jugador 11
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        player.blocked = True
+        session.commit()
+    finally:
+        session.close()
+
+    # Intento bloquarlo
+    session = Session()
+    try:
+        with pytest.raises(InvalidBlockError):
+            await operation.block_figcard(8, 144, "rojo")
+    finally:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        player.blocked = False # Lo desbloqueo
+        session.commit()
+        session.close()
 
 # Test de no bloquear si quedan menos de 3 cartas
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_not_block_if_less_three_cards(operation : Operations):
+    session = Session()
+    # Le saco cartas al jugador 11
+    try:
+        # Preparacion previa
+        figcards = session.query(FigCard).filter(FigCard.id_jugador == 11).all()
+        assert len(figcards) >= 4
+        for figcard in figcards:
+            if not figcard.shown:
+                figcard.id_jugador = None # Dejo solo las 3 visibiles
+        session.commit()
+
+        # Le voy sacando cartas e intento bloquearlo
+        # Primero le saco las mostradas
+        shown_figcards = [figcard for figcard in figcards if figcard.shown]
+        # Vamos a testear con 2 y 1 cartas
+        for index in range(2):
+            shown_figcards[index].id_jugador = None
+            session.commit()
+            with pytest.raises(InvalidBlockError):
+                await operation.block_figcard(8, shown_figcards[-1].id_figcard, "rojo")
+    finally:
+        for figcard in figcards:
+            figcard.id_jugador = 11 # Le devuelvo sus cartas
+        session.commit()
+        session.close()
 
 # Test de que se bloquee todo correctamente
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard(operation : Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert not player.blocked
+        figcard = session.query(FigCard).filter(FigCard.id_figcard == 144).first()
+        assert not figcard.blocked
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido != "verde"
+    finally:
+        session.close()
+
+    await operation.block_figcard(8, 144, "verde")
+
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert player.blocked
+        figcard = session.query(FigCard).filter(FigCard.id_figcard == 144).first()
+        assert figcard.blocked
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido == "verde"
+    finally:
+        session.close()
 
 # @pytest.mark.integration_test
 # @pytest.mark.asyncio
