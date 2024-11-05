@@ -596,3 +596,31 @@ class Operations:
             return diff
         finally:
             session.close()
+
+    def get_logs(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            logs = []
+            for msj in game.mensajes:
+                if msj.type == 0:
+                    logs.append(msj)
+            return logs
+        finally:
+            session.close()
+            
+    def get_chat(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            chat = []
+            for msj in game.mensajes:
+                if msj.type == 1:
+                    chat.append(msj)
+            return chat
+        finally:
+            session.close()
