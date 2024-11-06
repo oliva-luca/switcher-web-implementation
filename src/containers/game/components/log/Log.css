@@ -1,3 +1,5 @@
+/* FILE: Log.css */
+
 .log-container {
     position: fixed;
     bottom: 20vh;
@@ -28,24 +30,23 @@
 
 .log-interface {
     position: fixed;
-    top: 20px; /* Ajusta según tus necesidades */
-    right: 0; /* Alinea al borde derecho */
+    top: 20px; /* Adjust as needed */
+    right: 0; /* Align to the right edge */
     width: 25vw;
-    height: calc(100% - 40px); /* Ajusta la altura considerando el margen superior e inferior */
-    background-color: #f0f0f0; /* Color gris */
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Sombra para efecto flotante */
+    height: calc(100% - 40px); /* Adjust height considering top and bottom margins */
+    background-color: #f0f0f0; /* Light grey color */
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Shadow for floating effect */
     transition: transform 0.3s ease-in-out;
-    z-index: 999; /* Asegura que esté por debajo del icono pero por encima de otros elementos */
+    z-index: 1001; /* Ensures it overlays other elements */
     display: flex;
     flex-direction: column;
-    transform: translateX(100%); /* Oculta el panel inicialmente */
-    border-radius: 10px; /* Bordes redondeados */
-    box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho */
-    z-index: 1000; /* Por encima de otros elementos */
+    transform: translateX(100%); /* Hidden by default */
+    border-radius: 10px; /* Rounded corners */
+    box-sizing: border-box; /* Includes padding and border in width */
 }
 
 .log-interface.open {
-    transform: translateX(0); /* Muestra el panel */
+    transform: translateX(0); /* Slide in */
 }
 
 .close-btn {
@@ -59,9 +60,9 @@
 
 .log-interface h1 {
     text-align: center;
-    margin: 20px 20px 10px 20px; /* Ajusta el margen superior para acercar el título */
-    border-bottom: 1px solid #ccc; /* Separador debajo del título */
-    padding-bottom: 10px; /* Espacio debajo del título */
+    margin: 20px 20px 10px 20px; /* Adjust top margin to bring the title closer */
+    border-bottom: 1px solid #ccc; /* Separator below the title */
+    padding-bottom: 10px; /* Space below the title */
     color: #333;
     font-size: 1.2em;
 }
@@ -71,6 +72,29 @@
     padding: 20px;
     overflow-y: auto;
     margin-bottom: 10px;
+}
+
+/* Custom Scrollbar Styling */
+
+/* For WebKit Browsers */
+.history-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-container::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Light grey track */
+    border-radius: 10px; /* Rounded track */
+}
+
+.history-container::-webkit-scrollbar-thumb {
+    background: #c0c0c0; /* Medium grey thumb */
+    border-radius: 10px; /* Rounded thumb */
+}
+
+/* For Firefox */
+.history-container {
+    scrollbar-width: thin;
+    scrollbar-color: #c0c0c0 #e0e0e0;
 }
 
 .history-message {

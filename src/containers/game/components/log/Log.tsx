@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHistory, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Log.css';
+import axios from 'axios';
 
 interface LogMessage {
     id: number;
@@ -15,37 +16,60 @@ interface LogMessage {
 const Log = () => {
     const [isOpen, setIsOpen] = useState(false);
     const logRef = useRef<HTMLDivElement>(null);
-    const [logMessages, setLogMessages] = useState<LogMessage[]>([
-        {
-            id: 1,
-            name: 'Sistema',
-            time: '10:00 AM',
-            text: 'La partida ha comenzado.',
-        },
-        {
-            id: 2,
-            name: 'Jugador 1',
-            time: '10:05 AM',
-            text: 'Jugador 1 ha movido su pieza.',
-        },
-        // Agrega más mensajes según sea necesario
-    ]);
+    const [logMessages, setLogMessages] = useState<LogMessage[]>([]);
 
-    const toggleLog = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const closeLog = () => {
-        setIsOpen(false);
-    };
-
-    const handleClickOutside = (event: MouseEvent) => {
-        if (logRef.current && !logRef.current.contains(event.target as Node)) {
-            closeLog();
-        }
-    };
-
+    // WebSocket setup
     useEffect(() => {
+        const gameId = localStorage.getItem("gameId");
+        if (!gameId) return;
+
+        const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
+
+        socket.onopen = async () => {
+            // Get logs when socket opens
+            try {
+                const response = await axios.get(`/gamelist/${gameId}/logs`);
+                const fetchedLogs: LogMessage[] = response.data.map((log: any) => ({
+                    id: log.id_mensaje,
+                    name: log.autor,
+                    text: log.content,
+                    time: new Date(log.time).toLocaleTimeString(),
+                }));
+                setLogMessages(fetchedLogs);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        socket.onmessage = async () => {
+            // Get updated logs when a new message is received
+            try {
+                const response = await axios.get(`/gamelist/${gameId}/logs`);
+                const fetchedLogs: LogMessage[] = response.data.map((log: any) => ({
+                    id: log.id_mensaje,
+                    name: log.autor,
+                    text: log.content,
+                    time: new Date(log.time).toLocaleTimeString(),
+                }));
+                setLogMessages(fetchedLogs);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        return () => {
+            socket.close();
+        };
+    }, []);
+
+    // Click outside to close
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (logRef.current && !logRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
         if (isOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         } else {
@@ -56,6 +80,14 @@ const Log = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isOpen]);
+
+    const toggleLog = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const closeLog = () => {
+        setIsOpen(false);
+    };
 
     return (
         <div>

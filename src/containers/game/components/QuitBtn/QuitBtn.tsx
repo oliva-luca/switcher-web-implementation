@@ -10,8 +10,7 @@ const QuitBtn = () => {
     const quit = () => {
         const userId = localStorage.getItem('userId');
         try{
-            const response = axios.put(`/gamelist/leave/${userId}`);
-            console.log(response);
+            axios.put(`/gamelist/leave/${userId}`);
             navigate('/lobby')
             
         } catch(error){
