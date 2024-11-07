@@ -203,6 +203,16 @@ async def get_chat(game_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+@app.get("/gamelist/mensaje/{game_id}/{player_id}/{mensaje}")
+async def send_message(game_id: int, player_id: int, mensaje: str):
+    operation = Operations()
+    try:
+        return await operation.send_message(game_id, player_id, mensaje)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

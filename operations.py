@@ -652,7 +652,32 @@ class Operations:
 
         finally: 
             session.close()
+    
+    async def send_message(self, game_id: int, player_id: int, mensaje: str):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
             
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            
+            new_log = Mensaje(
+                type=1,
+                autor = f"{player.nombre}",
+                content=mensaje,
+                id_partida=game_id,
+                time = datetime.now()
+            )
+            session.add(new_log)
+            session.commit()
+            await manager_game.broadcast(game_id, f"MENSAJE")
+            return {"message": f"Message sent by player {player_id} in game {game_id}"}
+        finally:
+            session.close()
+    
     def get_turn_time(self, game_id: int):
         session = Session()
         try:
