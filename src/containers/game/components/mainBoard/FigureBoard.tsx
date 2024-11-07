@@ -19,6 +19,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
           <div className="figureDeck ply1">{deck}</div>
           {cards.map((card) => (
             <FigureCard
+              key={card.id_figcard}
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
@@ -30,6 +31,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
         <div className="figureBoardSide figureGridSide ply2">
           {cards.map((card) => (
             <FigureCard
+              key={card.id_figcard}
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
@@ -43,6 +45,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
         <div className="figureBoard figureGrid ply3">
           {cards.map((card) => (
             <FigureCard
+              key={card.id_figcard}
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
@@ -58,6 +61,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
           <div className="figureDeck ply4">{deck}</div>
           {cards.map((card) => (
             <FigureCard
+              key={card.id_figcard}
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}

@@ -142,6 +142,8 @@ describe("ColorTyle Component", () => {
     const button = getByRole("button");
     fireEvent.click(button);
 
-    expect(axios.put).toHaveBeenCalledWith("/gamelist/1/discard_figcard/3");
+    expect(axios.put).toHaveBeenCalledWith(
+      "/gamelist/1/discard_figcard/3/color/rojo"
+    );
   });
 });
