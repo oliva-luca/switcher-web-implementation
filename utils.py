@@ -239,7 +239,10 @@ def repartir_una_carta_figura(id_partida: int, session):
         return {"message": "Repartidas las cartas de figura"}
 
 def mostrar_cartas_figura(id_jugador : int, session):
-    try:
+    # Obtengo el jugador
+    player = session.query(Player).filter(Player.id_jugador == id_jugador).first()
+    # Solo repartirle si no está bloqueado
+    if not player.blocked:
         # Obtengo las cartas de figura del jugador
         player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == id_jugador).all())
         # Obtengo solo las cartas sin mostrar
@@ -253,8 +256,6 @@ def mostrar_cartas_figura(id_jugador : int, session):
             new_figcard.shown = True
             number_shown_figcards += 1
         session.commit()
-    finally:
-        pass
 
 
 #--------------------------- COMPUTAR COMPONENTES  -------------------------------------------------------------
