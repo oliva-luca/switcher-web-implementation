@@ -175,7 +175,24 @@ async def discard_figcard(game_id: int, figcard_id: int, color: str):
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except NotTheirTurnError as e:
-        raise HTTPException(status_code=400, detail=str(e))   
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@app.put("/gamelist/{game_id}/block_figcard/{figcard_id}/color/{color}")
+async def block_figcard(game_id: int, figcard_id: int, color: str):
+    operation = Operations()
+    try:
+        return await operation.block_figcard(game_id, figcard_id, color)
+
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except CardNotFoundError as e: 
+        raise HTTPException(status_code=404, detail=str(e))
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except InvalidCardError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except InvalidBlockError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     
 @app.get("/gamelist/turn_time/{game_id}")
 async def get_turn_time(game_id: int):
