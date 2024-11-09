@@ -362,6 +362,48 @@ async def test_discard_figcard(operation : Operations):
         session.close()
 
 @pytest.mark.integration_test
+
+def test_get_logs(operation: Operations):
+    logs = operation.get_logs(1)
+    assert len(logs) == 0
+    
+@pytest.mark.integration_test
+def test_get_chat(operation: Operations):
+    chat = operation.get_chat(1)
+    assert len(chat) == 0
+
+@pytest.mark.integration_test
+def test_get_logs_2(operation: Operations):
+    logs = operation.get_logs(6)
+    assert len(logs) == 1
+    assert logs[0].id_mensaje == 2
+    assert logs[0].type == 0
+    assert logs[0].mensaje == 'El jugador 6 ha movido'
+    assert logs[0].autor == 'Sistema'
+    assert logs[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
+    assert logs[0].id_partida == 6
+
+@pytest.mark.integration_test
+def test_get_chat_2(operation: Operations):
+    chat = operation.get_chat(6)
+    assert len(chat) == 1
+    assert chat[0].id_mensaje == 1
+    assert chat[0].type == 1
+    assert chat[0].mensaje == "Hola, soy el jugador 6"
+    assert chat[0].autor == 'player6'
+    assert chat[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
+    assert chat[0].id_partida == 6
+    
+@pytest.mark.integration_test
+def test_get_logs_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.get_logs(1000)
+
+@pytest.mark.integration_test
+def test_get_chat_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.get_chat(1000)
+
 @pytest.mark.asyncio
 async def test_block_figcard_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
@@ -472,6 +514,7 @@ async def test_block_figcard(operation : Operations):
         assert tablero.color_prohibido == "verde"
     finally:
         session.close()
+
 
 # @pytest.mark.integration_test
 # @pytest.mark.asyncio
