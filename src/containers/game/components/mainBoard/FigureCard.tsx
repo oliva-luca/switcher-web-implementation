@@ -9,7 +9,8 @@ interface FigureCardProp {
   blocked?: boolean;
 }
 
-const FigureCard = ({ cardID, type, playerID, blocked = false }: FigureCardProp) => {
+const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
+  
   const {
     selectedFigureCard,
     setSelectedFigureCard,
@@ -18,6 +19,7 @@ const FigureCard = ({ cardID, type, playerID, blocked = false }: FigureCardProp)
   } = useCurrentPlay();
 
   return (
+    
     <img
       id={type.toString()}
       className={"figCard"}
@@ -29,6 +31,7 @@ const FigureCard = ({ cardID, type, playerID, blocked = false }: FigureCardProp)
           ? "/fig0" + type + ".svg"
           : "/fig" + type + ".svg"
       }
+
       style={{
         opacity: (selectedFigureCard == null || selectedFigureCard[0] == cardID) && playerID != 0
             ? 1
@@ -38,13 +41,20 @@ const FigureCard = ({ cardID, type, playerID, blocked = false }: FigureCardProp)
             : "none",
         borderRadius: "10px",
       }}
+
       onClick={() => {
+
+          console.log("Estado de la carta:", blocked);
+
+          console.log("La carta pertenece a:", playerID);
+          console.log("El jugador actual es:", localStorage.getItem("userId"));
+
           setSelectedTyle(null);
           setSelectedCard(null);
           setSelectedFigureCard(
             selectedFigureCard != null && selectedFigureCard[0] == cardID
               ? null
-              : [cardID, type, playerID.toString() === localStorage.getItem("playerID") ? true : false],
+              : [cardID, type, playerID.toString() === localStorage.getItem("userId") ? true : false],
           );
       }}
       alt={`${cardID}`}

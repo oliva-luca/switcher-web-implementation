@@ -36,6 +36,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
+              blocked={card.blocked}
             />
           ))}
           <div className="figureDeck ply2">{deck}</div>
@@ -50,6 +51,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
+              blocked={card.blocked}
             />
           ))}
           <div className="figureDeck ply3">{deck}</div>
@@ -66,6 +68,7 @@ const FigureBoard = ({ pos, deck, cards, name }: FigureBoardProp) => {
               cardID={card.id_figcard}
               type={card.type}
               playerID={card.id_jugador}
+              blocked={card.blocked}
             />
           ))}
         </div>

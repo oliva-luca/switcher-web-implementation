@@ -103,7 +103,7 @@ const ColorTyle = ({
       const game_id = localStorage.getItem("gameId");
 
       const response = await axios.put(
-        `/gamelist/${game_id}/block_figcard/${selectedFigureCard[0]}`
+        `/gamelist/${game_id}/block_figcard/${selectedFigureCard[0]}/color/${color}`
       );
       console.log("Response:", response);
 
@@ -125,7 +125,7 @@ const ColorTyle = ({
         : selectedTyle == null &&
           selectedCard == null &&
           selectedFigureCard != null &&
-          selectedFigureCard[1] == tipo_figura && selectedFigureCard[2]
+          selectedFigureCard[1] == tipo_figura && !selectedFigureCard[2]
             ? handleFigureBlock()
             //mover fichas
             : selectedTyle != null 
