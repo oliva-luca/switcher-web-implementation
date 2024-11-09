@@ -18,7 +18,7 @@ const PassTurn = () => {
   useEffect(() => {
     const fetchGameData = async () => {
       try {
-        const gameId = localStorage.getItem("gameId");
+        const gameId = sessionStorage.getItem("gameId");
         const response = await axios.get(`/gamelist/${gameId}`);
         setCurrentTurn(response.data.turn);
         if (response.data.turn !== undefined) {
@@ -45,16 +45,18 @@ const PassTurn = () => {
       <Button
         variant="primary"
         disabled={
-          !currentTurn || currentTurn !== Number(localStorage.getItem("userId"))
+          !currentTurn ||
+          currentTurn !== Number(sessionStorage.getItem("playerId"))
         }
         className={
-          !currentTurn || currentTurn === Number(localStorage.getItem("userId"))
+          !currentTurn ||
+          currentTurn === Number(sessionStorage.getItem("playerId"))
             ? "blue-button"
             : "gray-button"
         }
         onClick={async () => {
           try {
-            const gameId = localStorage.getItem("gameId");
+            const gameId = sessionStorage.getItem("gameId");
             await axios.put(`/end_turn/${gameId}`);
             setSelectedCard(null);
             setSelectedTyle(null);
