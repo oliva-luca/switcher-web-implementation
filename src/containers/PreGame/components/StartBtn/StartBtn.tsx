@@ -60,8 +60,7 @@ const StartBtn = () => {
   const exit = () => {
     const userId = sessionStorage.getItem("playerId");
     try {
-      const response = axios.put(`/gamelist/leave/${userId}`);
-      // console.log(response);
+      const response = axios.put(`/gamelist/leave_lobby/${userId}`);
       navigate("/lobby");
     } catch (error) {
       console.log(error);

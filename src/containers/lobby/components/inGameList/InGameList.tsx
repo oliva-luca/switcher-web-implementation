@@ -4,7 +4,17 @@ import axios from "axios";
 interface UserData {
   id_user: Number;
   nombre: String;
-  players: Array<Number>;
+  players: Array<PlayerData>;
+}
+
+interface PlayerData {
+  nombre: string;
+  in_game: boolean;
+  position: number | null;
+  id_partida: number;
+  id_jugador: number;
+  block: boolean;
+  user_id: number;
 }
 
 export default function InGameList() {
@@ -20,11 +30,11 @@ export default function InGameList() {
       });
   }, []);
 
-  console.log(
-    userData.find(
-      (usr) => usr.id_user == Number(localStorage.getItem("userId"))
-    )
-  );
+  // console.log(
+  //   userData.find(
+  //     (usr) => usr.id_user == Number(localStorage.getItem("userId"))
+  //   )
+  // );
 
   return <div></div>;
 }
