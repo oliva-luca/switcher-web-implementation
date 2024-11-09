@@ -49,7 +49,7 @@ async def join_game(game_id: int, user_id: int):
         player_id = await operation.join_game(game_id=game_id, user_id=user_id)
 
         return {
-                'id_player ': player_id,
+                'id_player': player_id,
                 'id_partida': game_id,
                 'operation_result': "Successfully joined!"
             }
