@@ -59,7 +59,7 @@ const ColorTyle = ({
 
   const handleTyleSwap = async () => {
     try {
-      const game_id = localStorage.getItem("gameId");
+      const game_id = sessionStorage.getItem("gameId");
       const casilla_id1 = selectedTyle[2];
       const casilla_id2 = tyleId;
 
@@ -85,7 +85,7 @@ const ColorTyle = ({
 
   const handleFigureDiscard = async () => {
     try {
-      const game_id = localStorage.getItem("gameId");
+      const game_id = sessionStorage.getItem("gameId");
 
       const response = await axios.put(
         `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}/color/${color}`
@@ -114,8 +114,7 @@ const ColorTyle = ({
   };
 
   const handleClick = () => {
-    if (currentTurn == Number(localStorage.getItem("userId"))) {
-      //descartar
+    if (currentTurn == Number(sessionStorage.getItem("playerId"))) {
       selectedTyle == null &&
       selectedCard == null &&
       selectedFigureCard != null &&

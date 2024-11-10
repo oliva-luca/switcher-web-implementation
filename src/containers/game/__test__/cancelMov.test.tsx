@@ -18,13 +18,13 @@ describe("CancelMov Component", () => {
     (useCurrentPlay as jest.Mock).mockReturnValue({
       currentTurn: 1,
     });
-    localStorage.setItem("gameId", "12345");
-    localStorage.setItem("userId", "1");
+    sessionStorage.setItem("gameId", "12345");
+    sessionStorage.setItem("userId", "1");
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("should call axios.put with the correct URL when button is clicked", async () => {
@@ -57,7 +57,7 @@ describe("CancelMov Component", () => {
   });
 
   it("shouldn't call axios.put when button is clicked by a different player", async () => {
-    localStorage.setItem("userId", "2");
+    sessionStorage.setItem("userId", "2");
     axios.put.mockResolvedValue({});
 
     const { getByRole } = render(<CancelMov />);

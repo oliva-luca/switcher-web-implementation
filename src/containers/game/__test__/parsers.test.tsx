@@ -34,7 +34,7 @@ describe("ParsePlayers", () => {
   ];
 
   test("should correctly order players starting with the current user", () => {
-    localStorage.setItem("userId", "1");
+    sessionStorage.setItem("userId", "1");
     const result = ParsePlayers(players);
     expect(result).toEqual([
       {
@@ -65,7 +65,7 @@ describe("ParsePlayers", () => {
   });
 
   test("should handle case when current user is not the first player", () => {
-    localStorage.setItem("userId", "2");
+    sessionStorage.setItem("userId", "2");
     const result = ParsePlayers(players);
     expect(result).toEqual([
       {
