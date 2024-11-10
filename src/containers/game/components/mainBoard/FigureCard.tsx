@@ -55,7 +55,8 @@ const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
               ? null
               : [cardID, type, playerID.toString() === localStorage.getItem("userId") ? true : false],
           );
-      }}
+        }}
+      }
       alt={`${cardID}`}
     />
   );
