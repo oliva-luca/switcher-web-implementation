@@ -1,6 +1,7 @@
 import React from "react";
 import "./Game.css";
 import QuitBtn from "./components/QuitBtn/QuitBtn";
+import LobbyBtn from "./components/lobbyBtn/LobbyBtn";
 import PassTurn from "./components/passTurn/passTurn";
 import HandOfCards from "./components/movementCard/HandOfCards";
 import { useGame } from "./hooks/GameData.hook";
@@ -53,6 +54,7 @@ function Game() {
             />
             <CancelMov />
             <QuitBtn />
+            <LobbyBtn />
           </div>
         </CurrentPlayProvider>
       )}
