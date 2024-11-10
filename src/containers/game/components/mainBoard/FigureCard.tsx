@@ -47,16 +47,20 @@ const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
       }}
 
       onClick={() => {
-        if (playerID?.toString() == sessionStorage.getItem("playerId")) {
+
+          console.log("Estado de la carta:", blocked);
+
+          console.log("La carta pertenece a:", playerID);
+          console.log("El jugador actual es:", sessionStorage.getItem("playerId"));
+
           setSelectedTyle(null);
           setSelectedCard(null);
           setSelectedFigureCard(
             selectedFigureCard != null && selectedFigureCard[0] == cardID
               ? null
-              : [cardID, type, playerID.toString() === localStorage.getItem("userId") ? true : false],
+              : [cardID, type, playerID.toString() === sessionStorage.getItem("playerId") ? true : false],
           );
         }}
-      }
       alt={`${cardID}`}
     />
   );

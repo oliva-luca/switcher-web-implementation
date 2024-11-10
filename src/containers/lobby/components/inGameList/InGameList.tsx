@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import SlotJoinStartedGame from "./slotJoinStartedGame";
+import "./inGameList.css";
 
 interface UserData {
   id_user: Number;
@@ -19,6 +21,8 @@ interface PlayerData {
 
 export default function InGameList() {
   const [userData, setUserData] = useState<Array<UserData>>([]);
+  const [partidas, setPartidas] = useState([]);
+
   useEffect(() => {
     axios
       .get("/user")
@@ -30,11 +34,27 @@ export default function InGameList() {
       });
   }, []);
 
-  // console.log(
-  //   userData.find(
-  //     (usr) => usr.id_user == Number(localStorage.getItem("userId"))
-  //   )
-  // );
+  const joinedGames = userData
+  .find((user) => user.id_user.toString() == localStorage.getItem("userId"))
+  ?.players.map((ply) => ply.id_partida)
+  .filter((idPartida) => idPartida != null);
 
-  return <div></div>;
+  const filteredPartidas = partidas
+  .filter((partida) => !joinedGames?.includes(partida.id_partida));
+
+  return (
+    <div id = "startedGamesColumn">
+      {filteredPartidas.map((partida) => (
+        <SlotJoinStartedGame
+          key={partida.id_partida}
+          id={partida.id_partida}
+          name={partida.name}
+          currentCapacity={partida.players.length}
+          capacity={partida.cant_jugadores}
+          is_private={false}
+          password={""}
+        />
+      ))}
+    </div>
+  );
 }
