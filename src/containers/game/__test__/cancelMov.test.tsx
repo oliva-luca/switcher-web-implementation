@@ -19,7 +19,7 @@ describe("CancelMov Component", () => {
       currentTurn: 1,
     });
     sessionStorage.setItem("gameId", "12345");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
   });
 
   afterEach(() => {
@@ -57,7 +57,7 @@ describe("CancelMov Component", () => {
   });
 
   it("shouldn't call axios.put when button is clicked by a different player", async () => {
-    sessionStorage.setItem("userId", "2");
+    sessionStorage.setItem("playerId", "2");
     axios.put.mockResolvedValue({});
 
     const { getByRole } = render(<CancelMov />);

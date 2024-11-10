@@ -32,7 +32,7 @@ describe("ColorTyle Component", () => {
       currentTurn: 1,
     });
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
   });
 
   afterEach(() => {
@@ -62,7 +62,7 @@ describe("ColorTyle Component", () => {
       selectedCard: null,
       currentTurn: 1,
     });
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     const { container } = render(<ColorTyle {...defaultProps} />);
     const button = container.querySelector(".colorTyle");
     expect(button).toHaveClass("selectedTyle");
