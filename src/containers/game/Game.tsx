@@ -8,9 +8,26 @@ import MainBoard from "./components/mainBoard/MainBoard";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 import CancelMov from "./components/cancelMov/cancelMov";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function Game() {
   const { game, gameInfoKey } = useGame();
+  const navigate = useNavigate();
+
+  if (
+    sessionStorage.getItem("gameId") == null ||
+    sessionStorage.getItem("playerId") == null
+  ) {
+    Swal.fire({
+      text: "Error cargando datos de la partida",
+      confirmButtonText: "Volver al lobby",
+    }).then(() => {
+      sessionStorage.clear();
+      navigate("/lobby");
+    });
+  }
+
   return (
     <>
       {game == null ? (
@@ -30,7 +47,8 @@ function Game() {
               cards={game.movcards.filter(
                 (card) =>
                   card.id_jugador != null &&
-                  card.id_jugador.toString() == sessionStorage.getItem("playerId")
+                  card.id_jugador.toString() ==
+                    sessionStorage.getItem("playerId")
               )}
             />
             <CancelMov />
