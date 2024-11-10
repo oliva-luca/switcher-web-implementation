@@ -29,7 +29,7 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
       }
       style={{
         opacity:
-          playerID?.toString() != localStorage.getItem("userId")
+          playerID?.toString() != sessionStorage.getItem("playerId")
             ? 1
             : (selectedFigureCard == null || selectedFigureCard[0] == cardID) &&
               playerID != 0
@@ -37,7 +37,7 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
             : 0.5,
       }}
       onClick={() => {
-        if (playerID?.toString() == localStorage.getItem("userId")) {
+        if (playerID?.toString() == sessionStorage.getItem("playerId")) {
           setSelectedTyle(null);
           setSelectedCard(null);
           setSelectedFigureCard(

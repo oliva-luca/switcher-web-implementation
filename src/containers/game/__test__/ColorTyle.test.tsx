@@ -31,13 +31,13 @@ describe("ColorTyle Component", () => {
       selectedCard: null,
       currentTurn: 1,
     });
-    localStorage.setItem("gameId", "1");
-    localStorage.setItem("userId", "1");
+    sessionStorage.setItem("gameId", "1");
+    sessionStorage.setItem("userId", "1");
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("should renders ColorTyle with the correct color class", () => {
@@ -62,7 +62,7 @@ describe("ColorTyle Component", () => {
       selectedCard: null,
       currentTurn: 1,
     });
-    localStorage.setItem("userId", "1");
+    sessionStorage.setItem("userId", "1");
     const { container } = render(<ColorTyle {...defaultProps} />);
     const button = container.querySelector(".colorTyle");
     expect(button).toHaveClass("selectedTyle");

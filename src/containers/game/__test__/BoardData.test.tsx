@@ -16,11 +16,11 @@ describe("useBoard hook", () => {
 
   afterEach(() => {
     mockedAxios.get.mockClear();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("should fetch and set board data correctly", async () => {
-    localStorage.setItem("gameId", "1");
+    sessionStorage.setItem("gameId", "1");
 
     mockedAxios.get.mockResolvedValueOnce({ data: mockBoardData });
 
@@ -32,7 +32,7 @@ describe("useBoard hook", () => {
   });
 
   it("should handle errors when fetching the board data", async () => {
-    localStorage.setItem("gameId", "2");
+    sessionStorage.setItem("gameId", "2");
 
     mockedAxios.get.mockRejectedValueOnce(new Error("Network error"));
     const consoleSpy = jest
