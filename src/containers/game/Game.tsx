@@ -30,7 +30,7 @@ function Game() {
               cards={game.movcards.filter(
                 (card) =>
                   card.id_jugador != null &&
-                  card.id_jugador.toString() == localStorage.getItem("userId")
+                  card.id_jugador.toString() == sessionStorage.getItem("playerId")
               )}
             />
             <CancelMov />

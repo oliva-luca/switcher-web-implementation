@@ -28,13 +28,13 @@ describe("ColorTyle Component", () => {
       setSelectedCard: setSelectedCard,
       setSelectedTyle: setSelectedTyle,
     });
-    localStorage.setItem("gameId", "1");
-    localStorage.setItem("userId", "1");
+    sessionStorage.setItem("gameId", "1");
+    sessionStorage.setItem("userId", "1");
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("should renders the FigureCard", () => {
