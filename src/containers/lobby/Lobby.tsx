@@ -6,12 +6,25 @@ import GameList from "./components/gameList/gameList";
 import { FilterProvider } from "./components/filters/FilterContext";
 import Filters from "./components/filters/Filter";
 import InGameList from "./components/inGameList/InGameList";
+import Swal from "sweetalert2";
 
 export function Lobby() {
   const [isConnected, setIsConnected] = useState(false);
   const [gameListKey, setGameListKey] = useState(0);
-
   const navigate = useNavigate();
+
+  if (localStorage.getItem("userId") == null) {
+    Swal.fire({
+      text: "Error cargando datos de usuario",
+      confirmButtonText: "Volver al home",
+    }).then(() => {
+      localStorage.clear();
+      navigate("/");
+    });
+  }
+
+  sessionStorage.clear();
+
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8000/ws");
 

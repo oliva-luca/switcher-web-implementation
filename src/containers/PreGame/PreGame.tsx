@@ -11,6 +11,19 @@ import Swal from "sweetalert2";
 function PreGame() {
   const navigate = useNavigate();
 
+  if (
+    sessionStorage.getItem("gameId") == null ||
+    sessionStorage.getItem("playerId") == null
+  ) {
+    Swal.fire({
+      text: "Error cargando datos de la partida",
+      confirmButtonText: "Volver al lobby",
+    }).then(() => {
+      sessionStorage.clear();
+      navigate("/lobby");
+    });
+  }
+
   const [gameInfoKey, setGameInfoKey] = useState(0);
   useEffect(() => {
     let gameId = sessionStorage.getItem("gameId");
