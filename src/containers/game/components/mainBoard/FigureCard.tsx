@@ -33,7 +33,11 @@ const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
       }
 
       style={{
-        opacity: (selectedFigureCard == null || selectedFigureCard[0] == cardID) && playerID != 0
+        opacity:
+          playerID?.toString() != sessionStorage.getItem("playerId")
+            ? 1
+            : (selectedFigureCard == null || selectedFigureCard[0] == cardID) &&
+              playerID != 0
             ? 1
             : 0.5,
         border: selectedFigureCard != null && selectedFigureCard[0] == cardID
