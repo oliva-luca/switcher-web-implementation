@@ -600,6 +600,8 @@ class Operations:
 
             session.commit()
 
+            await manager_game.broadcast(game_id, "Block card")
+
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was blocked"}
         
         finally:
