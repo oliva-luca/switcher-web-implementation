@@ -6,9 +6,11 @@ interface FigureCardProp {
   cardID: number;
   type: number;
   playerID?: number;
+  blocked?: boolean;
 }
 
-const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
+const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
+  
   const {
     selectedFigureCard,
     setSelectedFigureCard,
@@ -17,16 +19,19 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
   } = useCurrentPlay();
 
   return (
+    
     <img
       id={type.toString()}
       className={"figCard"}
-      src={
-        type > 18
+      src={ blocked
+        ? "/back.svg"
+        :type > 18
           ? "/fige0" + (type - 18) + ".svg"
           : type < 10
           ? "/fig0" + type + ".svg"
           : "/fig" + type + ".svg"
       }
+
       style={{
         opacity:
           playerID?.toString() != sessionStorage.getItem("playerId")
@@ -35,17 +40,27 @@ const FigureCard = ({ cardID, type, playerID }: FigureCardProp) => {
               playerID != 0
             ? 1
             : 0.5,
+        border: selectedFigureCard != null && selectedFigureCard[0] == cardID
+            ? "3px solid white"
+            : "none",
+        borderRadius: "10px",
       }}
+
       onClick={() => {
-        if (playerID?.toString() == sessionStorage.getItem("playerId")) {
-          setSelectedTyle(null);
-          setSelectedCard(null);
-          setSelectedFigureCard(
-            selectedFigureCard != null && selectedFigureCard[0] == cardID
-              ? null
-              : [cardID, type]
-          );
-        }
+
+          console.log("Estado de la carta:", blocked);
+
+          console.log("La carta pertenece a:", playerID);
+          console.log("El jugador actual es:", sessionStorage.getItem("playerId"));
+          if (!blocked) {
+              setSelectedTyle(null);
+              setSelectedCard(null);
+              setSelectedFigureCard(
+                selectedFigureCard != null && selectedFigureCard[0] == cardID
+                  ? null
+                  : [cardID, type, playerID.toString() === sessionStorage.getItem("playerId") ? true : false],
+              );
+          }
       }}
       alt={`${cardID}`}
     />
