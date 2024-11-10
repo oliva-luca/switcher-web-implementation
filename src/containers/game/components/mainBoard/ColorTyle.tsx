@@ -100,7 +100,7 @@ const ColorTyle = ({
 
   const handleFigureBlock = async () => {
     try {
-      const game_id = localStorage.getItem("gameId");
+      const game_id = sessionStorage.getItem("gameId");
 
       const response = await axios.put(
         `/gamelist/${game_id}/block_figcard/${selectedFigureCard[0]}/color/${color}`
@@ -114,7 +114,7 @@ const ColorTyle = ({
   };
 
   const handleClick = () => {
-    if (currentTurn == Number(localStorage.getItem("userId"))) {
+    if (currentTurn == Number(sessionStorage.getItem("playerId"))) {
       //descartar
       selectedTyle == null &&
       selectedCard == null &&
