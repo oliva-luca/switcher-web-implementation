@@ -29,7 +29,7 @@ describe("ColorTyle Component", () => {
       setSelectedTyle: setSelectedTyle,
     });
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
   });
 
   afterEach(() => {
