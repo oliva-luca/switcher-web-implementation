@@ -7,6 +7,7 @@ import axios from 'axios';
 interface Message {
     id: number;
     name: string;
+    id_autor: number;
     time: string;
     text: string;
 }
@@ -34,6 +35,52 @@ const Chat = () => {
     };
 
     useEffect(() => {
+        const gameId = localStorage.getItem("gameId");
+        const userId = localStorage.getItem('userId');
+        if (!gameId || !userId) return;
+    
+        const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
+    
+        socket.onopen = async () => {
+            try {
+                const response = await axios.get(`/gamelist/${gameId}/chat`);
+                const fetchedLogs: Message[] = response.data.map((log: any) => ({
+                    id: log.id_mensaje,
+                    name: log.autor,
+                    id_autor: log.id_autor, // Asegúrate de que este campo existe en la respuesta
+                    text: log.content,
+                    time: new Date(log.time).toLocaleTimeString(),
+                }));
+                setMessages(fetchedLogs);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+    
+        socket.onmessage = async (event) => {
+            if (event.data === "MENSAJE") {
+                try {
+                    const response = await axios.get(`/gamelist/${gameId}/chat`);
+                    const fetchedLogs: Message[] = response.data.map((log: any) => ({
+                    id: log.id_mensaje,
+                    name: log.autor,
+                    id_autor: log.id_autor,
+                    text: log.content,
+                    time: new Date(log.time).toLocaleTimeString(),
+                    }));
+                    setMessages(fetchedLogs);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        };
+    
+        return () => {
+            socket.close();
+        };
+    }, []);
+
+    useEffect(() => {
         if (isOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         } else {
@@ -51,20 +98,11 @@ const Chat = () => {
 
     const handleSend = () => {
         if (message.trim() !== '') {
-            try{
-                axios.put(`/gamelist/${gameId}/message/${userId}`, {
-                    message: message.trim(),
-                });
-            } catch(error){
+            try {
+                axios.post(`/gamelist/mensaje/${gameId}/${userId}/${message.trim()}`);
+            } catch (error) {
                 console.log(error);
             }
-            const newMessage: Message = {
-                id: messages.length + 1,
-                name: 'Usuario', // Nombre hardcoded
-                time: new Date().toLocaleTimeString(), // Tiempo actual
-                text: message.trim(),
-            };
-            setMessages([...messages, newMessage]); // Añade el mensaje al estado
             setMessage(''); // Limpia el input
         }
     };
@@ -81,9 +119,12 @@ const Chat = () => {
                 <h1>CHAT</h1>
                 <div className="messages-container">
                     {messages.map((msg) => (
-                        <div key={msg.id} className="message">
+                        <div
+                            key={msg.id}
+                            className={`message ${msg.id_autor == Number(userId) ? 'my-message' : 'other-message'}`}
+                        >
                             <div className="message-header">
-                                <span className="message-name">{msg.name}</span>
+                                <span className="message-name">{msg.id_autor == Number(userId) ? 'Yo' : msg.name}</span>
                                 <span className="message-time">{msg.time}</span>
                             </div>
                             <div className="message-text">{msg.text}</div>
