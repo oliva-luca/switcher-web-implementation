@@ -46,7 +46,7 @@ const Chat = () => {
                     id: log.id_mensaje,
                     name: log.autor,
                     id_autor: log.id_autor, // Asegúrate de que este campo existe en la respuesta
-                    text: log.content,
+                    text: log.mensaje,
                     time: new Date(log.time).toLocaleTimeString(),
                 }));
                 setMessages(fetchedLogs);
@@ -63,7 +63,7 @@ const Chat = () => {
                     id: log.id_mensaje,
                     name: log.autor,
                     id_autor: log.id_autor,
-                    text: log.content,
+                    text: log.mensaje,
                     time: new Date(log.time).toLocaleTimeString(),
                     }));
                     setMessages(fetchedLogs);
