@@ -8,26 +8,28 @@ import { useNavigate } from "react-router-dom";
 /**
  * Componente de boton para abandonar una partida
  *
- * Muestra un boton durante la partida que le permite al usuario
- * abandonar en cualquier momento. Al clickearlo (y si la HTTP
- * request es exitosa) el jugador es redirigido al lobby
+ * Muestra un boton durante la partida que le permite al usuario abandonar
+ * en cualquier momento. Al clickearlo hace la HTTP request al servidor a
+ * partir del playerId guardando en el almacenamiento de session y el jugador
+ * es redirigido al lobby.
  *
- * @returns {JSX.Element}
+ * @returns {JSX.Element} Boton para abandonar la partida.
  */
 const QuitBtn = () => {
-  const navigate = useNavigate(); // Hook para redirigir a otra ruta
+  // Hook para redirigir a otra ruta
+  const navigate = useNavigate();
 
   // Handler del evento para abandonar partida
   const handleQuit = () => {
-    const userId = sessionStorage.getItem("playerId");
+    const playerId = sessionStorage.getItem("playerId");
     try {
       // PUT request para que el jugador abandone la partida
-      const response = axios.put(`/gamelist/leave/${userId}`);
+      const response = axios.put(`/gamelist/leave/${playerId}`);
 
       // Redireccion del usuario luego de abandonar
       navigate("/lobby");
     } catch (error) {
-      // Muestra el error en la consola en caso de que falle la solicitud
+      // Muestra un error si la solicitud falla
       console.log(error);
     }
   };
