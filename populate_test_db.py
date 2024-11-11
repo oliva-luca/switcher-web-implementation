@@ -1,5 +1,7 @@
 from sqlalchemy.orm import sessionmaker
-from models import Game, engine, Player, FigCard, MovCard, Tablero, Casilla, Mensaje
+
+from models import Game, engine, Player, User ,FigCard, MovCard, Tablero, Casilla, Mensaje
+
 
 
 
@@ -18,6 +20,15 @@ def load_data_for_test():
 
     ]
     
+    users = [
+        (1, 'user1'),
+        (2, 'user2'),
+        (3, 'user3'),
+        (4, 'user4'),
+        (5, 'user5'),
+        (6, 'user6'),
+    ]
+
     players = [
         (1, 'player1', False, False, None, None),
         (2, 'player2', False, False, None, 3),
@@ -317,6 +328,16 @@ def load_data_for_test():
             session.commit()
     finally:
         session.close() 
+
+    session = Session()
+    try:
+        if session.query(User).count() == 0:
+            for id_user, nombre in users:
+                user = User(id_user = id_user, nombre =nombre)
+                session.add(user)
+            session.commit()
+    finally:
+        session.close()
     
     # Agregar jugadores
     session = Session()
