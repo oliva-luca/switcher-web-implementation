@@ -359,7 +359,7 @@ async def test_discard_figcard(operation : Operations):
 @pytest.mark.integration_test
 
 def test_get_logs(operation: Operations):
-    logs = operation.get_logs(1)
+    logs = operation.get_logs(2)
     assert len(logs) == 0
     
 @pytest.mark.integration_test
