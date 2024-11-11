@@ -44,8 +44,12 @@ function Game() {
               figcards={game.figcards}
               key={"board" + gameInfoKey}
             />
-            <Timer />
-            <PassTurn key={gameInfoKey} />
+            <div className="r-items-container" style={{ zIndex: 1 }}>
+              <Timer />
+              <PassTurn key={gameInfoKey} />
+              <Chat />
+              <Log />
+            </div>
             <HandOfCards
               cards={game.movcards.filter(
                 (card) =>
@@ -54,9 +58,7 @@ function Game() {
                     sessionStorage.getItem("playerId")
               )}
             />
-            <Chat />
             <CancelMov />
-            <Log />
             <QuitBtn />
             <LobbyBtn />
           </div>

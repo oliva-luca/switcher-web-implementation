@@ -1,9 +1,4 @@
-/* FILE: Log.css */
-
 .log-container {
-    position: fixed;
-    bottom: 20vh;
-    right: 5vw;
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 30px;
@@ -30,23 +25,23 @@
 
 .log-interface {
     position: fixed;
-    top: 20px; /* Adjust as needed */
-    right: 0; /* Align to the right edge */
-    width: 25vw;
-    height: calc(100% - 40px); /* Adjust height considering top and bottom margins */
-    background-color: #f0f0f0; /* Light grey color */
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Shadow for floating effect */
+    top: 20px;
+    right: 0;
+    width: 30vw;
+    height: calc(100% - 40px);
+    background-color: #f0f0f0;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;
-    z-index: 1001; /* Ensures it overlays other elements */
+    z-index: 1001;
     display: flex;
     flex-direction: column;
-    transform: translateX(100%); /* Hidden by default */
-    border-radius: 10px; /* Rounded corners */
-    box-sizing: border-box; /* Includes padding and border in width */
+    transform: translateX(100%);
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .log-interface.open {
-    transform: translateX(0); /* Slide in */
+    transform: translateX(0);
 }
 
 .close-btn {
@@ -60,9 +55,9 @@
 
 .log-interface h1 {
     text-align: center;
-    margin: 20px 20px 10px 20px; /* Adjust top margin to bring the title closer */
-    border-bottom: 1px solid #ccc; /* Separator below the title */
-    padding-bottom: 10px; /* Space below the title */
+    margin: 20px 20px 10px 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
     color: #333;
     font-size: 1.2em;
 }
@@ -74,24 +69,20 @@
     margin-bottom: 10px;
 }
 
-/* Custom Scrollbar Styling */
-
-/* For WebKit Browsers */
 .history-container::-webkit-scrollbar {
     width: 8px;
 }
 
 .history-container::-webkit-scrollbar-track {
-    background: #e0e0e0; /* Light grey track */
-    border-radius: 10px; /* Rounded track */
+    background: #e0e0e0;
+    border-radius: 10px;
 }
 
 .history-container::-webkit-scrollbar-thumb {
-    background: #c0c0c0; /* Medium grey thumb */
-    border-radius: 10px; /* Rounded thumb */
+    background: #c0c0c0;
+    border-radius: 10px;
 }
 
-/* For Firefox */
 .history-container {
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #e0e0e0;

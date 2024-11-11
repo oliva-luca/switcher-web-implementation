@@ -48,7 +48,7 @@ const Log = () => {
                 const fetchedLogs: LogMessage[] = response.data.map((log: any) => ({
                     id: log.id_mensaje,
                     name: log.autor,
-                    text: log.content,
+                    text: log.mensaje,
                     time: new Date(log.time).toLocaleTimeString(),
                 }));
                 console.log(fetchedLogs);
