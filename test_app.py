@@ -117,3 +117,64 @@ def test_get_player(mock_Get_player, player_a):
     response = client.get("/user/2")
     assert response.status_code == 200
     assert response.json() == player_a
+    
+    
+@pytest.fixture
+def log_a():
+    return {
+        "id_mensaje": 1,
+        "type": 0,
+        "mensaje": "se movio correctamente",
+        "autor": "Sistema",
+        "time": "2021-10-10 10:10:10",
+        "id_partida": 1,
+    }
+@patch("app.Operations")
+def test_get_logs(mock_Get_logs):
+    mock_logs = MagicMock()
+    mock_logs.get_logs.return_value = []
+    mock_Get_logs.return_value = mock_logs
+    
+    response = client.get("/game/1/logs")
+    assert response.status_code == 200
+    assert response.json() == []
+    
+@patch("app.Operations")
+def test_get_logs_2(mock_Get_logs, log_a):
+    mock_logs = MagicMock()
+    mock_logs.get_logs.return_value = log_a
+    mock_Get_logs.return_value = mock_logs
+    
+    response = client.get("/game/1/logs")
+    assert response.status_code == 200
+    assert response.json() == log_a
+    
+@pytest.fixture
+def mensaje_a():
+    return {
+        "id_mensaje": 1,
+        "type": 1,
+        "mensaje": "hola",
+        "autor": "pepe",
+        "time": "2021-10-10 10:10:10",
+        "id_partida": 1,
+    }
+@patch("app.Operations")
+def test_get_mensajes(mock_Get_mensajes):
+    mock_mensajes = MagicMock()
+    mock_mensajes.get_chat.return_value = []
+    mock_Get_mensajes.return_value = mock_mensajes
+    
+    response = client.get("/game/1/chat")
+    assert response.status_code == 200
+    assert response.json() == []
+    
+@patch("app.Operations")
+def test_get_mensajes_2(mock_Get_mensajes, mensaje_a):
+    mock_mensajes = MagicMock()
+    mock_mensajes.get_chat.return_value = mensaje_a
+    mock_Get_mensajes.return_value = mock_mensajes
+    
+    response = client.get("/game/1/chat")
+    assert response.status_code == 200
+    assert response.json() == mensaje_a

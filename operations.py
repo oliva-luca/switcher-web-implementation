@@ -527,7 +527,7 @@ class Operations:
             session.close()
             
 
-    async def discard_figcard(self, game_id : int, figcard_id : int):
+    async def discard_figcard(self, game_id : int, figcard_id : int, color : str):
         session = Session()
 
         try: 
@@ -557,6 +557,8 @@ class Operations:
 
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
+            game.tablero.color_prohibido = color
+
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
@@ -570,6 +572,58 @@ class Operations:
             await manager_game.broadcast(game_id, "discard figcard") 
 
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
+        
+        finally:
+            session.close()
+
+    async def block_figcard(self, game_id : int, figcard_id : int, color : str):
+        session = Session()
+
+        try: 
+            
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            
+            figcard = session.query(FigCard).filter((FigCard.id_figcard == figcard_id) &
+                                                    (FigCard.id_partida == game_id)).first()
+            if not figcard: 
+                raise CardNotFoundError(f"FigCard with ID {figcard_id} not found.")
+
+            player = figcard.player
+            
+            if not player:
+                raise PlayerNotFoundError(f"Player associated with FigCard ID {figcard_id} not found.")
+            
+            if not figcard.shown:
+                raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
+            
+            if game.turn == player.id_jugador:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} cannot block theirself.")
+        
+            if player.blocked:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} is already blocked.")
+            
+            number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
+            
+            # El jugador no puede ser bloqueado si le quedan menos de 3 figcards
+            if number_of_figcards < 3:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} has less than three figcards.")
+            
+            
+            player.blocked = True
+            figcard.blocked = True
+            await confirmar_cambios(session, game.id_tablero)
+
+            actualizar_informacion_casillas(game_id, game.tablero, session)
+
+            game.tablero.color_prohibido = color
+
+            session.commit()
+
+            await manager_game.broadcast(game_id, "Block card")
+
+            return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was blocked"}
         
         finally:
             session.close()
@@ -613,5 +667,33 @@ class Operations:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
             diff = int((datetime.now() - game.turn_time).total_seconds())
             return diff
+        finally:
+            session.close()
+
+    def get_logs(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            logs = []
+            for msj in game.mensajes:
+                if msj.type == 0:
+                    logs.append(msj)
+            return logs
+        finally:
+            session.close()
+            
+    def get_chat(self, game_id: int):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            chat = []
+            for msj in game.mensajes:
+                if msj.type == 1:
+                    chat.append(msj)
+            return chat
         finally:
             session.close()

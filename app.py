@@ -172,11 +172,11 @@ async def cancel_partial_move(game_id: int):
         raise HTTPException(status_code=404, detail=str(e))  
 
 
-@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}")
-async def discard_figcard(game_id: int, figcard_id: int):
+@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}/color/{color}")
+async def discard_figcard(game_id: int, figcard_id: int, color: str):
     operation = Operations()
     try:
-        return await operation.discard_figcard(game_id, figcard_id)
+        return await operation.discard_figcard(game_id, figcard_id, color)
 
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -187,7 +187,24 @@ async def discard_figcard(game_id: int, figcard_id: int):
     except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except NotTheirTurnError as e:
-        raise HTTPException(status_code=400, detail=str(e))   
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@app.put("/gamelist/{game_id}/block_figcard/{figcard_id}/color/{color}")
+async def block_figcard(game_id: int, figcard_id: int, color: str):
+    operation = Operations()
+    try:
+        return await operation.block_figcard(game_id, figcard_id, color)
+
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except CardNotFoundError as e: 
+        raise HTTPException(status_code=404, detail=str(e))
+    except PlayerNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except InvalidCardError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except InvalidBlockError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     
 @app.get("/gamelist/turn_time/{game_id}")
 async def get_turn_time(game_id: int):
@@ -199,6 +216,21 @@ async def get_turn_time(game_id: int):
     except GameNotStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/game/{game_id}/logs")
+async def get_logs(game_id: int):
+    operation = Operations()
+    try:
+        return operation.get_logs(game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.get("/game/{game_id}/chat")
+async def get_chat(game_id: int):
+    operation = Operations()
+    try:
+        return operation.get_chat(game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

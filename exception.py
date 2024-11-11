@@ -1,5 +1,4 @@
 
-
 class GameNotFoundError(Exception):
     pass
 
@@ -31,4 +30,7 @@ class PlayerAlreadyInGameError(Exception):
     pass
 
 class UserNotFoundError(Exception):
+    pass
+  
+class InvalidBlockError(Exception):
     pass

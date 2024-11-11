@@ -634,8 +634,22 @@ def test_detected_figures_are_shown(colores_de_tablero_b):
     session = Session()
     try:
         figure_types = obtener_figuras_de_jugadores(6, session)
-        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, session)
+        matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, None, session)
         for type, _ in matching_figures:
             assert type in figure_types
+    finally:
+        session.close()
+
+@pytest.mark.integration_test
+def test_not_detect_forbidden_color(colores_de_tablero_b):
+    session = Session()
+    try:
+        colors = ["V", "M", "R", "Z"] # colores del tablero de este test
+        for color_prohibido in colors:
+            matching_figures = obtener_figuras_tablero(6, colores_de_tablero_b, color_prohibido, session)
+            for _, comp in matching_figures:
+                casilla = (comp[0][0], comp[0][1])
+                color_casilla = colores_de_tablero_b[casilla[0]][casilla[1]]
+                assert color_casilla != color_prohibido
     finally:
         session.close()
