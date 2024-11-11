@@ -1,0 +1,156 @@
+/* FILE: chat.css */
+
+.chat-container {
+    position: fixed;
+    bottom: 35vh;
+    right: 15vh;
+    border-radius: 5px;
+    padding: 20px;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+.chat-container .fa-comments {
+    font-size: 3em; /* Tamaño del icono */
+    cursor: pointer;
+}
+
+.chat-interface {
+    position: fixed;
+    top: 20px; /* Espacio desde la parte superior */
+    right: 0; /* Alinea al borde derecho */
+    width: 30vw; /* Ancho del chat */
+    height: calc(100% - 40px); /* Ajusta la altura considerando el margen superior e inferior */
+    background-color: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Sombra para efecto flotante */
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000; /* Por encima de otros elementos */
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%); /* Oculta el chat inicialmente */
+    border-radius: 10px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho */
+}
+
+.chat-interface.open {
+    transform: translateX(0); /* Muestra el chat */
+}
+
+.chat-interface .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5em;
+}
+
+.chat-interface h1 {
+    text-align: center;
+    margin: 10px 20px 10px 20px; /* Reducido el margen superior para acercar el título */
+    border-bottom: 1px solid #ccc; /* Separador debajo del título */
+    padding-bottom: 10px; /* Espacio debajo del título */
+}
+
+.messages-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.my-message {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+}   
+.other-message {
+    background-color: #f8f9fa;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.message-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Pista gris claro */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background: #c0c0c0; /* Pulgar gris medio */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+/* .message {
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+} */
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.message-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.message-text {
+    font-size: 1em;
+    color: #333;
+}
+
+.message-box {
+    display: flex;
+    padding: 10px 20px; /* Padding lateral */
+    border-top: 1px solid #ccc;
+    margin-top: auto;
+}
+
+.message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho */
+}
+
+.send-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.5em;
+    color: #333;
+}

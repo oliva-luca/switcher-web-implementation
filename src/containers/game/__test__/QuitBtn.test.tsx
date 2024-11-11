@@ -27,7 +27,7 @@ describe("QuitBtn Component", () => {
   it("should call quit function on button click", async () => {
     const navigate = jest.fn();
     (useNavigate as jest.Mock).mockReturnValue(navigate);
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     (axios.put as jest.Mock).mockResolvedValueOnce({ data: {} });
 
     const { getByRole } = render(<QuitBtn />);

@@ -70,7 +70,6 @@ const ColorTyle = ({
       const response = await axios.put(
         `/gamelist/${game_id}/playcard/${cardId}/casillas/${casilla_id1}/${casilla_id2}`
       );
-      console.log("Response:", response);
 
       setSelectedCard(null);
       setSelectedTyle(null);
@@ -90,7 +89,6 @@ const ColorTyle = ({
       const response = await axios.put(
         `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}/color/${color}`
       );
-      console.log("Response:", response);
 
       setSelectedFigureCard(null);
     } catch (error) {
