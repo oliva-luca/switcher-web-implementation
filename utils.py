@@ -409,7 +409,7 @@ def obtener_figuras_de_jugadores(id_partida: int, session):
     # Obtengo las cartas de figura mostradas de la partida
     figcards = session.query(FigCard).filter((FigCard.id_partida == id_partida) &
                                              (FigCard.shown) & (FigCard.player is not None) &
-                                             (not FigCard.blocked)).all()
+                                             (False == FigCard.blocked)).all()
     # Me quedo solo con sus tipos
     figcards_types = [figcard.type for figcard in figcards]
     return figcards_types
