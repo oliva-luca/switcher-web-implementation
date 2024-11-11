@@ -1,7 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
 
-from models import Game, Player, User , Tablero, Casilla, MovCard, FigCard, engine
+
+from models import Game, Player, User , Tablero, Casilla, MovCard, FigCard, engine, Mensaje
 from typing import List,Dict
 
 
@@ -124,7 +125,15 @@ class Operations:
             if new_player.figcards is not None:
                 for figcard in new_player.figcards:
                     figcard.id_jugador = None
-
+                    
+            new_log = Mensaje(
+                type=0,
+                autor = f"{new_player.nombre}",
+                mensaje="Se ha unido a la partida",
+                id_partida=game_id,
+                time = datetime.now()
+            )
+            session.add(new_log)
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
 
@@ -246,7 +255,16 @@ class Operations:
 
                 # Actualizo el tiempo del turno
                 game.turn_time = datetime.now()
-
+                
+                new_log = Mensaje(
+                type=0,
+                autor = "Sistema",
+                mensaje="La partida ha comenzado",
+                id_partida=game_id,
+                time = datetime.now()
+                )
+                session.add(new_log)
+                
                 session.commit()
 
                 await manager_game.broadcast(game_id, "Game has started")
@@ -371,7 +389,17 @@ class Operations:
                                                            (Player.position == next_player_position)).first()
             # Actualizo la informacion del turno actual
             game.turn = next_player.id_jugador
-
+            
+            # Registro nuevo turno
+            new_log = Mensaje(
+                type=0,
+                autor = "Sistema",
+                mensaje=f"Turno del jugador {next_player.nombre}",
+                id_partida=game_id,
+                time = datetime.now()
+            )
+            session.add(new_log)
+            session.commit()
             # Recalculo la informacion de las casillas
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
@@ -434,6 +462,14 @@ class Operations:
 
             player.id_partida = None
             player.in_game = False
+            new_log = Mensaje(
+                type=0,
+                autor = f"{player.nombre}",
+                mensaje="Se ha ido del lobby",
+                id_partida=game.id_partida,
+                time = datetime.now()
+            )
+            session.add(new_log)
             session.commit()
 
             await manager.broadcast("player leave")
@@ -469,6 +505,14 @@ class Operations:
             # Contar cuántos jugadores quedan en la partida
             remaining_players = session.query(Player).filter(Player.id_partida == id_game, Player.in_game == True).count()
             remaining_player = session.query(Player).filter(Player.id_partida == id_game).first()
+            new_log = Mensaje(
+                type=0,
+                autor = f"{player.nombre}",
+                mensaje="Se ha ido de la partida",
+                id_partida=id_game,
+                time = datetime.now()
+            )
+            session.add(new_log)
             session.commit()
             if remaining_players == 1:
                 remaining_player.id_partida = None 
@@ -519,6 +563,15 @@ class Operations:
 
             actualizar_informacion_casillas(game_id, tablero, session, modificaciones)
 
+            new_log = Mensaje(
+                type=0,
+                autor = f"{player.nombre}",
+                mensaje=f"Ha intercambiado una ficha de color {casilla_1.color} por una ficha de color {casilla_2.color}",
+                id_partida=game.id_partida,
+                time = datetime.now()
+            )
+            session.add(new_log)
+            
             session.commit()
 
             await manager_game.broadcast(game_id, "Board change") 
@@ -559,6 +612,15 @@ class Operations:
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
             game.tablero.color_prohibido = color
+            
+            new_log = Mensaje(
+                type=0,
+                autor = f"{player.nombre}",
+                mensaje="Ha descartado una carta de figura",
+                id_partida=game.id_partida,
+                time = datetime.now()
+            )
+            session.add(new_log)
 
             # Detectar si descartó la unica bloqueada que tenía
             # El chequeo de que sea valida de jugar se hace desde el front
@@ -567,7 +629,6 @@ class Operations:
             if number_of_shown_figcards == 0 and player.blocked:
                 # Debe ser desbloqueado
                 player.blocked = False
-
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
@@ -658,7 +719,14 @@ class Operations:
                 casilla.figura = - 1
 
             actualizar_informacion_casillas(game_id, tablero, session)
-    
+            new_log = Mensaje(
+                type=0,
+                autor = f"{current_player.nombre}",
+                mensaje="Se han cancelado los movimientos parciales",
+                id_partida=game.id_partida,
+                time = datetime.now()
+            )
+            session.add(new_log)
             session.commit()
             
             await manager_game.broadcast(game_id, "The partial moves has been cancelled") 
@@ -667,7 +735,32 @@ class Operations:
 
         finally: 
             session.close()
+    
+    async def send_message(self, game_id: int, player_id: int, mensaje: str):
+        session = Session()
+        try:
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game:
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
             
+            player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            if not player:
+                raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
+            
+            new_msj = Mensaje(
+                type=1,
+                autor = f"{player.nombre}",
+                mensaje=mensaje,
+                id_partida=game_id,
+                time = datetime.now()
+            )
+            session.add(new_msj)
+            session.commit()
+            await manager_game.broadcast(game_id, f"MENSAJE")
+            return {"message": f"Message sent by player {player_id} in game {game_id}"}
+        finally:
+            session.close()
+    
     def get_turn_time(self, game_id: int):
         session = Session()
         try:

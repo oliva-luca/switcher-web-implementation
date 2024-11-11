@@ -216,7 +216,7 @@ async def get_turn_time(game_id: int):
     except GameNotStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/game/{game_id}/logs")
+@app.get("/gamelist/{game_id}/logs")
 async def get_logs(game_id: int):
     operation = Operations()
     try:
@@ -224,12 +224,22 @@ async def get_logs(game_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@app.get("/game/{game_id}/chat")
+@app.get("/gamelist/{game_id}/chat")
 async def get_chat(game_id: int):
     operation = Operations()
     try:
         return operation.get_chat(game_id)
     except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.post("/gamelist/mensaje/{game_id}/{player_id}/{mensaje}")
+async def send_message(game_id: int, player_id: int, mensaje: str):
+    operation = Operations()
+    try:
+        return await operation.send_message(game_id, player_id, mensaje)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except PlayerNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
 @app.websocket("/ws")

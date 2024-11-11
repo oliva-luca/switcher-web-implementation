@@ -3,7 +3,7 @@ import asyncio
 from sqlalchemy.orm import sessionmaker
 from exception import *
 from operations import Operations
-from models import Game, engine, Base, User ,  Player, Tablero, MovCard, FigCard, Casilla 
+from models import Game, engine, Base, User ,  Player, Tablero, MovCard, FigCard, Casilla, Mensaje 
 from utils import modificates
 
 Session = sessionmaker(bind=engine)
@@ -577,5 +577,22 @@ async def test_unblock_figcard(operation : Operations):
 
 
 
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_send_message(operation: Operations):
+    session = Session()
+    try:
+        N_mensajes = session.query(Mensaje).filter(Mensaje.id_partida == 1, Mensaje.type == 1).count()
+    finally:
+        session.close()
+    
+    await operation.send_message('1', '1', 'mensaje1')
+    
+    session = Session()
+    try:
+        N_mensajes_new = session.query(Mensaje).filter(Mensaje.id_partida == 1, Mensaje.type == 1).count()
+        assert N_mensajes_new  == N_mensajes + 1
+    finally:
+        session.close()
 
 
