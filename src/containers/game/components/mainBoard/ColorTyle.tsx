@@ -107,12 +107,13 @@ const ColorTyle = ({
 
       setSelectedFigureCard(null);
     } catch (error) {
-      console.error("Error blocking card:", error);
+      console.error("Error swapping tyles:", error);
     }
   };
 
   const handleClick = () => {
     if (currentTurn == Number(sessionStorage.getItem("playerId"))) {
+      //descartar
       selectedTyle == null &&
       selectedCard == null &&
       selectedFigureCard != null &&

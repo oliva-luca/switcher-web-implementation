@@ -1,11 +1,36 @@
+/**
+ * @file slotJoinGame.tsx
+ * @description Componente para unirse a un juego desde la lista de juegos en el lobby.
+ *
+ * @module SlotJoinGame
+ *
+ * @requires react
+ * @requires sweetalert2
+ * @requires axios
+ * @requires react-router-dom
+ * @requires @fortawesome/react-fontawesome
+ * @requires @fortawesome/free-solid-svg-icons
+ */
+
 import React from "react";
 import Swal from "sweetalert2";
 import "./slotJoinGame.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * @interface GameProps
+ * @description Propiedades del juego.
+ * @property {number} id - ID del juego.
+ * @property {string} name - Nombre del juego.
+ * @property {number} currentCapacity - Capacidad actual del juego.
+ * @property {number} capacity - Capacidad máxima del juego.
+ * @property {boolean} is_private - Indica si el juego es privado.
+ * @property {string} password - Contraseña del juego (si es privado).
+ * @property {boolean} started - Indica si el juego ha comenzado.
+ */
 export interface GameProps {
   id: number;
   name: string;
@@ -16,19 +41,41 @@ export interface GameProps {
   started: boolean;
 }
 
+/**
+ * @interface JoinResponse
+ * @description Respuesta de la solicitud para unirse a un juego.
+ * @property {number} id_player - ID del jugador.
+ * @property {number} id_partida - ID de la partida.
+ */
 interface JoinResponse {
   id_player: number;
   id_partida: number;
 }
 
+/**
+ * @function changeBackground
+ * @description Cambia el color de fondo del botón al pasar el ratón por encima.
+ * @param {React.MouseEvent} e - Evento del ratón.
+ */
 function changeBackground(e) {
   e.target.style.background = "#6ec5e1";
 }
 
+/**
+ * @function restoreBackground
+ * @description Restaura el color de fondo del botón al quitar el ratón de encima.
+ * @param {React.MouseEvent} e - Evento del ratón.
+ */
 function restoreBackground(e) {
   e.target.style.background = "#7eb65b";
 }
 
+/**
+ * @function SlotJoinGame
+ * @description Componente para unirse a un juego.
+ * @param {GameProps} props - Propiedades del componente.
+ * @returns {JSX.Element} Elemento JSX del componente.
+ */
 export default function SlotJoinGame({
   id,
   name,
@@ -38,8 +85,13 @@ export default function SlotJoinGame({
   password,
 }: GameProps) {
   const navigate = useNavigate();
-  // const [joinResponse, setJoinResponse]
 
+  /**
+   * @function joinGame
+   * @description Función para unirse a un juego.
+   * @param {number} id - ID del juego.
+   * @returns {Promise<void>} Promesa que se resuelve cuando el jugador se une al juego.
+   */
   const joinGame = async (id) => {
     try {
       if (is_private) {
@@ -71,7 +123,6 @@ export default function SlotJoinGame({
       }
 
       const userId = localStorage.getItem("userId");
-      //console.log('Joining game');
       const joinData = {
         user_id: userId,
       };
@@ -90,7 +141,6 @@ export default function SlotJoinGame({
       sessionStorage.setItem("gameId", id.toString());
       navigate("/pregame");
     } catch (error) {
-      // console.error('Error joining game:', error);
       await Swal.fire({
         icon: "error",
         title: "Error",

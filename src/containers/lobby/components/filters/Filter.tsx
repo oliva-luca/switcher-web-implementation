@@ -1,3 +1,43 @@
+/**
+ * Componente de filtro para la pantalla de lobby.
+ * 
+ * Este componente permite filtrar jugadores por nombre y cantidad de jugadores.
+ * Utiliza el contexto `useFilter` para manejar los estados de los filtros.
+ * 
+ * @component
+ * 
+ * @example
+ * <Filter />
+ * 
+ * @returns {JSX.Element} El componente de filtro.
+ * 
+ * @remarks
+ * - El filtro de cantidad de jugadores permite valores entre 2 y 4.
+ * - El filtro de nombre permite filtrar jugadores por su nombre.
+ * 
+ * @function
+ * @name Filter
+ * 
+ * @hook
+ * @name useFilter
+ * @description Hook que proporciona los estados y funciones para manejar los filtros.
+ * 
+ * @typedef {Object} FilterContext
+ * @property {number|string} playerCount - El número de jugadores filtrado.
+ * @property {function} setPlayerCount - Función para actualizar el número de jugadores.
+ * @property {string} nameFilter - El nombre filtrado.
+ * @property {function} setNameFilter - Función para actualizar el nombre filtrado.
+ * 
+ * @param {React.ChangeEvent<HTMLInputElement>} event - El evento de cambio del input.
+ * 
+ * @function
+ * @name handlePlayerCountChange
+ * @description Maneja el cambio en el input de cantidad de jugadores.
+ * 
+ * @function
+ * @name handleNameFilterChange
+ * @description Maneja el cambio en el input de filtro de nombre.
+ */
 import React from 'react';
 import { useFilter } from './FilterContext'; // Ajusta la ruta según sea necesario
 import './Filter.css'; // Ajusta la ruta según sea necesario
