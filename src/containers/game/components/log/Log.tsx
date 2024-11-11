@@ -20,7 +20,7 @@ const Log = () => {
 
     // WebSocket setup
     useEffect(() => {
-        const gameId = localStorage.getItem("gameId");
+        const gameId = sessionStorage.getItem("gameId");
         if (!gameId) return;
 
         const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
@@ -32,7 +32,7 @@ const Log = () => {
                 const fetchedLogs: LogMessage[] = response.data.map((log: any) => ({
                     id: log.id_mensaje,
                     name: log.autor,
-                    text: log.content,
+                    text: log.mensaje,
                     time: new Date(log.time).toLocaleTimeString(),
                 }));
                 setLogMessages(fetchedLogs);
@@ -51,6 +51,7 @@ const Log = () => {
                     text: log.content,
                     time: new Date(log.time).toLocaleTimeString(),
                 }));
+                console.log(fetchedLogs);
                 setLogMessages(fetchedLogs);
             } catch (error) {
                 console.log(error);
