@@ -27,7 +27,7 @@ interface FigureCardProp {
  * - `playerID` (number): ID del jugador propietario de la carta (opcional).
  * - `blocked` (boolean): Define si la carta está bloqueada (opcional).
  *
- * @return {JSX.Element} Imagen representativa de la carta de figura.
+ * @return {JSX.Element} Carta de figura.
  */
 const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
   // Extrae funciones y estados relacionados al juego desde el contexto

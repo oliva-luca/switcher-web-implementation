@@ -13,7 +13,6 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 function Game() {
-  const { game, gameInfoKey } = useGame();
   const navigate = useNavigate();
 
   if (
@@ -28,6 +27,8 @@ function Game() {
       navigate("/lobby");
     });
   }
+
+  const { game, gameInfoKey } = useGame();
 
   return (
     <>
