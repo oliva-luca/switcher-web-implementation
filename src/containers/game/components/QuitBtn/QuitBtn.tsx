@@ -11,7 +11,6 @@ const QuitBtn = () => {
     const userId = sessionStorage.getItem("playerId");
     try {
       const response = axios.put(`/gamelist/leave/${userId}`);
-      console.log(response);
       navigate("/lobby");
     } catch (error) {
       console.log(error);

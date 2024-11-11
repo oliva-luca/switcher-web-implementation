@@ -17,7 +17,7 @@ export function Lobby() {
     Swal.fire({
       text: "Error cargando datos de usuario",
       confirmButtonText: "Volver al home",
-    }).then(() => {
+    }).finally(() => {
       localStorage.clear();
       navigate("/");
     });

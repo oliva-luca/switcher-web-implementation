@@ -23,7 +23,7 @@ function Game() {
     Swal.fire({
       text: "Error cargando datos de la partida",
       confirmButtonText: "Volver al lobby",
-    }).then(() => {
+    }).finally(() => {
       sessionStorage.clear();
       navigate("/lobby");
     });

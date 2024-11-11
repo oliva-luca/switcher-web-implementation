@@ -63,24 +63,15 @@ const ColorTyle = ({
       const casilla_id1 = selectedTyle[2];
       const casilla_id2 = tyleId;
 
-      console.log(
-        `Attempting to swap tiles: game_id=${game_id}, cardId=${cardId}, casilla_id1=${casilla_id1}, casilla_id2=${casilla_id2}`
-      );
-
       const response = await axios.put(
         `/gamelist/${game_id}/playcard/${cardId}/casillas/${casilla_id1}/${casilla_id2}`
       );
-      console.log("Response:", response);
 
       setSelectedCard(null);
       setSelectedTyle(null);
     } catch (error) {
       console.error("Error swapping tyles:", error);
     }
-
-    console.log(
-      "card " + cardId + " swaped: " + selectedTyle[2] + "<--->" + tyleId
-    );
   };
 
   const handleFigureDiscard = async () => {
@@ -90,7 +81,6 @@ const ColorTyle = ({
       const response = await axios.put(
         `/gamelist/${game_id}/discard_figcard/${selectedFigureCard[0]}/color/${color}`
       );
-      console.log("Response:", response);
 
       setSelectedFigureCard(null);
     } catch (error) {
@@ -105,8 +95,6 @@ const ColorTyle = ({
       const response = await axios.put(
         `/gamelist/${game_id}/block_figcard/${selectedFigureCard[0]}/color/${color}`
       );
-      console.log("Response:", response);
-
       setSelectedFigureCard(null);
     } catch (error) {
       console.error("Error blocking card:", error);
@@ -119,21 +107,23 @@ const ColorTyle = ({
       selectedTyle == null &&
       selectedCard == null &&
       selectedFigureCard != null &&
-      selectedFigureCard[1] == tipo_figura && selectedFigureCard[2]
+      selectedFigureCard[1] == tipo_figura &&
+      selectedFigureCard[2]
         ? handleFigureDiscard()
-        //bloquear
-        : selectedTyle == null &&
+        : //bloquear
+        selectedTyle == null &&
           selectedCard == null &&
           selectedFigureCard != null &&
-          selectedFigureCard[1] == tipo_figura && !selectedFigureCard[2]
-            ? handleFigureBlock()
-            //mover fichas
-            : selectedTyle != null 
-              && selectedCard != null 
-              && selectedFigureCard == null 
-              && availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
-              ? handleTyleSwap()
-              : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
+          selectedFigureCard[1] == tipo_figura &&
+          !selectedFigureCard[2]
+        ? handleFigureBlock()
+        : //mover fichas
+        selectedTyle != null &&
+          selectedCard != null &&
+          selectedFigureCard == null &&
+          availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
+        ? handleTyleSwap()
+        : setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null);
     }
   };
 

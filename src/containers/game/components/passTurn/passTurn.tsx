@@ -25,7 +25,6 @@ const PassTurn = () => {
           const toFind = response.data.turn;
           const response2 = await axios.get(`/user/${toFind}`);
           setNameTurn(response2.data.nombre);
-          console.log(response2.data.nombre);
         }
       } catch (error) {
         console.error("Error fetching game data:", error);
