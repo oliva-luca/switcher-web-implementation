@@ -6,7 +6,7 @@ export const useBoard = () => {
   const [board, setBoard] = useState<BoardData | null>(null);
 
   useEffect(() => {
-    const gameId = localStorage.getItem("gameId");
+    const gameId = sessionStorage.getItem("gameId");
 
     axios
       .get(`/tableros/${gameId}`)

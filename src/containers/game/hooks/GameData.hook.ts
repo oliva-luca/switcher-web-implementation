@@ -11,7 +11,7 @@ export const useGame = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const gameId = localStorage.getItem("gameId");
+    const gameId = sessionStorage.getItem("gameId");
     const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
     const getData = async () => {
       await axios
@@ -36,13 +36,14 @@ export const useGame = () => {
 
       if (message.includes("winner")) {
         const winner = message.replace("winner ", "");
-        if (winner == localStorage.getItem("userId"))
+        if (winner == sessionStorage.getItem("playerId"))
           Swal.fire({
             title: "¡Ganaste!",
             text: "Felicidades, has ganado la partida.",
             icon: "success",
             confirmButtonText: "Aceptar",
           });
+        sessionStorage.clear();
         navigate("/lobby");
       } else {
         getData();

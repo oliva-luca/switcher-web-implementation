@@ -1,0 +1,18 @@
+.buttom-lobby {
+  position: fixed;
+  bottom: 20px; /* Ajusta el valor según el margen deseado */
+  right: 300px; /* Ajusta el valor según el margen deseado */
+  margin: 5px;
+  background-color: red;
+  color: white;
+}
+
+.buttom-lobby:hover {
+  background-color: darkred;
+  color: black;
+}
+
+.buttom-lobby:active {
+  background-color: red !important;
+  color: white !important;
+}

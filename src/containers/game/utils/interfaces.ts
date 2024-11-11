@@ -36,6 +36,7 @@ export interface FigCard {
   id_jugador: number;
   id_figcard: number;
   id_partida: number;
+  blocked: boolean;
 }
 
 export interface GameData {

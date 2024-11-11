@@ -9,8 +9,8 @@ import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 const CancelMov = () => {
   const { currentTurn } = useCurrentPlay();
   const cancel = async () => {
-    const gameId = localStorage.getItem("gameId");
-    if (currentTurn == localStorage.getItem("userId")) {
+    const gameId = sessionStorage.getItem("gameId");
+    if (currentTurn == sessionStorage.getItem("playerId")) {
       try {
         await axios.put(`/gamelist/cancelmoves/${gameId}`);
       } catch (error) {

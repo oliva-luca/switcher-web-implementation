@@ -14,9 +14,9 @@ interface CurrentPlayContextProps {
   currentTurn: number | null;
   setCurrentTurn: React.Dispatch<React.SetStateAction<number | null>>;
 
-  selectedFigureCard: [number, number] | null;
+  selectedFigureCard: [number, number, boolean] | null;
   setSelectedFigureCard: React.Dispatch<
-    React.SetStateAction<[number, number] | null>
+    React.SetStateAction<[number, number, boolean] | null>
   >;
 }
 
@@ -36,7 +36,7 @@ export const CurrentPlayProvider = ({ children }: { children: ReactNode }) => {
   const [currentTurn, setCurrentTurn] = useState<number | null>(null);
 
   const [selectedFigureCard, setSelectedFigureCard] = useState<
-    [number, number] | null
+    [number, number, boolean] | null
   >(null);
 
   return (

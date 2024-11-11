@@ -2,7 +2,7 @@ import { Player, FigCard } from "./interfaces";
 
 export function ParsePlayers(players: Player[]) {
   const firstPlayer = players.find(
-    (ply) => ply.id_jugador.toString() == localStorage.getItem("userId")
+    (ply) => ply.id_jugador.toString() == sessionStorage.getItem("playerId")
   )?.position;
 
   const order1 = players
