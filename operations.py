@@ -629,6 +629,12 @@ class Operations:
             if number_of_shown_figcards == 0 and player.blocked:
                 # Debe ser desbloqueado
                 player.blocked = False
+
+            if number_of_shown_figcards == 1 and player.blocked:
+                last_figcard = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).first() 
+                # Debe ser desbloqueado
+                last_figcard.blocked = False
+            
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó

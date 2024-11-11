@@ -69,14 +69,6 @@ async def create_user(name: str):
     
     return operation.create_user(nombre=name)
 
-@app.post("/player")
-async def create_player(user_id : int):
-    operation = Operations()
-    
-    return operation.create_player(id_user=user_id)
-
-
-
 
 @app.put("/gamelist/start/{game_id}")
 async def start_game(game_id: int):
