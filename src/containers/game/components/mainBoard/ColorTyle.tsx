@@ -113,7 +113,6 @@ const ColorTyle = ({
 
   const handleClick = () => {
     if (currentTurn == Number(sessionStorage.getItem("playerId"))) {
-      //descartar
       selectedTyle == null &&
       selectedCard == null &&
       selectedFigureCard != null &&

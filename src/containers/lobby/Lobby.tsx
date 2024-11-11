@@ -54,15 +54,28 @@ export function Lobby() {
   }, []);
 
   return (
-    <div className="container">
-      <div className="join-game-section">
-        <h2 className="title">Unirse a partida</h2>
-        <FilterProvider>
-          <Filters />
-          <GameList key={gameListKey} />
+    <div className="contenedor">
+
+      <div className="partidas">
+
+        <div  className="started-games-section" >
+          <h2 className="title">Partidas en curso</h2>
           <InGameList />
-        </FilterProvider>
+        </div>
+
+        {/* <div className="separador"></div> */}
+
+        <div className="join-game-section">
+          <h2 className="title">Unirse a partida</h2>
+          <FilterProvider>
+            <Filters />
+            <GameList key={gameListKey} />
+          </FilterProvider>
+        </div>
+        
       </div>
+
+      {/* <div className="separador"></div> */}
 
       <div className="d-flex flex-column align-items-center">
         <h2 className="title">Crear partida</h2>

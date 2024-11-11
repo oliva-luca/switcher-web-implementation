@@ -1,0 +1,12 @@
+#startedGamesColumn {
+    display: grid;
+    flex-direction: column;
+    gap: 2vh; 
+    border: 1vh solid #7dd3b3;
+    border-radius: 2vh; 
+    background-color: #92ecd3;
+    max-height: 65vh; 
+    padding: 2vw;
+    overflow-y: auto;
+  }
+  
