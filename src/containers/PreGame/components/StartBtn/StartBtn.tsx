@@ -5,12 +5,22 @@ import axios from "axios"; // Importar Axios
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
+/**
+  * El componente StartBtn muestra el botón de inicio de la partida.
+  * 
+  * Este componente muestra el botón de inicio de la partida si el jugador es el propietario del juego.
+  * Si el jugador no es el propietario del juego, muestra el botón de salida de la partida.
+  * 
+  * @returns {JSX.Element} El botón de inicio de la partida o el botón de salida de la partida.
+ */
+
+
 const StartBtn = () => {
-  const [started, setStarted] = useState(false);
   const navigate = useNavigate();
   const [idOwner, setIdOwner] = useState(null);
-  const userId = sessionStorage.getItem("playerId");
+  const playerId = sessionStorage.getItem("playerId");
 
+  // Obtiene los datos del juego para determinar si el jugador es el propietario del juego
   useEffect(() => {
     const fetchGameData = async () => {
       const gameId = sessionStorage.getItem("gameId");
@@ -31,43 +41,42 @@ const StartBtn = () => {
     fetchGameData();
   }, []);
 
+  // Inicia la partida
   const start = async () => {
     const gameId = sessionStorage.getItem("gameId");
-    // console.log('Game ID:', gameId);
     if (!gameId) {
       console.error("Game ID not found");
-      return;
-    }
-
-    try {
-      const response = await axios.put(`/gamelist/start/${gameId}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setStarted(true);
-      // console.log('Game started successfully:', response.data);
-      navigate("/game");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Se necesitan más jugadores para comenzar",
-      });
+    } else{
+      try {
+        const response = await axios.put(`/gamelist/start/${gameId}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        navigate("/game");
+      } catch (error) {
+        // en caso de error, muestra una alerta
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Se necesitan más jugadores para comenzar",
+        });
+      }
     }
   };
 
-  const exit = () => {
-    const userId = sessionStorage.getItem("playerId");
+  const exit = async () => {
+    const playerId = sessionStorage.getItem("playerId");
     try {
-      const response = axios.put(`/gamelist/leave_lobby/${userId}`);
+      await axios.put(`/gamelist/leave_lobby/${playerId}`);
       navigate("/lobby");
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (idOwner == userId) {
+  // Muestra el botón de inicio de la partida si el jugador es el propietario del juego
+  if (idOwner == playerId) {
     return (
       <button
         type="submit"
@@ -78,6 +87,7 @@ const StartBtn = () => {
       </button>
     );
   } else {
+    // Muestra el botón de salida de la partida si el jugador no es el propietario del juego
     return (
       <button
         type="submit"

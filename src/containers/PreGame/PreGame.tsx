@@ -8,13 +8,23 @@ import axios from "axios";
 import CancelBtn from "./components/CancelBtn/CancelBtn";
 import Swal from "sweetalert2";
 
+/**
+ * Componente PreGame
+ * 
+ * Componente que muestra la pantalla de espera de jugadores antes de que inicie la partida.
+ * 
+ * @returns {JSX.Element} Componente PreGame
+ */
+
 function PreGame() {
   const navigate = useNavigate();
 
+  // verificar si se tienen los datos de la partida
   if (
     sessionStorage.getItem("gameId") == null ||
     sessionStorage.getItem("playerId") == null
   ) {
+    // Si no se tienen los datos de la partida, se redirige al lobby, y muestra error
     Swal.fire({
       text: "Error cargando datos de la partida",
       confirmButtonText: "Volver al lobby",
@@ -25,22 +35,20 @@ function PreGame() {
   }
 
   const [gameInfoKey, setGameInfoKey] = useState(0);
+
+  // Se crea un WebSocket para escuchar los mensajes del servidor
   useEffect(() => {
     let gameId = sessionStorage.getItem("gameId");
     console.log("GAME ID: ", gameId);
     const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
 
-    socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
+    // Se escuchan los mensajes del servidor para actualizar la información de la partida
     socket.onmessage = (event) => {
       console.log("WebSocket message received");
       setGameInfoKey((prevKey) => prevKey + 1); // Update key to force re-render
       const message = event.data;
       switch (message) {
         case "Game has started":
-          // alert("La partida empezo");
           navigate("/game");
           break;
         case "Owner cancelled the game":
@@ -52,8 +60,6 @@ function PreGame() {
           navigate("/lobby");
           break;
         default:
-          // alert("Actualizar info partida");
-          console.log(message);
           break;
       }
     };
@@ -66,12 +72,13 @@ function PreGame() {
       console.error("WebSocket error: ", error);
     };
 
-    // Cleanup on component unmount
+    // Se envía un mensaje al servidor para unirse a la partida
     return () => {
       socket.close();
     };
   }, []);
 
+  // Devuelve el componente PreGame
   return (
     <>
       <div className="d-flex justify-content-center align-items-center vh-100 flex-column">

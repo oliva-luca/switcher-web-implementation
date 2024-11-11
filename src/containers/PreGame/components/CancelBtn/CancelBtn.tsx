@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./CancelBtn.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios"; // Importar Axios
+import axios from "axios";
 import Swal from "sweetalert2";
+
+/**
+ * El componente CancelBtn es un botón que permite al propietario de un juego cancelar el juego.
+ * 
+ * Este componente obtiene los datos del juego para determinar el propietario del juego y 
+ * lo compara con el ID del usuario actual almacenado en el almacenamiento de sesión. Si el 
+ * usuario actual es el propietario, muestra un botón que permite al propietario cancelar el juego.
+ * 
+ * La función cancel envía una solicitud al servidor para salir del lobby y navega al usuario 
+ * de vuelta a la página del lobby. Si ocurre un error durante este proceso, se muestra un 
+ * mensaje de error utilizando SweetAlert2.
+ * 
+ * @returns {JSX.Element | null} Un botón para cancelar el juego si el usuario es el propietario, de lo contrario null.
+ */
 import { useNavigate } from "react-router-dom";
 
 const CancelBtn: React.FC = () => {
@@ -10,6 +24,7 @@ const CancelBtn: React.FC = () => {
   const [idOwner, setIdOwner] = useState(null);
   const userId = sessionStorage.getItem("playerId");
 
+  // Obtiene los datos del juego para determinar el propietario del juego
   useEffect(() => {
     const fetchGameData = async () => {
       const gameId = sessionStorage.getItem("gameId");
@@ -30,9 +45,10 @@ const CancelBtn: React.FC = () => {
     fetchGameData();
   });
 
+  // Cancela el juego y navega al usuario de vuelta a la página del lobby
   const cancel = async () => {
     try {
-      const response = await axios.put(`/gamelist/leave_lobby/${userId}`);
+      await axios.put(`/gamelist/leave_lobby/${userId}`);
       // console.log('Game started successfully:', response.data);
       navigate("/lobby");
     } catch (error) {
@@ -44,6 +60,7 @@ const CancelBtn: React.FC = () => {
     }
   };
 
+  // Muestra el botón de cancelar si el usuario es el propietario
   if (idOwner == userId) {
     return (
       <button
