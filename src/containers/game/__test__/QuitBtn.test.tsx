@@ -5,10 +5,10 @@ import axios from "axios";
 import { useNavigate, BrowserRouter } from "react-router-dom";
 import QuitBtn from "../components/QuitBtn/QuitBtn";
 
-// Mockeo de HTTP requests
+// Mock de HTTP requests
 jest.mock("axios");
 
-// Mockeo de useNavigate
+// Mock de useNavigate
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: jest.fn(),

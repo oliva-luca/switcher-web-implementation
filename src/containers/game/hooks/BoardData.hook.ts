@@ -3,13 +3,14 @@ import axios from "axios";
 import { BoardData } from "../utils/interfaces";
 
 /**
- * Hook para obtener datos del tablero de una partida especifica dede la API
+ * Hook para obtener datos del tablero de una partida especifica
  *
  * Este hook maneja el estado del tablero ("board") dentro de una partida
  * a partir de la informacion proporcionada por el servidor cuando el
  * componente hace la request.
  *
- * @returns {Object} Datos del tablero y la funciona para actualizarlo.
+ * @returns {Object}
+ * - `board` (BoardData | null): Objeto con informacion actual del tablero.
  */
 export const useBoard = () => {
   // Variable de estado para guardar los datos del tablero
@@ -19,7 +20,7 @@ export const useBoard = () => {
     // Obtiene el ID de la partida desde sessionStorage
     const gameId = sessionStorage.getItem("gameId");
 
-    // HTTP request del tablero a partir del gameId
+    // GET request del tablero a partir del gameId
     axios
       .get(`/tableros/${gameId}`)
       .then((response) => {
@@ -32,5 +33,5 @@ export const useBoard = () => {
   }, []);
 
   // Retorna los datos del tablero y la funcion para modificarlos
-  return { board, setBoard };
+  return { board };
 };

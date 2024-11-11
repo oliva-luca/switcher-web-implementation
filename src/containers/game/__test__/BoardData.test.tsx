@@ -2,12 +2,12 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { useBoard } from "../hooks/BoardData.hook";
 
-// Mockeo de HTTP requests
+// Mock de HTTP requests
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("useBoard hook", () => {
-  // Mockeo de los datos del tablero
+  // Mock de los datos del tablero
   const mockBoardData = {
     id: 1,
     tiles: [

@@ -4,7 +4,7 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import { useNavigate } from "react-router-dom";
 import LobbyBtn from "../components/lobbyBtn/LobbyBtn";
 
-// Mockeo de useNavigate
+// Mock de useNavigate
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useNavigate: jest.fn(),
