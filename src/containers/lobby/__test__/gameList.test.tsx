@@ -51,8 +51,34 @@ describe("GameList Component", () => {
     },
   ];
 
+  const mockUserData = [
+    {
+      id_user: 1,
+      nombre: "User 1",
+      players: [
+        {
+          id_partida: 1,
+          id_jugador: 1,
+          in_game: true,
+          position: 1,
+          block: false,
+          user_id: 1,
+        },
+        {
+          id_partida: 2,
+          id_jugador: 2,
+          in_game: true,
+          position: 2,
+          block: false,
+          user_id: 1,
+        },
+      ],
+    },
+  ];
+
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.setItem("userId", "1");
   });
 
   it("should fetch and render game list", async () => {
@@ -187,6 +213,153 @@ describe("GameList Component", () => {
     await waitFor(() =>
       expect(screen.queryByTestId("slot-join-game")).toBeNull()
     );
+  });
+
+  it("should fetch and render game list", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
+    );
+  });
+
+  it("should handle fetch error", async () => {
+    axios.get.mockRejectedValue(new Error("Error fetching the game list"));
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.queryByTestId("slot-join-game")).toBeNull()
+    );
+  });
+
+  it("should filter games by player count", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    const playerCount = 4;
+    const filteredPartidas = mockGames
+      .filter((partida) => !partida.started)
+      .filter((partida) => {
+        if (playerCount) {
+          return partida.cant_jugadores === Number(playerCount);
+        }
+        return true;
+      });
+
+    expect(filteredPartidas).toEqual([
+      {
+        id_partida: 1,
+        name: "Game 1",
+        players: [],
+        cant_jugadores: 4,
+        started: false,
+      },
+      {
+        id_partida: 2,
+        name: "Game 2",
+        players: [{}, {}],
+        cant_jugadores: 4,
+        started: false,
+      },
+    ]);
+  });
+
+  it("should fetch and render game list", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
+    );
+  });
+
+  it("should handle fetch error", async () => {
+    axios.get.mockRejectedValue(new Error("Error fetching the game list"));
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.queryByTestId("slot-join-game")).toBeNull()
+    );
+  });
+
+  it("should filter games by player count", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    const playerCount = 4;
+    const filteredPartidas = mockGames
+      .filter((partida) => !partida.started)
+      .filter((partida) => {
+        if (playerCount) {
+          return partida.cant_jugadores === Number(playerCount);
+        }
+        return true;
+      });
+
+    expect(filteredPartidas).toEqual([
+      {
+        id_partida: 1,
+        name: "Game 1",
+        players: [],
+        cant_jugadores: 4,
+        started: false,
+      },
+      {
+        id_partida: 2,
+        name: "Game 2",
+        players: [{}, {}],
+        cant_jugadores: 4,
+        started: false,
+      },
+    ]);
+  });
+  it("should fetch and render game list", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
+    );
+  });
+
+  it("should handle fetch error", async () => {
+    axios.get.mockRejectedValue(new Error("Error fetching the game list"));
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.queryByTestId("slot-join-game")).toBeNull()
+    );
+  });
+
+  it("should get joined games correctly", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockUserData });
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    const joinedGames =
+      mockUserData
+        .find(
+          (user) => user.id_user.toString() === localStorage.getItem("userId")
+        )
+        ?.players.map((ply) => ply.id_partida) || [];
+
+    expect(joinedGames).toEqual([1, 2]);
   });
 
   it("should fetch and render game list", async () => {
