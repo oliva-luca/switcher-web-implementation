@@ -1,6 +1,7 @@
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
 from models import Game, engine, Player, FigCard, MovCard, Tablero, Casilla, Mensaje
-
+from datetime import datetime
 
 
 Session = sessionmaker(bind=engine)
@@ -302,11 +303,11 @@ def load_data_for_test():
         {"type": 24, "id_partida": 8, "shown": False, "id_figcard": 149, "id_jugador": 10}, 
         {"type": 25, "id_partida": 8, "shown": False, "id_figcard": 150, "id_jugador": 10}
     ]
+
     mensajes = [
-        {"type":0, "id_mensaje": 1, "id_partida": 6, "autor": "player6", "mensaje": "Hola, soy el jugador 6"},
-        {"type":1,"id_mensaje": 2, "id_partida": 6, "autor": None, "mensaje": "El jugador 6 ha movido"},
+        {"type":1, "id_mensaje": 1, "id_partida": 6, "autor": "player6", "mensaje": "Hola, soy el jugador 6",  'time': '2021-06-01 12:00:00'},
+        {"type":0,"id_mensaje": 2, "id_partida": 6, "autor": "Sistema", "mensaje": "El jugador 6 ha movido", 'time': '2021-06-01 12:00:00'},
     ]
-    
     # Agregar partidas
     session = Session()
     try:
@@ -372,17 +373,19 @@ def load_data_for_test():
             session.commit()
     finally:
         session.close()
-
-# Agregar mensajes
+        
     session = Session()
+    
+
     try:
         if session.query(Mensaje).count() == 0:
             for message in mensajes:
-                new_message = Mensaje(id_mensaje=message["id_mensaje"], id_partida=message["id_partida"], autor=message["autor"], mensaje=message["mensaje"])
+                message_time = datetime.strptime(message["time"], '%Y-%m-%d %H:%M:%S')
+                new_message = Mensaje(id_mensaje=message["id_mensaje"], type=message['type'], id_partida=message["id_partida"], autor=message["autor"], mensaje=message["mensaje"], time=message_time)
                 session.add(new_message)
+            session.commit()
     finally:
         session.close()
-        
 
 if __name__ == '__main__':
     load_data_for_test()            

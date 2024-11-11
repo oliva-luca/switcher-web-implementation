@@ -203,7 +203,7 @@ async def get_chat(game_id: int):
     except GameNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@app.get("/gamelist/mensaje/{game_id}/{player_id}/{mensaje}")
+@app.post("/gamelist/mensaje/{game_id}/{player_id}/{mensaje}")
 async def send_message(game_id: int, player_id: int, mensaje: str):
     operation = Operations()
     try:

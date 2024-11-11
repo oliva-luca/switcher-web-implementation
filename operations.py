@@ -109,7 +109,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{new_player.nombre}",
-                content="Se ha unido a la partida",
+                mensaje="Se ha unido a la partida",
                 id_partida=game_id,
                 time = datetime.now()
             )
@@ -237,7 +237,7 @@ class Operations:
                 new_log = Mensaje(
                 type=0,
                 autor = "Sistema",
-                content="La partida ha comenzado",
+                mensaje="La partida ha comenzado",
                 id_partida=game_id,
                 time = datetime.now()
                 )
@@ -372,7 +372,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = "Sistema",
-                content=f"Turno del jugador {next_player.nombre}",
+                mensaje=f"Turno del jugador {next_player.nombre}",
                 id_partida=game_id,
                 time = datetime.now()
             )
@@ -443,7 +443,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{player.nombre}",
-                content="Se ha ido del lobby",
+                mensaje="Se ha ido del lobby",
                 id_partida=game.id_partida,
                 time = datetime.now()
             )
@@ -486,7 +486,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{player.nombre}",
-                content="Se ha ido de la partida",
+                mensaje="Se ha ido de la partida",
                 id_partida=id_game,
                 time = datetime.now()
             )
@@ -544,7 +544,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{player.nombre}",
-                content=f"Ha intercambiado una ficha de color {casilla_1.color} por una ficha de color {casilla_2.color}",
+                mensaje=f"Ha intercambiado una ficha de color {casilla_1.color} por una ficha de color {casilla_2.color}",
                 id_partida=game.id_partida,
                 time = datetime.now()
             )
@@ -593,7 +593,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{player.nombre}",
-                content="Ha descartado una carta de figura",
+                mensaje="Ha descartado una carta de figura",
                 id_partida=game.id_partida,
                 time = datetime.now()
             )
@@ -639,7 +639,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{current_player.nombre}",
-                content="Se han cancelado los movimientos parciales",
+                mensaje="Se han cancelado los movimientos parciales",
                 id_partida=game.id_partida,
                 time = datetime.now()
             )
@@ -664,14 +664,14 @@ class Operations:
             if not player:
                 raise PlayerNotFoundError(f"Player with ID {player_id} not found.")
             
-            new_log = Mensaje(
+            new_msj = Mensaje(
                 type=1,
                 autor = f"{player.nombre}",
-                content=mensaje,
+                mensaje=mensaje,
                 id_partida=game_id,
                 time = datetime.now()
             )
-            session.add(new_log)
+            session.add(new_msj)
             session.commit()
             await manager_game.broadcast(game_id, f"MENSAJE")
             return {"message": f"Message sent by player {player_id} in game {game_id}"}
