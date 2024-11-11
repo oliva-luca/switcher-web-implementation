@@ -5,7 +5,16 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-// Componente QuitBtn - Representa un botón para abandonar una partida
+/**
+ * Componente de boton para abandonar una partida
+ *
+ * @remaks
+ * Muestra un boton durante la partida que le permite al usuario
+ * abandonar en cualquier momento. Al clickearlo (y si la HTTP
+ * request es exitosa) el jugador es redirigido al obby
+ *
+ * @returns {JSX.Element}
+ */
 const QuitBtn = () => {
   const navigate = useNavigate(); // Hook para redirigir a otra ruta
 
