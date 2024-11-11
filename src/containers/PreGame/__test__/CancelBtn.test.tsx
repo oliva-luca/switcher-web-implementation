@@ -12,17 +12,15 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const mockAxios = new MockAdapter(axios);
-const navigate = jest.fn();
 
 describe('CancelBtn', () => {
     beforeEach(() => {
-        localStorage.setItem('userId', '1');
-        localStorage.setItem('gameId', '123');
-        (useNavigate as jest.Mock).mockReturnValue(navigate);
+        sessionStorage.setItem('playerId', '1');
+        sessionStorage.setItem('gameId', '123');
     });
 
     afterEach(() => {
-        localStorage.clear();
+        sessionStorage.clear();
         mockAxios.reset();
     });
 
@@ -42,6 +40,8 @@ describe('CancelBtn', () => {
         });
 
         it('calls cancel function when button is clicked', async () => {
+            const navigate = jest.fn();
+            (useNavigate as jest.Mock).mockReturnValue(navigate);
             mockAxios.onGet('/gamelist/123').reply(200, { owner: '1' });
             mockAxios.onPut('/gamelist/leave_lobby/1').reply(200);
 
@@ -51,15 +51,16 @@ describe('CancelBtn', () => {
                 </MemoryRouter>
             );
 
+            
             await waitFor(() => {
-                expect(screen.getByText('CANCELAR PARTIDA')).toBeInTheDocument();
+                expect(screen.getByText('CANCELAR PARTIDA')).toBeInTheDocument();                
             });
 
             fireEvent.click(screen.getByText('CANCELAR PARTIDA'));
 
             await waitFor(() => {
                 expect(navigate).toHaveBeenCalledWith('/lobby');
-            });
+            }); 
         });
 
         it('handles error when canceling the game', async () => {
@@ -85,7 +86,7 @@ describe('CancelBtn', () => {
 
         it('handles error when gameId is not found', async () => {
 
-            localStorage.removeItem('gameId');
+            sessionStorage.removeItem('gameId');
             const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
             render(
@@ -100,7 +101,6 @@ describe('CancelBtn', () => {
         });
 
         it('handles error when get ownerId fails', async () => {
-
             const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
             mockAxios.onGet('/gamelist/123').reply(500);
 
@@ -120,6 +120,7 @@ describe('CancelBtn', () => {
     describe('when the user is not the owner', () => {
         it('does not render the button', async () => {
             mockAxios.onGet('/gamelist/123').reply(200, { owner: '2' });
+            // set mi id to 1
 
             render(
                 <MemoryRouter>
