@@ -128,6 +128,7 @@ def log_a():
         "autor": "Sistema",
         "time": "2021-10-10 10:10:10",
         "id_partida": 1,
+        "id_autor": None,
     }
 @patch("app.Operations")
 def test_get_logs(mock_Get_logs):
@@ -158,6 +159,7 @@ def mensaje_a():
         "autor": "pepe",
         "time": "2021-10-10 10:10:10",
         "id_partida": 1,
+        "id_autor": 2,
     }
 @patch("app.Operations")
 def test_get_mensajes(mock_Get_mensajes):
