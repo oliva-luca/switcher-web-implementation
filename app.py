@@ -25,6 +25,11 @@ async def print_tablero_by_id(game_id: int):
     
     return await modificar_tablero(board)
 
+@app.get("/user")
+async def print_user():
+    operation = Operations()
+    return operation.get_users()
+
 @app.post("/gamelist")
 async def create_game(name: str, cant_players: int, priv: bool, psw: str):
     operation = Operations()
@@ -38,13 +43,13 @@ async def create_game(name: str, cant_players: int, priv: bool, psw: str):
 
 
 @app.put("/gamelist/join/{game_id}")
-async def join_game(game_id: int, player_id: int):
+async def join_game(game_id: int, user_id: int):
     operation = Operations()
     try:
-        player_id = await operation.join_game(game_id=game_id, player_id=player_id)
+        player_id = await operation.join_game(game_id=game_id, user_id=user_id)
 
         return {
-                'id_player ': player_id,
+                'id_player': player_id,
                 'id_partida': game_id,
                 'operation_result': "Successfully joined!"
             }
@@ -59,10 +64,17 @@ async def join_game(game_id: int, player_id: int):
         raise HTTPException(status_code=400, detail=str(e))
         
 @app.post("/user")
-async def create_player(name: str):
+async def create_user(name: str):
     operation = Operations()
     
-    return operation.create_player(nombre=name)
+    return operation.create_user(nombre=name)
+
+@app.post("/player")
+async def create_player(user_id : int):
+    operation = Operations()
+    
+    return operation.create_player(id_user=user_id)
+
 
 
 
@@ -204,6 +216,21 @@ async def get_turn_time(game_id: int):
     except GameNotStartedError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/game/{game_id}/logs")
+async def get_logs(game_id: int):
+    operation = Operations()
+    try:
+        return operation.get_logs(game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@app.get("/game/{game_id}/chat")
+async def get_chat(game_id: int):
+    operation = Operations()
+    try:
+        return operation.get_chat(game_id)
+    except GameNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
