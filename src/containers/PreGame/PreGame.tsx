@@ -74,25 +74,20 @@ function PreGame() {
 
   return (
     <>
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="top-left-text" style={{ zIndex: 3 }}>
+      <div className="d-flex justify-content-center align-items-center vh-100 flex-column">
+        <div className="top-center-text" style={{ zIndex: 3, textAlign: "center", marginTop: "20px" }}>
+          <h1>Esperando a que se unan los jugadores...</h1>
+        </div>
+        <div className="top-left-text" style={{ zIndex: 3, textAlign: "center", marginTop: "20px" }}>
           <CantPlayer key={gameInfoKey} />
         </div>
-        <div className="blank-screen"></div>
-        {/* <div className="content" style={{ zIndex: 1 }}>
-                <PreGameBoard board={board}/>
-            </div> */}
-        <div style={{ zIndex: 3 }}>
+        <div style={{ zIndex: 3, marginTop: "20px" }}>
           <StartBtn />
         </div>
-      </div>
-      <div className="blank-screen"></div>
-      <div className="content" style={{ zIndex: 1 }}></div>
-      <div style={{ zIndex: 3 }}>
-        <CancelBtn />
-      </div>
-      <div style={{ zIndex: 3 }}>
-        <StartBtn />
+        <div className="content" style={{ zIndex: 1 }}></div>
+        <div style={{ zIndex: 3, marginTop: "20px" }}>
+          <CancelBtn />
+        </div>
       </div>
     </>
   );
