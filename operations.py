@@ -539,15 +539,15 @@ class Operations:
 
             game.tablero.color_prohibido = color
 
-            session.commit()
-
             # Detectar si descartó la unica bloqueada que tenía
             # El chequeo de que sea valida de jugar se hace desde el front
             number_of_shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador)
                                                                      & FigCard.shown).count()
             if number_of_shown_figcards == 0 and player.blocked:
                 # Debe ser desbloqueado
-                player.blocked = True
+                player.blocked = False
+
+            session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
             number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
