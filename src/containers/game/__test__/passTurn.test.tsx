@@ -65,7 +65,7 @@ describe("PassTurn Component", () => {
 
   it('should disable "PASAR TURNO" button if it is not the user\'s turn', async () => {
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "2");
+    sessionStorage.setItem("playerId", "2");
     const gameData = { turn: 1 };
     const userData = { nombre: "Player 1" };
     (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
@@ -85,7 +85,7 @@ describe("PassTurn Component", () => {
 
   it('should enable "PASAR TURNO" button if it is the user\'s turn', async () => {
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     const gameData = { turn: 1 };
     const userData = { nombre: "Messi" };
     (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
@@ -105,7 +105,7 @@ describe("PassTurn Component", () => {
 
   it("should make PUT request to end turn", async () => {
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     const gameData = { turn: 1 };
     const userData = { nombre: "Messi" };
     (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
@@ -133,7 +133,7 @@ describe("PassTurn Component", () => {
 
   it("should log an error if PUT request fails", async () => {
     sessionStorage.setItem("gameId", "1");
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     const gameData = { turn: 1 };
     const userData = { nombre: "Messi" };
     (axios.get as jest.Mock).mockResolvedValueOnce({ data: gameData });
