@@ -509,6 +509,46 @@ async def test_block_figcard(operation : Operations):
         assert tablero.color_prohibido == "verde"
     finally:
         session.close()
+# Test de desbloqueo de carta de figura
+# Tiene que correrse despues del test anterior
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_unblock_figcard(operation : Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert player.blocked
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        unblocked_figcards = [figcard for figcard in figcards if not figcard.blocked]
+        blocked_figcards = [figcard for figcard in figcards if figcard.blocked]
+        assert len(blocked_figcards) == 1
+        for figcard in unblocked_figcards:
+            figcard.player = None
+        game = session.query(Game).filter(Game.id_partida == 8).first()
+        game.turn = 11
+        session.commit()
+    finally:
+        session.close()
+
+    await operation.discard_figcard(8, 144, "azul")
+
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert not player.blocked   # se debloquea el jugador
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        assert len(figcards) == 0   # no tiene cartas mostradas
+    finally:
+        session.close()
+
+    await operation.end_turn(8)
+
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        assert len(figcards) == 3   # se le rellenaron al terminar el turno
+    finally:
+        session.close()
 
 
 # @pytest.mark.integration_test
