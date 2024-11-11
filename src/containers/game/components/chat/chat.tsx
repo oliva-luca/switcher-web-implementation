@@ -17,8 +17,8 @@ const Chat = () => {
     const chatRef = useRef<HTMLDivElement>(null);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]); // Estado para almacenar los mensajes
-    const userId = localStorage.getItem('userId');
-    const gameId = localStorage.getItem('gameId');
+    const playerId = sessionStorage.getItem('playerId');
+    const gameId = sessionStorage.getItem('gameId');
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
@@ -35,9 +35,7 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        const gameId = localStorage.getItem("gameId");
-        const userId = localStorage.getItem('userId');
-        if (!gameId || !userId) return;
+        if (!gameId || !playerId) return;
     
         const socket = new WebSocket(`ws://localhost:8000/ws/game/${gameId}`);
     
@@ -99,7 +97,7 @@ const Chat = () => {
     const handleSend = () => {
         if (message.trim() !== '') {
             try {
-                axios.post(`/gamelist/mensaje/${gameId}/${userId}/${message.trim()}`);
+                axios.post(`/gamelist/mensaje/${gameId}/${playerId}/${message.trim()}`);
             } catch (error) {
                 console.log(error);
             }
@@ -109,11 +107,11 @@ const Chat = () => {
 
     return (
         <div>
-            <div className="chat-container" onClick={toggleChat}>
+            <div className="chat-container" onClick={toggleChat} data-testid="toggle-chat">
                 <FontAwesomeIcon icon={faComments} />
             </div>
             <div ref={chatRef} className={`chat-interface ${isOpen ? 'open' : ''}`}>
-                <div className="close-btn" onClick={closeChat}>
+                <div className="close-btn" onClick={closeChat} data-testid="close-button">
                     <FontAwesomeIcon icon={faTimes} />
                 </div>
                 <h1>CHAT</h1>
@@ -121,10 +119,10 @@ const Chat = () => {
                     {messages.map((msg) => (
                         <div
                             key={msg.id}
-                            className={`message ${msg.id_autor == Number(userId) ? 'my-message' : 'other-message'}`}
+                            className={`message ${msg.id_autor == Number(playerId) ? 'my-message' : 'other-message'}`}
                         >
                             <div className="message-header">
-                                <span className="message-name">{msg.id_autor == Number(userId) ? 'Yo' : msg.name}</span>
+                                <span className="message-name">{msg.id_autor == Number(playerId) ? 'Yo' : msg.name}</span>
                                 <span className="message-time">{msg.time}</span>
                             </div>
                             <div className="message-text">{msg.text}</div>
@@ -144,7 +142,7 @@ const Chat = () => {
                             }
                         }}
                     />
-                    <button className="send-button" onClick={handleSend}>
+                    <button className="send-button" onClick={handleSend} data-testid="send-button">
                         <FontAwesomeIcon icon={faPaperPlane} />
                     </button>
                 </div>

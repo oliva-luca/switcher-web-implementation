@@ -96,7 +96,7 @@ const Log = () => {
                 <span className="log-title">Historial</span>
             </div>
             <div ref={logRef} className={`log-interface ${isOpen ? 'open' : ''}`}>
-                <div className="close-btn" onClick={closeLog}>
+                <div className="close-btn" onClick={closeLog} data-testid="close-button">
                     <FontAwesomeIcon icon={faTimes} />
                 </div>
                 <h1>Historial de Movimientos</h1>
