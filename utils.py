@@ -5,9 +5,27 @@ from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 
 from figuras_dibujos import *
-from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
+from models import Game, Player, User, Tablero, Casilla, MovCard, FigCard, engine
 from typing import List, Dict, Tuple
 import logging
+
+
+
+def create_player(id_user: int, session):    
+    user = session.query(User).filter(User.id_user==id_user).first()
+    if user is None:
+        return {'error': f"User with id {id_user} does not exist"}
+
+    new_player_entry = Player(
+        nombre=user.nombre,
+        user_id=id_user
+        )
+
+    session.add(new_player_entry)
+    session.commit()
+    session.refresh(new_player_entry)
+    return new_player_entry.id_jugador
+
 
 #--------------------------- TABLERO -------------------------------------------------------------
 class Modify:
@@ -239,7 +257,10 @@ def repartir_una_carta_figura(id_partida: int, session):
         return {"message": "Repartidas las cartas de figura"}
 
 def mostrar_cartas_figura(id_jugador : int, session):
-    try:
+    # Obtengo el jugador
+    player = session.query(Player).filter(Player.id_jugador == id_jugador).first()
+    # Solo repartirle si no está bloqueado
+    if not player.blocked:
         # Obtengo las cartas de figura del jugador
         player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == id_jugador).all())
         # Obtengo solo las cartas sin mostrar
@@ -253,8 +274,6 @@ def mostrar_cartas_figura(id_jugador : int, session):
             new_figcard.shown = True
             number_shown_figcards += 1
         session.commit()
-    finally:
-        pass
 
 
 #--------------------------- COMPUTAR COMPONENTES  -------------------------------------------------------------
@@ -389,7 +408,8 @@ def detectar_multiples_figuras(componentes: List, figure_types: List):
 def obtener_figuras_de_jugadores(id_partida: int, session):
     # Obtengo las cartas de figura mostradas de la partida
     figcards = session.query(FigCard).filter((FigCard.id_partida == id_partida) &
-                                             (FigCard.shown) & (FigCard.player is not None)).all()
+                                             (FigCard.shown) & (FigCard.player is not None) &
+                                             (not FigCard.blocked)).all()
     # Me quedo solo con sus tipos
     figcards_types = [figcard.type for figcard in figcards]
     return figcards_types

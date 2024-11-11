@@ -1,7 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
 
-from models import Game, Player, Tablero, Casilla, MovCard, FigCard, Mensaje, engine
+
+from models import Game, Player, User , Tablero, Casilla, MovCard, FigCard, engine, Mensaje
 from typing import List,Dict
 
 
@@ -31,6 +32,16 @@ class Operations:
             for game in games:
                 game.figcards = game.figcards
             return games
+        finally:
+            session.close()
+
+    def get_users(self):
+        session = Session()
+        try: 
+            users = session.query(User).all()
+            for user in users:
+                user.players = user.players
+            return users
         finally:
             session.close()
 
@@ -66,7 +77,7 @@ class Operations:
             session.close()
 
 
-    async def join_game(self,game_id: int, player_id: int):
+    async def join_game(self,game_id: int, user_id: int):
         # Crear una sesión de la base de datos
         session = Session()
         
@@ -75,15 +86,23 @@ class Operations:
             game = session.query(Game).filter(Game.id_partida == game_id).first()
             if not game:
                 raise GameNotFoundError(f"Game with ID {game_id} not found.")
+
+            user = session.query(User).filter(User.id_user == user_id).first()
+            if not user:
+                raise UserNotFoundError(f"User with id {user_id} not found.")
+
+            
+
+            new_player_id = create_player( user_id, session) 
             
             # Verificar si el jugador existe
-            new_player = session.query(Player).filter(Player.id_jugador == player_id).first()
+            new_player = session.query(Player).filter(Player.id_jugador == new_player_id).first()
             if not new_player:
-                raise PlayerNotFoundError(f"Player with id {player_id} not found.")
+                raise PlayerNotFoundError(f"Player with id {new_player_id} not found.")
 
             # Verficar si el jugador ya está en alguna partida
-            if new_player.id_partida != None:
-                raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
+            #if new_player.id_partida != None:
+            #    raise PlayerAlreadyInGameError(f"Player with id {player_id} is already in game {game_id}.")
 
             if not game.players:
                 game.owner = new_player.id_jugador
@@ -95,6 +114,7 @@ class Operations:
 
             # Marcar el jugador como 'in_game'
             new_player.in_game = True
+
 
             #Por si el jugador tiene cartas de anteriores partidas se borran 
             if new_player.movcards is not None:
@@ -116,7 +136,6 @@ class Operations:
             session.add(new_log)
             # Guardar los cambios
             session.commit()  # ¡IMPORTANTE! Guardar los cambios en la base de datos.
-
 
             # Notificar que un jugador se unió
             await manager.broadcast("player join")
@@ -152,23 +171,26 @@ class Operations:
         finally:
             session.close()
 
-    def create_player(self, nombre: str):
-
+    def create_user(self, nombre: str):
         session = Session()
-        try:
-            new_player_entry = Player(
-                nombre=nombre
+
+        try: 
+            new_user_entry = User (
+                nombre = nombre 
             )
-            session.add(new_player_entry)
+
+            session.add(new_user_entry)
             session.commit()
-            session.refresh(new_player_entry)
+            session.refresh(new_user_entry)
             return {
-                'id': new_player_entry.id_jugador,
-                'name': new_player_entry.nombre,
+                'id': new_user_entry.id_user,
+                'name': new_user_entry.nombre,
                 'operation_result': "Successfully created!"
             }
         finally:
             session.close()
+
+
 
     async def start_game(self,game_id: int):
             session = Session()
@@ -584,6 +606,7 @@ class Operations:
                 raise NotTheirTurnError(f"Player with ID {player.id_jugador} doesnt have the turn.")
             figcard.id_jugador = None
             figcard.shown = False
+            figcard.blocked = False
             await confirmar_cambios(session, game.id_tablero)
 
             actualizar_informacion_casillas(game_id, game.tablero, session)
@@ -598,6 +621,14 @@ class Operations:
                 time = datetime.now()
             )
             session.add(new_log)
+
+            # Detectar si descartó la unica bloqueada que tenía
+            # El chequeo de que sea valida de jugar se hace desde el front
+            number_of_shown_figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador)
+                                                                     & FigCard.shown).count()
+            if number_of_shown_figcards == 0 and player.blocked:
+                # Debe ser desbloqueado
+                player.blocked = False
             session.commit()
 
             # Detectar si el jugador que descartó esta carta ganó
@@ -611,6 +642,58 @@ class Operations:
             await manager_game.broadcast(game_id, "discard figcard") 
 
             return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was discarded"}
+        
+        finally:
+            session.close()
+
+    async def block_figcard(self, game_id : int, figcard_id : int, color : str):
+        session = Session()
+
+        try: 
+            
+            game = session.query(Game).filter(Game.id_partida == game_id).first()
+            if not game: 
+                raise GameNotFoundError(f"Game with ID {game_id} not found.")
+            
+            figcard = session.query(FigCard).filter((FigCard.id_figcard == figcard_id) &
+                                                    (FigCard.id_partida == game_id)).first()
+            if not figcard: 
+                raise CardNotFoundError(f"FigCard with ID {figcard_id} not found.")
+
+            player = figcard.player
+            
+            if not player:
+                raise PlayerNotFoundError(f"Player associated with FigCard ID {figcard_id} not found.")
+            
+            if not figcard.shown:
+                raise InvalidCardError(f"FigCard with ID {figcard_id} is not shown.")
+            
+            if game.turn == player.id_jugador:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} cannot block theirself.")
+        
+            if player.blocked:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} is already blocked.")
+            
+            number_of_figcards = session.query(FigCard).filter(FigCard.id_jugador == player.id_jugador).count()
+            
+            # El jugador no puede ser bloqueado si le quedan menos de 3 figcards
+            if number_of_figcards < 3:
+                raise InvalidBlockError(f"Player with ID {player.id_jugador} has less than three figcards.")
+            
+            
+            player.blocked = True
+            figcard.blocked = True
+            await confirmar_cambios(session, game.id_tablero)
+
+            actualizar_informacion_casillas(game_id, game.tablero, session)
+
+            game.tablero.color_prohibido = color
+
+            session.commit()
+
+            await manager_game.broadcast(game_id, "Block card")
+
+            return {"message": f"Figcard {figcard_id} from player {player.id_jugador} in game {game_id} was blocked"}
         
         finally:
             session.close()

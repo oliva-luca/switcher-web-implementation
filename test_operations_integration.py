@@ -3,7 +3,7 @@ import asyncio
 from sqlalchemy.orm import sessionmaker
 from exception import *
 from operations import Operations
-from models import Game, engine, Base, Player, Tablero, MovCard, FigCard, Casilla, Mensaje 
+from models import Game, engine, Base, User ,  Player, Tablero, MovCard, FigCard, Casilla, Mensaje 
 from utils import modificates
 
 Session = sessionmaker(bind=engine)
@@ -25,19 +25,19 @@ def test_get_games(operation: Operations):
         session.close()
 
 @pytest.mark.integration_test
-def test_create_player(operation: Operations):
+def test_create_user(operation: Operations):
     session = Session()
     try:
-        N_players = session.query(Player).count()
+        N_users = session.query(User).count()
     finally:
         session.close()
     
-    operation.create_player('player1')
+    operation.create_user('player1')
     
     session = Session()
     try:
-        N_players_new = session.query(Player).count()
-        assert N_players_new  == N_players + 1
+        N_users_new = session.query(User).count()
+        assert N_users_new  == N_users + 1
     finally:
         session.close()
 
@@ -72,7 +72,7 @@ async def test_join_game(operation: Operations):
     finally:
         session.close()
     
-    await operation.join_game(1, 1)
+    player_id =  await  operation.join_game(1, 1)
     
     session = Session()
     try:
@@ -83,7 +83,7 @@ async def test_join_game(operation: Operations):
         
     session = Session()
     try:
-        player = session.query(Player).filter(Player.id_jugador == 1).one()
+        player = session.query(Player).filter(Player.id_jugador == player_id).one()
         assert player.id_partida == 1
     finally:
         session.close()
@@ -91,7 +91,7 @@ async def test_join_game(operation: Operations):
     session = Session()
     try:
         game = session.query(Game).filter(Game.id_partida == 1).one()
-        player = session.query(Player).filter(Player.id_jugador == 1).one()
+        player = session.query(Player).filter(Player.id_jugador == player_id).one()
         players_in_1 = game.players
         assert player in players_in_1
     finally:
@@ -100,7 +100,7 @@ async def test_join_game(operation: Operations):
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_join_game_player_not_found(operation: Operations):
-    with pytest.raises(PlayerNotFoundError):
+    with pytest.raises(UserNotFoundError):
         await operation.join_game(1, 1000)
         
         
@@ -110,12 +110,7 @@ async def test_join_game_game_not_found(operation: Operations):
     with pytest.raises(GameNotFoundError):
         await operation.join_game(1000, 1)
         
-@pytest.mark.integration_test
-@pytest.mark.asyncio
-async def test_join_game_player_already_in_game(operation: Operations):
-    with pytest.raises(PlayerAlreadyInGameError):
-        await operation.join_game(3, 6)
-        
+
 @pytest.mark.integration_test
 @pytest.mark.asyncio
 async def test_start_game(operation: Operations):
@@ -200,7 +195,7 @@ def test_get_player(operation: Operations):
     assert player.id_jugador == 2
     assert player.nombre == 'player2'
     assert player.in_game == False
-    assert player.block == False
+    assert player.blocked == False
     assert player.position == None
     assert player.id_partida == 3
 
@@ -360,6 +355,201 @@ async def test_discard_figcard(operation : Operations):
         assert tablero.color_prohibido == "azul"
     finally:
         session.close()
+
+@pytest.mark.integration_test
+
+def test_get_logs(operation: Operations):
+    logs = operation.get_logs(1)
+    assert len(logs) == 0
+    
+@pytest.mark.integration_test
+def test_get_chat(operation: Operations):
+    chat = operation.get_chat(1)
+    assert len(chat) == 0
+
+@pytest.mark.integration_test
+def test_get_logs_2(operation: Operations):
+    logs = operation.get_logs(6)
+    assert len(logs) == 1
+    assert logs[0].id_mensaje == 2
+    assert logs[0].type == 0
+    assert logs[0].mensaje == 'El jugador 6 ha movido'
+    assert logs[0].autor == 'Sistema'
+    assert logs[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
+    assert logs[0].id_partida == 6
+
+@pytest.mark.integration_test
+def test_get_chat_2(operation: Operations):
+    chat = operation.get_chat(6)
+    assert len(chat) == 1
+    assert chat[0].id_mensaje == 1
+    assert chat[0].type == 1
+    assert chat[0].mensaje == "Hola, soy el jugador 6"
+    assert chat[0].autor == 'player6'
+    assert chat[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
+    assert chat[0].id_partida == 6
+    
+@pytest.mark.integration_test
+def test_get_logs_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.get_logs(1000)
+
+@pytest.mark.integration_test
+def test_get_chat_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        operation.get_chat(1000)
+
+@pytest.mark.asyncio
+async def test_block_figcard_game_not_found(operation: Operations):
+    with pytest.raises(GameNotFoundError):
+        await operation.block_figcard(1000, 1, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_card_not_found(operation: Operations):
+    with pytest.raises(CardNotFoundError):
+        await operation.block_figcard(8, 1, "rojo")  # is from another game
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_player_not_found(operation: Operations):
+    with pytest.raises(PlayerNotFoundError):
+        await operation.block_figcard(8, 104, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_invalid_card(operation: Operations):
+    with pytest.raises(InvalidCardError):
+        await operation.block_figcard(8, 101, "rojo")
+
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard_not_block_theirself(operation: Operations):
+    with pytest.raises(InvalidBlockError):
+        await operation.block_figcard(8, 115, "rojo")
+
+# Test de no bloquear si el jugador ya está bloqueado
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_already_blocked_player(operation : Operations):
+    session = Session()
+    # Bloqueo al jugador 11
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        player.blocked = True
+        session.commit()
+    finally:
+        session.close()
+
+    # Intento bloquarlo
+    session = Session()
+    try:
+        with pytest.raises(InvalidBlockError):
+            await operation.block_figcard(8, 144, "rojo")
+    finally:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        player.blocked = False # Lo desbloqueo
+        session.commit()
+        session.close()
+
+# Test de no bloquear si quedan menos de 3 cartas
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_not_block_if_less_three_cards(operation : Operations):
+    session = Session()
+    # Le saco cartas al jugador 11
+    try:
+        # Preparacion previa
+        figcards = session.query(FigCard).filter(FigCard.id_jugador == 11).all()
+        assert len(figcards) >= 4
+        for figcard in figcards:
+            if not figcard.shown:
+                figcard.id_jugador = None # Dejo solo las 3 visibiles
+        session.commit()
+
+        # Le voy sacando cartas e intento bloquearlo
+        # Primero le saco las mostradas
+        shown_figcards = [figcard for figcard in figcards if figcard.shown]
+        # Vamos a testear con 2 y 1 cartas
+        for index in range(2):
+            shown_figcards[index].id_jugador = None
+            session.commit()
+            with pytest.raises(InvalidBlockError):
+                await operation.block_figcard(8, shown_figcards[-1].id_figcard, "rojo")
+    finally:
+        for figcard in figcards:
+            figcard.id_jugador = 11 # Le devuelvo sus cartas
+        session.commit()
+        session.close()
+
+# Test de que se bloquee todo correctamente
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_block_figcard(operation : Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert not player.blocked
+        figcard = session.query(FigCard).filter(FigCard.id_figcard == 144).first()
+        assert not figcard.blocked
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido != "verde"
+    finally:
+        session.close()
+
+    await operation.block_figcard(8, 144, "verde")
+
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert player.blocked
+        figcard = session.query(FigCard).filter(FigCard.id_figcard == 144).first()
+        assert figcard.blocked
+        tablero = session.query(Game).filter(Game.id_partida == 8).first().tablero
+        assert tablero.color_prohibido == "verde"
+    finally:
+        session.close()
+# Test de desbloqueo de carta de figura
+# Tiene que correrse despues del test anterior
+@pytest.mark.integration_test
+@pytest.mark.asyncio
+async def test_unblock_figcard(operation : Operations):
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert player.blocked
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        unblocked_figcards = [figcard for figcard in figcards if not figcard.blocked]
+        blocked_figcards = [figcard for figcard in figcards if figcard.blocked]
+        assert len(blocked_figcards) == 1
+        for figcard in unblocked_figcards:
+            figcard.player = None
+        game = session.query(Game).filter(Game.id_partida == 8).first()
+        game.turn = 11
+        session.commit()
+    finally:
+        session.close()
+
+    await operation.discard_figcard(8, 144, "azul")
+
+    session = Session()
+    try:
+        player = session.query(Player).filter(Player.id_jugador == 11).first()
+        assert not player.blocked   # se debloquea el jugador
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        assert len(figcards) == 0   # no tiene cartas mostradas
+    finally:
+        session.close()
+
+    await operation.end_turn(8)
+
+    session = Session()
+    try:
+        figcards = session.query(FigCard).filter((FigCard.id_jugador == player.id_jugador) & FigCard.shown).all()
+        assert len(figcards) == 3   # se le rellenaron al terminar el turno
+    finally:
+        session.close()
+
 
 # @pytest.mark.integration_test
 # @pytest.mark.asyncio
