@@ -55,9 +55,9 @@ const availableMov = (
 /**
  * Componente de ficha de color
  *
- * Este componente representa una ficha de color en el tablero de juego, con funcionalidad
- * para jugar cartas de movimiento y figura. El componente realiza validaciones de movimientos,
- * cambios de estado y envía peticiones HTTP para actualizar el estado del juego en el servidor.
+ * Renderiza una ficha de color con funcionalidad para jugar cartas de movimiento y figura.
+ * El componente realiza validaciones de movimientos, cambios de estado y envía peticiones
+ * HTTP para actualizar el estado del juego en el servidor.
  *
  * @param {ColorTyleProps}
  * - `tyleId` (number): ID único de la ficha en el tablero.

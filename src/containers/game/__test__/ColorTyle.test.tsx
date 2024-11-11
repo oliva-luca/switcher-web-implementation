@@ -33,6 +33,8 @@ describe("Componente ColorTyle", () => {
       selectedCard: null,
       currentTurn: 1,
     });
+
+    // Valores de sessionStorage para tests
     sessionStorage.setItem("gameId", "1");
     sessionStorage.setItem("playerId", "1");
   });
