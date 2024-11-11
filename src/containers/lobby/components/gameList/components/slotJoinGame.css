@@ -2,8 +2,8 @@
     display: flex;
     background-color: #f17252;
     border-radius: 100px;
-    padding: 6px 16px;
     border: 3px solid white;
+    padding: 1vw;
 }
 
 #nombrePartida{

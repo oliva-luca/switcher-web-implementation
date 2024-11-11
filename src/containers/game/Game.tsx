@@ -1,6 +1,7 @@
 import React from "react";
 import "./Game.css";
 import QuitBtn from "./components/QuitBtn/QuitBtn";
+import LobbyBtn from "./components/lobbyBtn/LobbyBtn";
 import PassTurn from "./components/passTurn/passTurn";
 import HandOfCards from "./components/movementCard/HandOfCards";
 import { useGame } from "./hooks/GameData.hook";
@@ -8,6 +9,8 @@ import MainBoard from "./components/mainBoard/MainBoard";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 import CancelMov from "./components/cancelMov/cancelMov";
+import Chat from "./components/chat/chat";
+import Log from "./components/log/Log";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -51,8 +54,11 @@ function Game() {
                     sessionStorage.getItem("playerId")
               )}
             />
+            <Chat />
             <CancelMov />
+            <Log />
             <QuitBtn />
+            <LobbyBtn />
           </div>
         </CurrentPlayProvider>
       )}

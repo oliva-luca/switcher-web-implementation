@@ -1,4 +1,7 @@
 module.exports = {
+
+  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // Asegúrate de que este archivo use sintaxis correcta
   moduleNameMapper: {

@@ -33,7 +33,7 @@ describe("useGame hook", () => {
     };
 
     (global as any).WebSocket = jest.fn(() => mockWebSocket);
-    sessionStorage.setItem("userId", "1");
+    sessionStorage.setItem("playerId", "1");
     sessionStorage.setItem("gameId", "1");
   });
 

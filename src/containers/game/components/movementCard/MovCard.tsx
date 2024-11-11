@@ -11,7 +11,6 @@ interface MovCardProp {
 const MovCard = ({ cardId, type, state }: MovCardProp) => {
   const { selectedCard, setSelectedCard, setSelectedFigureCard } =
     useCurrentPlay();
-  console.log("MovCard: ", cardId, type, state);
   return (
     <img
       id={cardId.toString()}
