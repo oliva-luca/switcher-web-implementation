@@ -10,7 +10,7 @@ jest.mock("../hooks/CurrentPlay.context", () => ({
   useCurrentPlay: jest.fn(),
 }));
 
-describe("ColorTyle Component", () => {
+describe("FigureCard Component", () => {
   const setSelectedTyle = jest.fn();
   const setSelectedCard = jest.fn();
   const setSelectedFigureCard = jest.fn();
