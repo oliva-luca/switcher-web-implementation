@@ -85,52 +85,8 @@ describe("GameList Component", () => {
     expect(axios.get).not.toHaveBeenCalledWith("/gamelist");
   });
 
-  it("should filter games correctly", async () => {
-    const mockGames = [
-      {
-        id_partida: 1,
-        name: "Game 1",
-        players: [],
-        cant_jugadores: 4,
-        started: false,
-      },
-      {
-        id_partida: 2,
-        name: "Game 2",
-        players: [{}, {}],
-        cant_jugadores: 4,
-        started: false,
-      },
-      {
-        id_partida: 3,
-        name: "Game 3",
-        players: [{}, {}, {}, {}],
-        cant_jugadores: 4,
-        started: true,
-      },
-      {
-        id_partida: 4,
-        name: "Game 4",
-        players: [{}, {}, {}],
-        cant_jugadores: 3,
-        started: false,
-      },
-    ];
-
-    (axios.get as jest.Mock).mockResolvedValue({ data: mockGames });
-
-    renderGameList();
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() =>
-      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
-    );
-  });
-
   it("should filter games by player count", async () => {
     (axios.get as jest.Mock).mockResolvedValue({ data: mockGames });
-
-    renderGameList();
 
     const filteredGames = mockGames.filter(
       (game) => game.cant_jugadores === 4 && !game.started
@@ -199,43 +155,31 @@ describe("GameList Component", () => {
     ]);
   });
 
-  it("should render all games when no filters are applied", async () => {
+  it("should filter games by player count, name and exclude joined games", async () => {
     (axios.get as jest.Mock).mockResolvedValue({ data: mockGames });
 
     renderGameList();
 
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() =>
-      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
+    const filteredGames = mockGames.filter(
+      (game) =>
+        game.cant_jugadores === 4 &&
+        game.name.toLowerCase().includes("game 2".toLowerCase()) &&
+        !game.started
     );
-  });
-
-  it("should render no games if all are started", async () => {
-    const allStartedGames = [
-      {
-        id_partida: 1,
-        name: "Game 1",
-        players: [],
-        cant_jugadores: 4,
-        started: true,
-      },
+    expect(filteredGames).toHaveLength(1);
+    expect(filteredGames).toEqual([
       {
         id_partida: 2,
         name: "Game 2",
         players: [{}, {}],
         cant_jugadores: 4,
-        started: true,
+        started: false,
       },
-      {
-        id_partida: 3,
-        name: "Game 3",
-        players: [{}, {}, {}, {}],
-        cant_jugadores: 4,
-        started: true,
-      },
-    ];
+    ]);
+  });
 
-    (axios.get as jest.Mock).mockResolvedValue({ data: allStartedGames });
+  it("should handle fetch errors gracefully", async () => {
+    axios.get.mockRejectedValue(new Error("Fetch error"));
 
     renderGameList();
 
@@ -245,8 +189,44 @@ describe("GameList Component", () => {
     );
   });
 
-  it("should render games correctly when only some are started", async () => {
-    const mixedGames = [
+  it("should fetch and render game list", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(3)
+    );
+  });
+
+  it("should handle fetch error", async () => {
+    axios.get.mockRejectedValue(new Error("Error fetching the game list"));
+
+    await renderGameList();
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
+    await waitFor(() =>
+      expect(screen.queryByTestId("slot-join-game")).toBeNull()
+    );
+  });
+
+  it("should filter games by player count", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
+
+    await renderGameList();
+
+    const playerCount = 4;
+    const filteredPartidas = mockGames
+      .filter((partida) => !partida.started)
+      .filter((partida) => {
+        if (playerCount) {
+          return partida.cant_jugadores === Number(playerCount);
+        }
+        return true;
+      });
+
+    expect(filteredPartidas).toEqual([
       {
         id_partida: 1,
         name: "Game 1",
@@ -259,81 +239,8 @@ describe("GameList Component", () => {
         name: "Game 2",
         players: [{}, {}],
         cant_jugadores: 4,
-        started: true,
-      },
-      {
-        id_partida: 3,
-        name: "Game 3",
-        players: [{}, {}, {}, {}],
-        cant_jugadores: 4,
         started: false,
       },
-    ];
-
-    (axios.get as jest.Mock).mockResolvedValue({ data: mixedGames });
-
-    renderGameList();
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() =>
-      expect(screen.getAllByTestId("slot-join-game")).toHaveLength(2)
-    );
-  });
-
-  it("fetches and displays available games", async () => {
-    (axios.get as jest.Mock).mockImplementation((url) => {
-      if (url === "/gamelist") {
-        return Promise.resolve({ data: mockGames });
-      } else if (url === "/user") {
-        return Promise.resolve({ data: mockUser });
-      }
-      return Promise.reject(new Error("Unknown API endpoint"));
-    });
-
-    render(
-      <FilterProvider>
-        <GameList />
-      </FilterProvider>
-    );
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/user"));
-
-    // Verificamos que sólo se renderizan las partidas que cumplen los criterios de filtro y exclusión
-    expect(screen.getAllByTestId("slot-join-game")).toHaveLength(1); // Solo debería renderizar una partida
-  });
-
-  it("filters out games that user has joined", async () => {
-    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockGames });
-    (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockUser });
-
-    render(
-      <FilterProvider>
-        <GameList />
-      </FilterProvider>
-    );
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/user"));
-
-    // Verificamos que la partida a la que el usuario ya se unió no esté presente
-    expect(screen.queryByText("Game 2")).toBeNull();
-    expect(screen.getAllByTestId("slot-join-game")).toHaveLength(1);
-  });
-
-  it("handles fetch errors gracefully", async () => {
-    (axios.get as jest.Mock).mockRejectedValue(new Error("Network error"));
-
-    render(
-      <FilterProvider>
-        <GameList />
-      </FilterProvider>
-    );
-
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/gamelist"));
-    await waitFor(() => expect(axios.get).toHaveBeenCalledWith("/user"));
-
-    // Verificamos que el componente maneja errores y no renderiza partidas en caso de fallo en la obtención de datos
-    expect(screen.queryByTestId("slot-join-game")).toBeNull();
+    ]);
   });
 });

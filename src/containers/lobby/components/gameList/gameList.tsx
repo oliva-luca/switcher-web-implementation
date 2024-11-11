@@ -36,7 +36,6 @@ export default function GameList() {
       .get("/gamelist")
       .then((response) => {
         setPartidas(response.data);
-        // console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching the game list:", error);
