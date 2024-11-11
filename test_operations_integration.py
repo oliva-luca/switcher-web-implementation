@@ -377,6 +377,7 @@ def test_get_logs_2(operation: Operations):
     assert logs[0].autor == 'Sistema'
     assert logs[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
     assert logs[0].id_partida == 6
+    assert logs[0].id_autor == None
 
 @pytest.mark.integration_test
 def test_get_chat_2(operation: Operations):
@@ -388,6 +389,7 @@ def test_get_chat_2(operation: Operations):
     assert chat[0].autor == 'player6'
     assert chat[0].time.strftime('%Y-%m-%d %H:%M:%S') == '2021-06-01 12:00:00'
     assert chat[0].id_partida == 6
+    assert chat[0].id_autor == 6
     
 @pytest.mark.integration_test
 def test_get_logs_game_not_found(operation: Operations):

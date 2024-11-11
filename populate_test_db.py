@@ -315,8 +315,8 @@ def load_data_for_test():
     ]
 
     mensajes = [
-        {"type":1, "id_mensaje": 1, "id_partida": 6, "autor": "player6", "mensaje": "Hola, soy el jugador 6",  'time': '2021-06-01 12:00:00'},
-        {"type":0,"id_mensaje": 2, "id_partida": 6, "autor": "Sistema", "mensaje": "El jugador 6 ha movido", 'time': '2021-06-01 12:00:00'},
+        {"type":1, "id_mensaje": 1, "id_partida": 6, "autor": "player6", "mensaje": "Hola, soy el jugador 6",  'time': '2021-06-01 12:00:00', 'id_autor': 6},
+        {"type":0,"id_mensaje": 2, "id_partida": 6, "autor": "Sistema", "mensaje": "El jugador 6 ha movido", 'time': '2021-06-01 12:00:00', 'id_autor': None},
     ]
     # Agregar partidas
     session = Session()
@@ -401,7 +401,7 @@ def load_data_for_test():
         if session.query(Mensaje).count() == 0:
             for message in mensajes:
                 message_time = datetime.strptime(message["time"], '%Y-%m-%d %H:%M:%S')
-                new_message = Mensaje(id_mensaje=message["id_mensaje"], type=message['type'], id_partida=message["id_partida"], autor=message["autor"], mensaje=message["mensaje"], time=message_time)
+                new_message = Mensaje(id_mensaje=message["id_mensaje"], type=message['type'], id_partida=message["id_partida"], autor=message["autor"], mensaje=message["mensaje"], time=message_time, id_autor=message["id_autor"])
                 session.add(new_message)
             session.commit()
     finally:

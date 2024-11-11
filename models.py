@@ -146,6 +146,7 @@ class Mensaje(Base):
     type = Column(Integer, nullable=False)
     mensaje = Column(String, nullable=False)
     autor = Column(String, nullable=True)
+    id_autor = Column(Integer, nullable=True)
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
     time = Column(DateTime, nullable=False)
     game = relationship("Game", back_populates="mensajes")

@@ -131,7 +131,8 @@ class Operations:
                 autor = f"{new_player.nombre}",
                 mensaje="Se ha unido a la partida",
                 id_partida=game_id,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = new_player.id_jugador
             )
             session.add(new_log)
             # Guardar los cambios
@@ -261,7 +262,8 @@ class Operations:
                 autor = "Sistema",
                 mensaje="La partida ha comenzado",
                 id_partida=game_id,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = None
                 )
                 session.add(new_log)
                 
@@ -396,7 +398,8 @@ class Operations:
                 autor = "Sistema",
                 mensaje=f"Turno del jugador {next_player.nombre}",
                 id_partida=game_id,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = None
             )
             session.add(new_log)
             session.commit()
@@ -467,7 +470,8 @@ class Operations:
                 autor = f"{player.nombre}",
                 mensaje="Se ha ido del lobby",
                 id_partida=game.id_partida,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = player.id_jugador
             )
             session.add(new_log)
             session.commit()
@@ -510,7 +514,8 @@ class Operations:
                 autor = f"{player.nombre}",
                 mensaje="Se ha ido de la partida",
                 id_partida=id_game,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = player.id_jugador
             )
             session.add(new_log)
             session.commit()
@@ -568,7 +573,8 @@ class Operations:
                 autor = f"{player.nombre}",
                 mensaje=f"Ha intercambiado una ficha de color {casilla_1.color} por una ficha de color {casilla_2.color}",
                 id_partida=game.id_partida,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = player.id_jugador
             )
             session.add(new_log)
             
@@ -618,7 +624,8 @@ class Operations:
                 autor = f"{player.nombre}",
                 mensaje="Ha descartado una carta de figura",
                 id_partida=game.id_partida,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = player.id_jugador
             )
             session.add(new_log)
 
@@ -730,7 +737,8 @@ class Operations:
                 autor = f"{current_player.nombre}",
                 mensaje="Se han cancelado los movimientos parciales",
                 id_partida=game.id_partida,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = current_player.id_jugador
             )
             session.add(new_log)
             session.commit()
@@ -758,7 +766,8 @@ class Operations:
                 autor = f"{player.nombre}",
                 mensaje=mensaje,
                 id_partida=game_id,
-                time = datetime.now()
+                time = datetime.now(),
+                id_autor = player_id
             )
             session.add(new_msj)
             session.commit()
