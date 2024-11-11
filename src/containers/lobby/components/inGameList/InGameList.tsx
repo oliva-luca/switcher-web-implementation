@@ -60,9 +60,27 @@ interface PlayerData {
   user_id: number;
 }
 
-export default function InGameList() {
-  const [userData, setUserData] = useState<Array<UserData>>([]);
-  const [partidas, setPartidas] = useState([]);
+interface Player {
+  id_partida: number | null;
+  id_jugador: number;
+}
+
+interface User {
+  id_user: number;
+  players: Player[];
+}
+
+interface Partida {
+  id_partida: number;
+  name: string;
+  players: any[];
+  cant_jugadores: number;
+  started: boolean;
+}
+
+const InGameList: React.FC = () => {
+  const [userData, setUserData] = useState<User[]>([]);
+  const [partidas, setPartidas] = useState<Partida[]>([]);
 
   useEffect(() => {
     axios
@@ -71,28 +89,28 @@ export default function InGameList() {
         setUserData(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching the game list:", error);
+        console.error("Error fetching user data:", error);
       });
-  }, []);
 
-  useEffect(() => {
     axios
       .get("/gamelist")
       .then((response) => {
         setPartidas(response.data);
-        // console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching the game list:", error);
       });
   }, []);
 
-  const joinedGames = userData
-    .find((user) => user.id_user.toString() == localStorage.getItem("userId"))
-    ?.players.filter((partida) => partida.id_partida != null);
+  const userId = localStorage.getItem("userId");
 
-  const filteredPartidas = partidas.filter(
-    (partida) => !joinedGames?.includes(partida.id_partida)
+  const joinedGames =
+    userData
+      .find((user) => user.id_user.toString() === userId)
+      ?.players.map((ply) => ply.id_partida) || [];
+
+  const filteredPartidas = partidas.filter((partida) =>
+    joinedGames.includes(partida.id_partida)
   );
 
   return (
@@ -107,15 +125,14 @@ export default function InGameList() {
           started={partida.started}
           playerId={
             userData
-              .find(
-                (user) =>
-                  user.id_user.toString() == localStorage.getItem("userId")
-              )
-              ?.players.find((ply) => ply.id_partida == partida.id_partida)
+              .find((user) => user.id_user.toString() === userId)
+              ?.players.find((ply) => ply.id_partida === partida.id_partida)
               ?.id_jugador ?? 0
           }
         />
       ))}
     </div>
   );
-}
+};
+
+export default InGameList;
