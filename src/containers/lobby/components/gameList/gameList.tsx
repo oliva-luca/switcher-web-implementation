@@ -5,7 +5,7 @@
  * @module GameList
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SlotJoinGame from "./components/slotJoinGame";
 import { useFilter } from "../filters/FilterContext"; // Ajusta la ruta según sea necesario
