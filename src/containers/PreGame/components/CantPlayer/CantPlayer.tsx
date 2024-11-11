@@ -6,15 +6,19 @@ import axios from "axios"; // Importar Axios
 const CantPlayer = () => {
   const [variable1, setVariable1] = useState(0);
   const [variable2, setVariable2] = useState(0);
+  const [nombres, setNombres] = useState<string[]>([]);
+
 
   useEffect(() => {
     const fetchGameData = async () => {
       const gameId = sessionStorage.getItem("gameId");
       try {
         const response = await axios.get(`/gamelist/${gameId}`);
+        console.log("Game data:", response.data);
         // Actualiza las variables con los datos obtenidos
         setVariable1(response.data.players.length);
         setVariable2(response.data.cant_jugadores);
+        setNombres(response.data.players.map((player: { nombre: string }) => player.nombre));
       } catch (error) {
         console.error("Error fetching game data:", error);
       }
@@ -24,8 +28,14 @@ const CantPlayer = () => {
   }, []);
 
   return (
-    <div className="top-left-text">
-      JUGADORES {variable1}/{variable2}
+    <div className="mid-center-text">
+      CONECTADOS {variable1}/{variable2}
+      <br />
+      <ul>
+        {nombres.map((nombre, index) => (
+          <li key={index}>{nombre}</li>
+        ))}
+      </ul>
     </div>
   );
 };
