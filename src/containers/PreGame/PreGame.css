@@ -1,10 +1,14 @@
-.blank-screen {
+h1 {
+    font-size: 3rem;
+}
+
+.top-center-text {
+    font-size: 3rem;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    opacity: 0.5;
-    z-index: 2; /* Asegúrate de que esté por encima de otros elementos */
+    padding-top: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px; /* Ajusta el tamaño de la fuente según sea necesario */
+    color: black; /* Ajusta el color del texto según sea necesario */
 }
