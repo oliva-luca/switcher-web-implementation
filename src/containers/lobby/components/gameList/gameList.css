@@ -1,6 +1,8 @@
-  #gameColumn {
-    display: grid;
-    padding: 1vh 1vw;
+  /* #gameColumn {
+    display: inline-flex;
+    padding: 10vh;
+    padding-left: 15vh;
+    padding-right: 15vh;
     flex-direction: column;
     gap: 2vh; 
     border: 1vh solid #7dd3b3;
@@ -9,5 +11,17 @@
     max-height: 65vh; 
     overflow-y: auto;
     max-width: 100%;
+  } */
+
+  #gameColumn{
+    display: flex;
+    padding: 1.5vw;
+    flex-direction: column;
+    gap: 1vh;
+    max-height: 50vh;
+    border: 1vh solid #7dd3b3;
+    background-color: #92ecd3;
+    border-radius: 50px;
+    overflow-y: auto;
   }
   
