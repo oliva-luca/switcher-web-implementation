@@ -13,6 +13,7 @@ export interface GameProps {
   capacity: number;
   is_private: boolean;
   password: string;
+  started: boolean;
 }
 
 interface JoinResponse {

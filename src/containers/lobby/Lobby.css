@@ -21,7 +21,7 @@
 
 .container {
   display: flex;
-  flex-direction: row; /* Alinea los elementos en una fila */
+  flex-direction: row; /*Alinea los elementos en una fila*/
   justify-content: space-between; /* Espacio entre los elementos */
   align-items: center; /* Alinea los elementos verticalmente al centro */
   gap: 1rem; /* Espacio entre los elementos */

@@ -34,10 +34,21 @@ export default function InGameList() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("/gamelist")
+      .then((response) => {
+        setPartidas(response.data);
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching the game list:", error);
+      });
+  }, []);
+
   const joinedGames = userData
   .find((user) => user.id_user.toString() == localStorage.getItem("userId"))
-  ?.players.map((ply) => ply.id_partida)
-  .filter((idPartida) => idPartida != null);
+  ?.players.filter((partida) => partida.id_partida != null);
 
   const filteredPartidas = partidas
   .filter((partida) => !joinedGames?.includes(partida.id_partida));
@@ -51,8 +62,8 @@ export default function InGameList() {
           name={partida.name}
           currentCapacity={partida.players.length}
           capacity={partida.cant_jugadores}
-          is_private={false}
-          password={""}
+          started={partida.started}
+          playerId={userData.find((user) => user.id_user.toString() == localStorage.getItem("userId"))?.players.find((ply) => ply.id_partida == partida.id_partida)?.id_jugador ?? 0}
         />
       ))}
     </div>

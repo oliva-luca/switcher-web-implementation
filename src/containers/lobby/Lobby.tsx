@@ -66,7 +66,6 @@ export function Lobby() {
         <FilterProvider>
           <Filters />
           <GameList key={gameListKey} />
-          <InGameList />
         </FilterProvider>
       </div>
 
