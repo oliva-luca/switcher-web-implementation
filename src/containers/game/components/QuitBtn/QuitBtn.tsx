@@ -8,10 +8,9 @@ import { useNavigate } from "react-router-dom";
 /**
  * Componente de boton para abandonar una partida
  *
- * @remaks
  * Muestra un boton durante la partida que le permite al usuario
  * abandonar en cualquier momento. Al clickearlo (y si la HTTP
- * request es exitosa) el jugador es redirigido al obby
+ * request es exitosa) el jugador es redirigido al lobby
  *
  * @returns {JSX.Element}
  */
