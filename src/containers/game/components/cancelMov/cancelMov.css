@@ -1,7 +1,7 @@
 .bottom-cancel {
     position: fixed;
-    bottom: 10vw; /* Ajusta el valor según el margen deseado */
-    right: 20px;  /* Ajusta el valor según el margen deseado */
+    bottom: 1vw; /* Ajusta el valor según el margen deseado */
+    left: 20px;  /* Ajusta el valor según el margen deseado */
     margin: 5px;
     background-color: orange;
     color: white
