@@ -9,6 +9,8 @@ import MainBoard from "./components/mainBoard/MainBoard";
 import Timer from "./components/Timer/Timer";
 import { CurrentPlayProvider } from "./hooks/CurrentPlay.context";
 import CancelMov from "./components/cancelMov/cancelMov";
+import Chat from "./components/chat/chat";
+import Log from "./components/log/Log";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -43,8 +45,12 @@ function Game() {
               figcards={game.figcards}
               key={"board" + gameInfoKey}
             />
-            <Timer />
-            <PassTurn key={gameInfoKey} />
+            <div className="r-items-container" style={{ zIndex: 1 }}>
+              <Timer />
+              <PassTurn key={gameInfoKey} />
+              <Chat />
+              <Log />
+            </div>
             <HandOfCards
               cards={game.movcards.filter(
                 (card) =>

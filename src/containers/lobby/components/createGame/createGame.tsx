@@ -1,35 +1,66 @@
+/**
+ * @fileoverview Componente para crear un nuevo juego en la aplicación.
+ * @module CreateGame
+ */
+
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./createGame.css";
-import axios from "axios"; // Importar Axios
-import Swal from "sweetalert2"; // Importar SweetAlert2
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
+/**
+ * Interfaz para la respuesta de la creación de un juego.
+ * @interface GameResponse
+ */
 interface GameResponse {
   id: string;
   name: string;
   status: string;
 }
 
-const CreateGame = () => {
-  const [name, setName] = useState("");
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [password, setPassword] = useState("");
-  const [players, setPlayers] = useState(4);
-  const navigate = useNavigate(); // Usar useNavigate
+/**
+ * Componente para crear un nuevo juego.
+ * @component
+ * @returns {JSX.Element} JSX Elemento del componente CreateGame.
+ */
 
+const CreateGame = () => {
+  const [name, setName] = useState<string>("");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [players, setPlayers] = useState<number>(4);
+  const navigate = useNavigate();
+
+  /**
+   * Maneja el cambio en el campo de nombre del juego.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - Evento de cambio del input.
+   */
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
+  /**
+   * Maneja el cambio en el checkbox de partida privada.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - Evento de cambio del input.
+   */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsPrivate(event.target.checked);
   };
 
+  /**
+   * Maneja el cambio en el campo de contraseña.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - Evento de cambio del input.
+   */
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 
+  /**
+   * Maneja el cambio en el campo de cantidad de jugadores.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - Evento de cambio del input.
+   */
   const handlePlayersChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (value < 2) {
@@ -41,10 +72,12 @@ const CreateGame = () => {
     }
   };
 
+  /**
+   * Maneja el envío del formulario para crear un nuevo juego.
+   * @param {React.FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // navigate('/game'); // Redirigir a la ruta /game
-    // return;
     const gameData = {
       name: name,
       cant_players: players,
@@ -91,13 +124,10 @@ const CreateGame = () => {
           sessionStorage.setItem("playerId", response.data.id_player);
           console.log(`Player id:${response.data.id_player}`);
           console.log("Game joined successfully:", response.data);
-          //guardar id partida en local storage
           sessionStorage.setItem("gameId", createInfo.id);
-          // Redirigir a la ruta /game
           navigate("/pregame");
         });
     } catch (error) {
-      //borrar la partida creada con el metodo delete
       await axios.delete(`/gamelist/${createInfo.id}`, {
         headers: {
           "Content-Type": "application/json",

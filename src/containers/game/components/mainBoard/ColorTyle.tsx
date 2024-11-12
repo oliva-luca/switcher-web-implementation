@@ -142,7 +142,7 @@ const ColorTyle = ({
       // Resetea valores de carta de figura seleccionada
       setSelectedFigureCard(null);
     } catch (error) {
-      console.error("Error blocking card:", error);
+      console.error("Error swapping tyles:", error);
     }
   };
 

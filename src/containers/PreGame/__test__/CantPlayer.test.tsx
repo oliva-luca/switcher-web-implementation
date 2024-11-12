@@ -9,7 +9,7 @@ jest.mock('axios');
 describe('CantPlayer Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    localStorage.setItem('gameId', '123');
+    sessionStorage.setItem('gameId', '123');
   });
 
   it('should fetch and display game data', async () => {
@@ -25,7 +25,7 @@ describe('CantPlayer Component', () => {
 
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith('/gamelist/123');
-      expect(getByText('JUGADORES 3/4')).toBeInTheDocument();
+      expect(getByText('CONECTADOS 3/4')).toBeInTheDocument();
     });
   });
 
@@ -36,7 +36,7 @@ describe('CantPlayer Component', () => {
 
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith('/gamelist/123');
-      expect(getByText('JUGADORES 0/0')).toBeInTheDocument();
+      expect(getByText('CONECTADOS 0/0')).toBeInTheDocument();
     });
   });
 });
