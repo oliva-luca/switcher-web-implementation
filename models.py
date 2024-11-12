@@ -36,7 +36,17 @@ class Game(Base):
     movcards = relationship("MovCard", back_populates="game")
 
     figcards = relationship("FigCard", back_populates="game")
+    
+    mensajes = relationship("Mensaje", back_populates="game")
 
+
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id_user = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String, unique=True, nullable=False)  # puedes agregar más columnas relevantes para el usuario
+    players = relationship("Player", back_populates="user")
 
 
 class Player(Base):
@@ -45,8 +55,12 @@ class Player(Base):
     id_jugador = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String, nullable=False)
     in_game = Column(Boolean, nullable=False, default=False)
-    block = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
+    blocked = Column(Boolean, nullable=False, default=False)  # Si está bloqueado
     position = Column(Integer, nullable=True)  # Posicion en la ronda
+
+    user_id = Column(Integer, ForeignKey('user.id_user'), nullable=True)
+    
+    user = relationship("User", back_populates="players")
 
     # Relación con Game, asumiendo que cada jugador pertenece a una sola partida
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=True)
@@ -60,23 +74,16 @@ class Player(Base):
     # Cartas de figura del jugador
     figcards = relationship("FigCard", back_populates="player")
 
-# Definir los colores como un Enum
-class Color(PyEnum):
-    ROJO = "rojo"
-    AZUL = "azul"
-    VERDE = "verde"
-    AMARILLO = "amarillo"
-
 # Definir la clase Tablero
 class Tablero(Base):
     __tablename__ = 'tablero'
     id_tablero = Column(Integer, primary_key=True, autoincrement=True)
-    color_principal = Column(String, nullable=True)  # Mantienes el color principal si es necesario
+    color_prohibido = Column(String, nullable=True, default = None)  # Mantiene el color prohibido
     casillas = relationship("Casilla", back_populates="tablero")  # Relación con las casillas
     def to_dict(self):
         return {
             'id_tablero': self.id_tablero,
-            'color_principal': self.color_principal,
+            'color_prohibido': self.color_prohibido,
             'casillas': [casilla.to_dict() for casilla in self.casillas]
         }
 
@@ -100,6 +107,7 @@ class Casilla(Base):
             'id_tablero': self.id_tablero,
             'figura': self.figura
         }
+    
 # Carta de movimiento
 class MovCard(Base):
     __tablename__ = 'movcard'
@@ -122,6 +130,7 @@ class FigCard(Base):
     id_figcard = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(Integer, nullable=False)
     shown = Column(Boolean, nullable=False, default=False)
+    blocked = Column(Boolean, nullable=False, default=False)
 
     # Partida a la que pertenece
     id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
@@ -131,6 +140,16 @@ class FigCard(Base):
     id_jugador = Column(Integer, ForeignKey('player.id_jugador'), nullable=True)
     player = relationship("Player", back_populates="figcards")
 
+class Mensaje(Base):
+    __tablename__ = 'mensaje'
+    id_mensaje = Column(Integer, primary_key=True, autoincrement=True)
+    type = Column(Integer, nullable=False)
+    mensaje = Column(String, nullable=False)
+    autor = Column(String, nullable=True)
+    id_autor = Column(Integer, nullable=True)
+    id_partida = Column(Integer, ForeignKey('game.id_partida'), nullable=False)
+    time = Column(DateTime, nullable=False)
+    game = relationship("Game", back_populates="mensajes")
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(engine)
@@ -138,6 +157,4 @@ Base.metadata.create_all(engine)
 # Crea una sesión
 Session = sessionmaker(bind=engine)
 session = Session()
-
-
 

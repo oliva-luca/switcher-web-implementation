@@ -5,9 +5,27 @@ from random import shuffle
 from fastapi import FastAPI, HTTPException, status, WebSocket, WebSocketDisconnect
 
 from figuras_dibujos import *
-from models import Game, Player, Tablero, Casilla, MovCard, FigCard, engine
+from models import Game, Player, User, Tablero, Casilla, MovCard, FigCard, engine
 from typing import List, Dict, Tuple
 import logging
+
+
+
+def create_player(id_user: int, session):    
+    user = session.query(User).filter(User.id_user==id_user).first()
+    if user is None:
+        return {'error': f"User with id {id_user} does not exist"}
+
+    new_player_entry = Player(
+        nombre=user.nombre,
+        user_id=id_user
+        )
+
+    session.add(new_player_entry)
+    session.commit()
+    session.refresh(new_player_entry)
+    return new_player_entry.id_jugador
+
 
 #--------------------------- TABLERO -------------------------------------------------------------
 class Modify:
@@ -239,7 +257,10 @@ def repartir_una_carta_figura(id_partida: int, session):
         return {"message": "Repartidas las cartas de figura"}
 
 def mostrar_cartas_figura(id_jugador : int, session):
-    try:
+    # Obtengo el jugador
+    player = session.query(Player).filter(Player.id_jugador == id_jugador).first()
+    # Solo repartirle si no está bloqueado
+    if not player.blocked:
         # Obtengo las cartas de figura del jugador
         player_figcards = list(session.query(FigCard).filter(FigCard.id_jugador == id_jugador).all())
         # Obtengo solo las cartas sin mostrar
@@ -253,8 +274,6 @@ def mostrar_cartas_figura(id_jugador : int, session):
             new_figcard.shown = True
             number_shown_figcards += 1
         session.commit()
-    finally:
-        pass
 
 
 #--------------------------- COMPUTAR COMPONENTES  -------------------------------------------------------------
@@ -389,32 +408,52 @@ def detectar_multiples_figuras(componentes: List, figure_types: List):
 def obtener_figuras_de_jugadores(id_partida: int, session):
     # Obtengo las cartas de figura mostradas de la partida
     figcards = session.query(FigCard).filter((FigCard.id_partida == id_partida) &
-                                             (FigCard.shown) & (FigCard.player is not None)).all()
+                                             (FigCard.shown) & (FigCard.player is not None) &
+                                             (False == FigCard.blocked)).all()
     # Me quedo solo con sus tipos
     figcards_types = [figcard.type for figcard in figcards]
     return figcards_types
 
-# Toma el id de la partida, la lista de colores del tablero y una session
+# Elimina las figuras detectadas que son del color prohibido
+# 'figuras_detectadas' debe respetar el formato del output de detectar_multiples_figuras
+# 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
+# color_prohibido es un string que indica el color prohibido o None si no existe
+def filtrar_color_prohibido(figuras_detectadas: List, colores_de_tablero: List, color_prohibido: str):
+    figuras_filtradas = []
+    for type, comp in figuras_detectadas:
+        # Obtengo cualquier casilla de la componente
+        casilla = (comp[0][0], comp[0][1])
+        # Obtengo su color
+        color = colores_de_tablero[casilla[0]][casilla[1]]
+        # Veo que no sea el color prohibido
+        if(color != color_prohibido):
+            figuras_filtradas.append((type, comp))
+    return figuras_filtradas
+
+# Toma el id de la partida, la lista de colores del tablero, el color prohibido y una session
 # 'colores_de_tablero' tiene que tener el mismo formato que el input de 'obtener_componentes_conexas'
 # Devuelve una lista de pares de la forma (tipo, componente)
 # que representan todas las figuras que se encuentran en el tablero
 # y como carta de figura (visible) de algún jugador
 # tipo es el tipo de la carta de figura (entre 1 y 25)
-# componente son las coordenadas de la casilla que la conforman 
-def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, session):
+# componente son las coordenadas de las casillas que la conforman 
+def obtener_figuras_tablero(id_partida: int, colores_de_tablero: List, color_prohibido: str, session):
     try:
         # Calculo las componentes
         componentes = obtener_componentes_conexas(colores_de_tablero)
         # Obtengo los tipos de figura relevantes
         figuras_types = obtener_figuras_de_jugadores(id_partida, session)
         # Calcula la lista resultado
-        resultado = detectar_multiples_figuras(componentes, figuras_types)
+        resultado_parcial = detectar_multiples_figuras(componentes, figuras_types)
+        # Sacar las del color prohibido
+        resultado = filtrar_color_prohibido(resultado_parcial, colores_de_tablero, color_prohibido)
     finally:
         pass
     return resultado
 
 
 #--------------------------- INFROMACION DE CASILLA  -------------------------------------------------------
+# Para cada casilla de un tablero, la actualiza indicando la componente a la que pertence
 def actualizar_informacion_casillas(id_partida: int, tablero : Tablero, session, modificaciones = None):
     session.refresh(tablero)
 
@@ -431,7 +470,7 @@ def actualizar_informacion_casillas(id_partida: int, tablero : Tablero, session,
             colores[ubi_1[0]][ubi_1[1]], colores[ubi_2[0]][ubi_2[1]] = colores[ubi_2[0]][ubi_2[1]], colores[ubi_1[0]][ubi_1[1]]
 
 
-    figuras = obtener_figuras_tablero(id_partida, colores, session)
+    figuras = obtener_figuras_tablero(id_partida, colores, tablero.color_prohibido, session)
 
     for casilla in tablero.casillas:
         casilla.figura = -1
