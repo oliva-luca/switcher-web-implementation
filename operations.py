@@ -574,7 +574,7 @@ class Operations:
             new_log = Mensaje(
                 type=0,
                 autor = f"{player.nombre}",
-                mensaje=f"Ha intercambiado una ficha de color {casilla_1.color} por una ficha de color {casilla_2.color}",
+                mensaje=f"Ha intercambiado la ficha en fila {casilla_1.fila+1} columna {casilla_1.columna+1} con la ficha en fila {casilla_2.fila+1} columna {casilla_2.columna+1}",
                 id_partida=game.id_partida,
                 time = datetime.now(),
                 id_autor = player.id_jugador
@@ -704,7 +704,16 @@ class Operations:
             actualizar_informacion_casillas(game_id, game.tablero, session)
 
             game.tablero.color_prohibido = color
-
+            
+            new_log = Mensaje(
+                type=0,
+                autor = f"{player.nombre}",
+                mensaje="Ha bloqueado una carta de figura",
+                id_partida=game.id_partida,
+                time = datetime.now(),
+                id_autor = player.id_jugador
+            )
+            session.add(new_log)
             session.commit()
 
             await manager_game.broadcast(game_id, "Block card")
@@ -774,7 +783,7 @@ class Operations:
             )
             session.add(new_msj)
             session.commit()
-            await manager_game.broadcast(game_id, f"MENSAJE")
+            await manager_game.broadcast(game_id, "MENSAJE")
             return {"message": f"Message sent by player {player_id} in game {game_id}"}
         finally:
             session.close()
