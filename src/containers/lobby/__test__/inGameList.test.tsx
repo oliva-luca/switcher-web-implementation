@@ -2,7 +2,7 @@ import React from "react";
 import { render, waitFor, screen, act } from "@testing-library/react";
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import axios from "axios";
-import InGameList from "../components/inGameList/inGameList";
+import InGameList from "../components/inGameList/InGameList";
 import { BrowserRouter as Router } from "react-router-dom";
 
 jest.mock("axios");
