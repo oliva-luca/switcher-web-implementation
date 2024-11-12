@@ -452,12 +452,29 @@ class Operations:
 
             game = session.query(Game).filter(Game.id_partida == player.id_partida).first()
 
+            if not game:
+                raise GameNotFoundError(f"Game with ID {player.id_partida} not found.")
+
+            if(game.owner != player.id_jugador):
+                new_log = Mensaje(
+                    type=0,
+                    autor = f"{player.nombre}",
+                    mensaje="Se ha ido del lobby",
+                    id_partida=game.id_partida,
+                    time = datetime.now(),
+                    id_autor = player.id_jugador
+                )
+                session.add(new_log)
+                session.commit()
+            
             if game.owner == player.id_jugador:
                 for player_i in game.players: 
                     player_i.id_partida = None
                     player_i.in_game=False
                 await manager_game.broadcast(game.id_partida, "Owner cancelled the game")
                 await manager.broadcast("Owner cancelled the game")
+                for mensaje in game.mensajes:
+                    session.delete(mensaje)
                 session.delete(game)
                 session.commit()
                 session.close()
@@ -465,16 +482,7 @@ class Operations:
 
             player.id_partida = None
             player.in_game = False
-            new_log = Mensaje(
-                type=0,
-                autor = f"{player.nombre}",
-                mensaje="Se ha ido del lobby",
-                id_partida=game.id_partida,
-                time = datetime.now(),
-                id_autor = player.id_jugador
-            )
-            session.add(new_log)
-            player.user_id = None
+            
             session.commit()
             await manager.broadcast("player leave")
             await manager_game.broadcast(game.id_partida, "Player has left the lobby")
