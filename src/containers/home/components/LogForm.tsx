@@ -22,18 +22,12 @@ const LogForm = () => {
     setName(event.target.value);
   };
 
-<<<<<<< HEAD
-    // Funcion que cambia detecta el nuevo nombre
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-=======
   // Funcion que envia el nombre del usuario al servidor, lo almacena el local storage
   // y envia el jugador al /lobby
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const userData = {
       name: name,
->>>>>>> dev
     };
     const queryName = new URLSearchParams(userData).toString();
 
