@@ -15,7 +15,6 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 function Game() {
-  const { game, gameInfoKey } = useGame();
   const navigate = useNavigate();
 
   if (
@@ -25,11 +24,13 @@ function Game() {
     Swal.fire({
       text: "Error cargando datos de la partida",
       confirmButtonText: "Volver al lobby",
-    }).then(() => {
+    }).finally(() => {
       sessionStorage.clear();
       navigate("/lobby");
     });
   }
+
+  const { game, gameInfoKey } = useGame();
 
   return (
     <>
