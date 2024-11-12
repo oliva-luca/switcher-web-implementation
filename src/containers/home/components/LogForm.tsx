@@ -5,12 +5,20 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
+/**
+ * El componente LogForm muestra el formulario de inicio de sesión.
+ * 
+ * Este componente muestra un formulario para que el jugador ingrese su nombre y pueda iniciar sesión.
+ * 
+ * @returns {JSX.Element} Formulario de inicio de sesión
+ */
+
 const LogForm = () => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
 
 
-    // Funcio que cambia detecta el nuevo nombre
+    // Funcion que cambia detecta el nuevo nombre
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
