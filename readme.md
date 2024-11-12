@@ -35,9 +35,9 @@ Si por alguna razón ya sea, no estaba en el entorno virtual o alguna otra razó
 
         make run_integration_tests
 
-5. Para correr los test end to end prender la aplicación en otra consola y correr 
+5. Para correr todos los test juntos 
 
-        make run_end2end_tests
+        make run_all_tests
 
 
 
@@ -56,11 +56,13 @@ Los endpoints son:
 
 * **@app.get("/tableros/{game_id}")** = Trae la información del tablero relacionado con el game que tenga ese game_id
 
+* **@app.get("/user")** = Devuelve todos los users que estan en la base de datos con sus jugadores asignados 
+
 * **@app.post("/gamelist")** = Crea una nueva partida con los datos solicitados 
 
 * **@app.put("/gamelist/join/{game_id}")** = Une a un jugador a la partida especificada por el game_id, el id_player se pasa por parameter
 
-* **@app.post("/user")** = Crea un nuevo player con el nombre que se pasa 
+* **@app.post("/user")** = Crea un nuevo usuario a partir de un nombre
 
 * **@app.put("/gamelist/start/{game_id}")** = Cambia el estado de una partida no iniciada a iniciada y hace las operaciones correspondientes para iniciarla (sortear los colores del tablero, rapertir las cartas, etc) 
 
@@ -73,6 +75,22 @@ Los endpoints son:
 * **@app.put("/gamelist/leave/{player_id}")** = Saca a un jugador de una partida que ya está iniciada 
 
 * **@app.put("/gamelist/leave_lobby/{player_id}")** = Saca a un jugador de una partida que todavía no se inicia 
+
+* **@app.put("/gamelist/{game_id}/playcard/{mov_card_id}/casillas/{casilla_id1}/{casilla_id2}")**  = En una partida toma una carta de movimiento y realiza el cambio entre dos casillas 
+
+* **@app.put("/gamelist/cancelmoves/{game_id}")** = Cancela los movimientos parciales encolados en una partida
+
+* **@app.put("/gamelist/{game_id}/discard_figcard/{figcard_id}/color/{color}")** = De una partida toma una carta de figura y la descarta estableciendo un nuevo color prohibido
+
+* **@app.put("/gamelist/{game_id}/block_figcard/{figcard_id}/color/{color}")** = De una partida toma una carta de figura y la bloquea estableciendo un nuevo color prohibido
+
+* **@app.get("/gamelist/turn_time/{game_id}")** = Devuelve el tiempo actual que le queda a un turno en una partida especifica
+
+* **@app.get("/gamelist/{game_id}/logs")** = Devuelve los logs pertenecientes a una partida en especifico 
+
+* **@app.get("/gamelist/{game_id}/chat")** = Devuelve el chat de una partida en especifico 
+
+* **@app.post("/gamelist/mensaje/{game_id}/{player_id}/{mensaje}")** = Pega un mensaje de un jugador en el chat de la partida 
 
 * **@app.websocket("/ws")** = Conector de websocket que maneja la información de las salas existentes 
 
@@ -93,6 +111,13 @@ Define las funcionalidades de los ws con sus funciones asignadas para brodcastea
 
 Funciones ligadas a un endpoint en específico, son las responsables de abrir las sesiones para conectarse con la base de datos, hacer los cambios pertinentes y luego cerrar la sesión 
 
+## Utils 
+
+Archivo con funciones auxiliares no referidas en particular a ningun endpoint o que evitan duplicacion de codigo y poder hacer cambios en un solo archivo permitiendo asi mantener el acoplamiento bajo
+
+## Exception
+
+Archivo dedicado a definir las excepciones que nuestro programa deberia manejar 
 
 
 ## Models 
@@ -127,10 +152,13 @@ Contiene las pruebas unitarias del proyecto, estas pruebas están totalmente ais
 
 Son los test de integración, todas las funcionalidades de Operation que hacen cambios relevantes en la base de datos, se apoya en el archivo populate_test_db, ya que las operaciones que realiza necesitan manejar datos reales y no información mockeada como en los test unitarios. 
 
+## Modifies to test 
 
-## test_end_to_end 
+Archivo que contiene una lista de cambios en el tablero para usar en test de operaciones referentes a los movimientos parciales
 
-Test que comprueba que los request del lado de la aplicacion traen la información de manera correcta, para eso preparamos unos modelos de datos que son iguales a los datos que cargamos en el apartdado populate_test_db para ver si los request traen esa misma información. 
+## test utils 
+
+Son los test referentes a las operaciones desarolladas en el modulo utils
 
 ## config 
 
@@ -140,7 +168,6 @@ Encargado de reemplazar el valor de la variable ENVIROMENT para que se cree una 
 ## pytest_ini
 
 Define las marcas para la ejecucion del make.
-
 
 
 
