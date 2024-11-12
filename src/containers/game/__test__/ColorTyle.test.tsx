@@ -158,7 +158,7 @@ describe("Componente ColorTyle", () => {
       setSelectedTyle,
       setSelectedCard,
       selectedCard: null,
-      selectedFigureCard: [3, 1, true],
+      selectedFigureCard: [3, 1, false],
       currentTurn: 1,
     });
     const axiosPutMock = axios.put as jest.MockedFunction<typeof axios.put>;
@@ -182,7 +182,7 @@ describe("Componente ColorTyle", () => {
       setSelectedTyle,
       setSelectedCard,
       selectedCard: null,
-      selectedFigureCard: [3, 1, false],
+      selectedFigureCard: [3, 1, true],
       currentTurn: 1,
     });
     const axiosPutMock = axios.put as jest.MockedFunction<typeof axios.put>;
