@@ -158,19 +158,23 @@ const ColorTyle = ({
         selectedFigureCard[1] == tipo_figura
       ) {
         // Revisa de quien es la carta
-        if (selectedFigureCard[2])
+        if (!selectedFigureCard[2]) {
           handleFigureDiscard(); // Request de descarta carta figura propia
-        else handleFigureBlock(); // Request de bloquea carta figura del rival
+        } else {
+          handleFigureBlock(); // Request de bloquea carta figura del rival
+        }
       }
-      // Caso en el que se juega carta movimiento
+      // Caso en el que se juegagame carta movimiento
       else if (
         selectedTyle != null &&
         selectedCard != null &&
         selectedFigureCard == null &&
         availableMov(cardType, col, row, selectedTyle[0], selectedTyle[1])
-      )
+      ) {
         handleTyleSwap(); // Request de jugar carta movimiento
-      else setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null); // Caso de seleccionar/deseleccionar ficha
+      } else {
+        setSelectedTyle(selectedTyle == null ? [col, row, tyleId] : null); // Caso de seleccionar/deseleccionar ficha
+      }
     }
   };
 
