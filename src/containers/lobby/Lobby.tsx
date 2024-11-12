@@ -1,6 +1,6 @@
 /**
  * @fileoverview Este archivo contiene el componente Lobby, que es el contenedor principal para la pantalla de lobby de la aplicación.
- * 
+ *
  * @module Lobby
  */
 
@@ -16,10 +16,10 @@ import Swal from "sweetalert2";
 
 /**
  * Componente principal del lobby que maneja la conexión WebSocket y la navegación del usuario.
- * 
+ *
  * @component
  * @returns {JSX.Element} El componente Lobby.
- * 
+ *
  * @example
  * <Lobby />
  */
@@ -85,12 +85,10 @@ export function Lobby() {
 
   return (
     <div className="contenedor">
-
       <div className="partidas">
-
-        <div  className="started-games-section" >
+        <div className="started-games-section">
           <h2 className="title">Partidas en curso</h2>
-          <InGameList />
+          <InGameList key={"ingame" + gameListKey} />
         </div>
 
         <div className="join-game-section">
@@ -100,7 +98,6 @@ export function Lobby() {
             <GameList key={gameListKey} />
           </FilterProvider>
         </div>
-        
       </div>
 
       <div className="d-flex flex-column align-items-center">

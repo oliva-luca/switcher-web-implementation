@@ -68,7 +68,16 @@ export const useGame = () => {
             icon: "success",
             confirmButtonText: "Aceptar",
           });
-
+        else
+          Swal.fire({
+            title: "Terdiste",
+            text: `${
+              game?.players.find((ply) => ply.id_jugador.toString() == winner)
+                ?.nombre
+            } ha ganado la partida.`,
+            icon: "success",
+            confirmButtonText: "Aceptar",
+          });
         // Limpia la sesión y redirige al lobby
         sessionStorage.clear();
         navigate("/lobby");
