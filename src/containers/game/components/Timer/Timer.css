@@ -1,7 +1,9 @@
 .timer{
-    position: fixed;
-    top: 30%; /* Ajusta el valor según el margen deseado */
-    right: 3%; /* Ajusta el valor según el margen deseado */
-    padding: 10px 20px; /* Ajusta el padding según sea necesario */
-    font-size: 1.5em;
+    padding: 10px 20px;
+    font-size: 2rem;
+}
+
+.text-center{
+    text-align: center;
+    font-size: 2rem;
 }

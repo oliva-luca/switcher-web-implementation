@@ -132,7 +132,8 @@
 }
 
 @keyframes respirar {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -149,4 +150,9 @@
   width: 82px;
   height: 82px;
   animation: respirar 1.2s infinite;
+}
+
+.blocked {
+  background-color: #aaccaa !important;
+  border-color: #88aa88 !important;
 }

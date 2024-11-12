@@ -17,12 +17,12 @@ jest.mock('react-router-dom', () => ({
 
 describe('StartBtn Component', () => {
     beforeEach(() => {
-        localStorage.clear();
+        sessionStorage.clear();
     });
 
     it('should render start button if user is the owner', async () => {
-        localStorage.setItem('userId', '1');
-        localStorage.setItem('gameId', '1');
+        sessionStorage.setItem('playerId', '1');
+        sessionStorage.setItem('gameId', '1');
 
         const response = { data: { owner: '1' } };
         (axios.get as jest.Mock).mockResolvedValueOnce(response);
@@ -39,8 +39,8 @@ describe('StartBtn Component', () => {
     });
         
         it('should render exit button if user is not the owner', async () => {
-            localStorage.setItem('userId', '2');
-            localStorage.setItem('gameId', '1');
+            sessionStorage.setItem('playerId', '2');
+            sessionStorage.setItem('gameId', '1');
             
             const response = { data: { owner: '1' } };
             (axios.get as jest.Mock).mockResolvedValueOnce(response);
@@ -57,8 +57,8 @@ describe('StartBtn Component', () => {
     });
         
     it('should start the game when start button is clicked', async () => {
-        localStorage.setItem('userId', '1');
-        localStorage.setItem('gameId', '1');
+        sessionStorage.setItem('playerId', '1');
+        sessionStorage.setItem('gameId', '1');
 
         const response = { data: { owner: '1' } };
         (axios.get as jest.Mock).mockResolvedValueOnce(response);
@@ -89,8 +89,8 @@ describe('StartBtn Component', () => {
     });
 
     it('should show error alert if starting the game fails', async () => {
-        localStorage.setItem('userId', '1');
-        localStorage.setItem('gameId', '1');
+        sessionStorage.setItem('playerId', '1');
+        sessionStorage.setItem('gameId', '1');
         const mockedAxios = jest.mocked(axios, true);
         mockedAxios.get.mockResolvedValueOnce({ data: { owner: '1' } });
         mockedAxios.put.mockRejectedValueOnce(new Error('Network Error'));
@@ -116,8 +116,8 @@ describe('StartBtn Component', () => {
     });
 
     it('should exit the game when exit button is clicked', async () => {
-        localStorage.setItem('userId', '2');
-        localStorage.setItem('gameId', '1');
+        sessionStorage.setItem('playerId', '2');
+        sessionStorage.setItem('gameId', '1');
         const response = { data: { owner: '1' } };
         (axios.get as jest.Mock).mockResolvedValueOnce(response);
         (axios.put as jest.Mock).mockResolvedValueOnce(() => Promise.resolve({ data: {} }));
@@ -137,14 +137,14 @@ describe('StartBtn Component', () => {
         });
 
         await waitFor(() => {
-            expect(axios.put).toHaveBeenCalledWith('/gamelist/leave/2');
+            expect(axios.put).toHaveBeenCalledWith('/gamelist/leave_lobby/2');
             expect(navigate).toHaveBeenCalledWith('/lobby');
         });
     });
 
     // Additional tests
-    it('should handle missing gameId in localStorage', async () => {
-        localStorage.setItem('userId', 'ownerId');
+    it('should handle missing gameId in sessionStorage', async () => {
+        sessionStorage.setItem('playerId', 'ownerId');
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
         render(
@@ -161,8 +161,8 @@ describe('StartBtn Component', () => {
     });
 
     it('should handle error fetching game data', async () => {
-        localStorage.setItem('userId', '1');
-        localStorage.setItem('gameId', '1');
+        sessionStorage.setItem('playerId', '1');
+        sessionStorage.setItem('gameId', '1');
         const mockedAxios = jest.mocked(axios, true);
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
         mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
@@ -178,6 +178,50 @@ describe('StartBtn Component', () => {
         });
 
         consoleErrorSpy.mockRestore();
+    });
+
+    it('should handle error when game ID is not found', async () => {
+        sessionStorage.removeItem('gameId');
+        sessionStorage.setItem('playerId', '1');
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+        render(
+          <Router>
+            <StartBtn />
+          </Router>
+        );
+    
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Game ID not found');
+
+    
+        consoleErrorSpy.mockRestore();
+      });
+
+    it('should handle error when leaving the lobby fails', async () => {
+        sessionStorage.setItem('playerId', '2');
+        sessionStorage.setItem('gameId', '1');
+        const response = { data: { owner: '1' } };
+        (axios.get as jest.Mock).mockResolvedValueOnce(response);
+        (axios.put as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
+
+        const navigate = jest.fn();
+        (useNavigate as jest.Mock).mockReturnValue(navigate);
+
+        const { getByRole } = render(
+            <Router>
+                <StartBtn />
+            </Router>
+        );
+
+        await waitFor(() => {
+            const exitButton = getByRole('button', { name: 'ABANDONAR PARTIDA' });
+            fireEvent.click(exitButton);
+        });
+
+        await waitFor(() => {
+            expect(axios.put).toHaveBeenCalledWith('/gamelist/leave_lobby/2');
+            expect(navigate).not.toHaveBeenCalled();
+        });
     });
 
 });
