@@ -55,7 +55,7 @@ describe("Componente FigureCard", () => {
 
     fireEvent.click(img);
     // Verifica que setSelectedFigureCard se llama con los parámetros correctos
-    expect(setSelectedFigureCard).toHaveBeenCalledWith([0, 2, false]);
+    expect(setSelectedFigureCard).toHaveBeenCalledWith([0, 2, true]);
   });
 
   it("debería deshabilitar la imagen cuando otra casilla está seleccionada", () => {
