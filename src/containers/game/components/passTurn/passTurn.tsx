@@ -6,13 +6,8 @@ import { useCurrentPlay } from "../../hooks/CurrentPlay.context";
 import { useEffect, useState } from "react";
 
 const PassTurn = () => {
-  const {
-    setSelectedCard,
-    setSelectedTyle,
-    currentTurn,
-    setCurrentTurn,
-    setPlayedCards,
-  } = useCurrentPlay();
+  const { setSelectedCard, setSelectedTyle, currentTurn, setCurrentTurn } =
+    useCurrentPlay();
   const [nameTurn, setNameTurn] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,7 +20,6 @@ const PassTurn = () => {
           const toFind = response.data.turn;
           const response2 = await axios.get(`/user/${toFind}`);
           setNameTurn(response2.data.nombre);
-          console.log(response2.data.nombre);
         }
       } catch (error) {
         console.error("Error fetching game data:", error);
@@ -60,7 +54,6 @@ const PassTurn = () => {
             await axios.put(`/end_turn/${gameId}`);
             setSelectedCard(null);
             setSelectedTyle(null);
-            setPlayedCards([]);
           } catch (error) {
             console.error("Error ending turn:", error);
           }
