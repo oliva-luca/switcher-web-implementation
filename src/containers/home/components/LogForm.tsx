@@ -63,6 +63,7 @@ const LogForm = () => {
                     type='text' 
                     className='form-control' 
                     placeholder='Ingresar tu nombre'
+                    maxLength={10}
                     required 
                     onChange={handleChange}
                     />
