@@ -474,8 +474,8 @@ class Operations:
                 id_autor = player.id_jugador
             )
             session.add(new_log)
+            player.user_id = None
             session.commit()
-
             await manager.broadcast("player leave")
             await manager_game.broadcast(game.id_partida, "Player has left the lobby")
             return {"message": f"Player {player_id} has left the lobby"}
