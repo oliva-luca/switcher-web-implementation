@@ -48,6 +48,7 @@
 
 
 .title{
+  text-align: center;
   border-radius: 89px;
   background: linear-gradient(145deg, #f7e271, #e4ca64);
   box-shadow:  6px 6px 8px #689b70,
