@@ -158,7 +158,7 @@ const ColorTyle = ({
         selectedFigureCard[1] == tipo_figura
       ) {
         // Revisa de quien es la carta
-        if (!selectedFigureCard[2]) {
+        if (selectedFigureCard[2]) {
           handleFigureDiscard(); // Request de descarta carta figura propia
         } else {
           handleFigureBlock(); // Request de bloquea carta figura del rival

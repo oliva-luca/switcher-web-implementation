@@ -81,7 +81,7 @@ const FigureCard = ({ cardID, type, playerID, blocked }: FigureCardProp) => {
             : [
                 cardID,
                 type,
-                playerID.toString() === localStorage.getItem("userId")
+                playerID.toString() === sessionStorage.getItem("playerId")
                   ? true // Indica si la carta es del jugador actual
                   : false,
               ]
