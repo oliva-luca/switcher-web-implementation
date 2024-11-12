@@ -68,6 +68,13 @@ export const useGame = () => {
             icon: "success",
             confirmButtonText: "Aceptar",
           });
+        if(winner != sessionStorage.getItem("playerId"))
+          Swal.fire({
+            title: "¡Perdiste!",
+            text: "Lo siento, has perdido la partida.",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+          });
         // Limpia la sesión y redirige al lobby
         sessionStorage.clear();
         navigate("/lobby");
