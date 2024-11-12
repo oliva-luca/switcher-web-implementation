@@ -520,10 +520,12 @@ class Operations:
             session.add(new_log)
             session.commit()
             if remaining_players == 1:
-                remaining_player.id_partida = None 
+                remaining_player.id_partida = None
                 session.commit()
-                await manager_game.broadcast(id_game, f"winner {remaining_player.id_jugador}")
                 await manager.broadcast("Somebody won")
+                await manager_game.broadcast(id_game, f"winner {remaining_player.id_jugador}")
+                session.delete(game)
+                session.commit()
             else:
                 await manager_game.broadcast(id_game, "Player has left the game") 
             return {"message": f"Player {player_id} has left the game"}
