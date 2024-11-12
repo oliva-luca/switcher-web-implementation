@@ -1,22 +1,40 @@
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 .pass-turn {
-  position: fixed;
-  top: 5%; /* Ajusta el valor según el margen deseado */
-  right: 4.5%; /* Ajusta el valor según el margen deseado */
-  padding: 10px 20px; /* Ajusta el padding según sea necesario */
-  font-size: 1.5em;
+  font-size: 2rem;
   color: #333;
   cursor: pointer;
-  transition: background-color 0.3s;
-  border: none; /* Añade un borde si es necesario */
-  border-radius: 5px; /* Ajusta el radio del borde según sea necesario */
+  transition: background-color 0.3s, border-color 0.3s;
+  border: none;
+  border-radius: 20px;
 }
 
 .gray-button {
-    background-color: gray !important;
-    border-color: gray !important;
-  }
+  width: 10vw;
+  background-color: gray !important;
+  border-color: gray !important;
+  transition: background-color 0.3s, border-color 0.3s;
+}
 
 .blue-button {
+  width: 10vw;
   background-color: blue !important;
   border-color: blue !important;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.blue-button:hover {
+  background-color: darkblue !important;
+  border-color: darkblue !important;
+}
+
+.blue-button:active {
+  animation: pulse 0.3s;
 }

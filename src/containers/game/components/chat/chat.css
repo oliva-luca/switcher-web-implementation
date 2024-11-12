@@ -1,38 +1,47 @@
-/* FILE: chat.css */
-
 .chat-container {
-    position: fixed;
-    bottom: 35vh;
-    right: 15vh;
-    border-radius: 5px;
-    padding: 20px;
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius:25px;
+    padding: 5px;
+    z-index: 1000;
+}
+
+.chat-container:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.05);
 }
 
 .chat-container .fa-comments {
-    font-size: 3em; /* Tamaño del icono */
+    font-size: 3em;
     cursor: pointer;
 }
 
 .chat-interface {
     position: fixed;
-    top: 20px; /* Espacio desde la parte superior */
-    right: 0; /* Alinea al borde derecho */
-    width: 30vw; /* Ancho del chat */
-    height: calc(100% - 40px); /* Ajusta la altura considerando el margen superior e inferior */
+    top: 20px;
+    right: 0;
+    width: 30vw;
+    height: calc(100% - 40px);
     background-color: white;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Sombra para efecto flotante */
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;
-    z-index: 1000; /* Por encima de otros elementos */
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    transform: translateX(100%); /* Oculta el chat inicialmente */
-    border-radius: 10px; /* Bordes redondeados */
-    box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho */
+    transform: translateX(100%);
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .chat-interface.open {
-    transform: translateX(0); /* Muestra el chat */
+    transform: translateX(0);
 }
 
 .chat-interface .close-btn {
@@ -45,9 +54,9 @@
 
 .chat-interface h1 {
     text-align: center;
-    margin: 10px 20px 10px 20px; /* Reducido el margen superior para acercar el título */
-    border-bottom: 1px solid #ccc; /* Separador debajo del título */
-    padding-bottom: 10px; /* Espacio debajo del título */
+    margin: 10px 20px 10px 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
 }
 
 .messages-container {
@@ -91,23 +100,14 @@
 }
 
 .messages-container::-webkit-scrollbar-track {
-    background: #e0e0e0; /* Pista gris claro */
-    border-radius: 10px; /* Bordes redondeados */
+    background: #e0e0e0;
+    border-radius: 10px;
 }
 
 .messages-container::-webkit-scrollbar-thumb {
-    background: #c0c0c0; /* Pulgar gris medio */
-    border-radius: 10px; /* Bordes redondeados */
+    background: #c0c0c0;
+    border-radius: 10px;
 }
-
-/* .message {
-    background-color: #f1f1f1;
-    padding: 10px 15px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
-} */
 
 .message-header {
     display: flex;
@@ -132,7 +132,7 @@
 
 .message-box {
     display: flex;
-    padding: 10px 20px; /* Padding lateral */
+    padding: 10px 20px;
     border-top: 1px solid #ccc;
     margin-top: auto;
 }
@@ -143,7 +143,7 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     outline: none;
-    box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho */
+    box-sizing: border-box;
 }
 
 .send-button {
