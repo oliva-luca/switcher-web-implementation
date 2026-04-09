@@ -1,0 +1,39 @@
+.custom-container {
+    background-color: #92ecd3;
+    border: 1vh solid #7dd3b3; /* Convertido de 10px a 1vh */
+    border-radius: 2vh; /* Convertido de 20px a 2vh */
+    padding: 1vh 3vw; /* Convertido de 10px 30px a 1vh 3vw */
+    margin: 0 auto;
+    max-width: 100%;
+    bottom: 20%;
+    right: 20%;
+}
+
+.block-background {
+    background-color: #f17252; /* Cambia esto al color que prefieras */
+    padding: 1vh; /* Convertido de 10px a 1vh */
+    border-radius: 10vh; /* Convertido de 100px a 10vh */
+    margin-bottom: 1vh; /* Convertido de 10px a 1vh */
+    color: white;
+    border: 0.3vh solid white; /* Convertido de 3px a 0.3vh */
+    width: 35vw;
+}
+
+.custom-button {
+    background-color: #7eb65b;
+    border: none;
+    color: white;
+    padding: 1.5vh 3.2vw; /* Convertido de 15px 32px a 1.5vh 3.2vw */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.6vh; /* Convertido de 16px a 1.6vh */
+    margin: 0.4vh 0.2vw; /* Convertido de 4px 2px a 0.4vh 0.2vw */
+    cursor: pointer;
+    border-radius: 10vh; /* Convertido de 100px a 10vh */
+}
+
+.custom-button:hover {
+    background-color: #71ab51;
+    color: black;
+}

@@ -1,0 +1,17 @@
+.bottom-left-button-cancel {
+    position: fixed;
+    bottom: 20px; /* Ajusta el valor según el margen deseado */
+    left: 20px;  /* Ajusta el valor según el margen deseado */
+    background-color: red;
+    color: white;
+}
+
+.bottom-left-button-cancel:hover {
+    background-color: darkred;
+    color: black;
+}
+
+.bottom-left-button-cancel:active {
+    background-color: red !important; 
+    color: white !important;
+}

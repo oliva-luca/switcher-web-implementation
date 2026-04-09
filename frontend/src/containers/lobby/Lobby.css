@@ -1,0 +1,59 @@
+/* Asegúrate de que el contenedor root no interfiera */
+#root {
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
+  height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+  background-color: #c9f1cf/* Color de fondo para visualizar mejor */
+}
+
+.partidas{
+  display: flex;
+  flex-direction: row;
+  gap: 3vw; /* Espacio entre elementos */
+}
+
+/* Estilos para el contenedor .container */
+.contenedor {
+  display: flex;
+  flex-direction:row; /*Alinea los elementos en una fila*/
+  justify-content: space-between; /* Espacio entre los elementos */
+  align-items: center; /* Alinea los elementos verticalmente al centro */
+  gap: 5vw; /* Espacio entre los elementos */
+  background-color: #c9f1cf; /* Color de fondo del contenedor */
+  /* border: 5px solid #7dd3b3; Borde para visualizar mejor */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.join-game-section {
+  display:flex;
+  flex-grow: 1;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.started-games-section{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px; /* Espacio entre secciones */
+  overflow-y: auto;
+  padding-left: 1vw;
+  padding-right: 1vw;
+}
+
+
+
+.title{
+  text-align: center;
+  border-radius: 89px;
+  background: linear-gradient(145deg, #f7e271, #e4ca64);
+  box-shadow:  6px 6px 8px #689b70,
+               -6px -6px 8px #d9f1dd;
+  padding: 4vh;
+  font-size: 5vh; /* Tamaño de fuente relativo a la altura de la ventana */
+  margin-bottom: 2vw; /* Espacio debajo del título */
+}

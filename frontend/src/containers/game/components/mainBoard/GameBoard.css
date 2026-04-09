@@ -1,0 +1,24 @@
+.boardSquare {
+  display: flex;
+  background: #92ecd3;
+  border: 10px solid #7dd3b3;
+  float: left;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+  height: 528px;
+  width: 528px;
+  border-radius: 10%;
+}
+
+.boardGrid {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: repeat(6, 82px);
+  grid-template-rows: repeat(6, 82px);
+  /* gap: 6px; */
+}

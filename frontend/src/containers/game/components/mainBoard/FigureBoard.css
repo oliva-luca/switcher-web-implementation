@@ -1,0 +1,76 @@
+.figureBoard {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  background: #92ecd3;
+  border: 7px solid #7dd3b3;
+  float: left;
+  height: 100px;
+  width: 500px;
+  border-radius: 10px;
+}
+
+.figureBoardSide {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  background: #92ecd3;
+  border: 7px solid #7dd3b3;
+  float: left;
+  height: 500px;
+  width: 100px;
+  border-radius: 10px;
+}
+
+.figureGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: 50px;
+  gap: 15px;
+}
+
+.figureGridSide {
+  display: grid;
+  grid-template-columns: 80px;
+  grid-template-rows: repeat(5, 80px);
+  gap: 15px;
+}
+
+.figureDeck {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #92ecd3;
+  border: 5px solid #7dd3b3;
+  height: 80px;
+  width: 80px;
+  border-radius: 10px;
+  align-content: center;
+  align-items: center;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.ply1 {
+  background-color: #6ec5e1 !important;
+  border: 7px solid #5cadcd !important;
+}
+
+.ply2 {
+  background-color: #efd96c !important;
+  border: 7px solid #e4ca64 !important;
+}
+
+.ply3 {
+  background-color: #7eb65b !important;
+  border: 7px solid #71ab51 !important;
+}
+
+.ply4 {
+  background-color: #f17252 !important;
+  border: 7px solid #e3634b !important;
+}

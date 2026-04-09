@@ -1,0 +1,8 @@
+.mid-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px; /* Ajusta el tamaño de la fuente según sea necesario */
+    color: black; /* Ajusta el color del texto según sea necesario */
+}

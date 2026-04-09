@@ -1,0 +1,21 @@
+/* filter.css */
+.nameFilter {
+    display: flex;
+    gap: 0.1vw; /* Espacio entre los inputs */
+    justify-content: center;
+    align-items: center;
+    margin: 1vh 1vh;
+    flex-direction: column;
+}
+
+#nameInput,
+#playerCountInput {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1vh 1vh;
+    box-sizing: border-box;
+    width: 32vh;
+    margin: 1vh 1vh;
+}

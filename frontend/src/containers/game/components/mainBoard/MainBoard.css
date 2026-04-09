@@ -1,0 +1,12 @@
+.board {
+  display: grid;
+  position: fixed;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 100px 528px 100px;
+  grid-template-rows: 100px 528px 100px;
+  gap: 10px;
+}

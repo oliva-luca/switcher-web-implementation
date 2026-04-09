@@ -1,0 +1,30 @@
+.r-items-container {
+    position: fixed;
+    padding: 10vh 5vw;
+    top: 5%;
+    right: 4.5%;
+    gap: 5vh;
+    max-width: 30vw;
+    max-height: 75vh;
+    display: flex;
+    flex-direction: column; /* Cambiar la dirección del flex a columna */
+    justify-content: center;
+    align-items: center;
+    background-color: #92ecd3;
+    border-radius: 10%;
+}
+
+.r-items-container > * {
+    position: relative;
+    width: 100%; /* Asegura que los elementos ocupen todo el ancho del contenedor */
+}
+
+.r-items-container > *:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -2.5vh; /* Ajusta la posición de la línea */
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+}

@@ -1,0 +1,40 @@
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.pass-turn {
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  border: none;
+  border-radius: 20px;
+}
+
+.gray-button {
+  width: 10vw;
+  background-color: gray !important;
+  border-color: gray !important;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.blue-button {
+  width: 10vw;
+  background-color: blue !important;
+  border-color: blue !important;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.blue-button:hover {
+  background-color: darkblue !important;
+  border-color: darkblue !important;
+}
+
+.blue-button:active {
+  animation: pulse 0.3s;
+}

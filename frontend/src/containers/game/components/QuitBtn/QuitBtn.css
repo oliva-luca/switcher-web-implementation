@@ -1,0 +1,18 @@
+.bottom-quit {
+  position: fixed;
+  bottom: 20px; /* Ajusta el valor según el margen deseado */
+  right: 20px; /* Ajusta el valor según el margen deseado */
+  margin: 5px;
+  background-color: red;
+  color: white;
+}
+
+.bottom-quit:hover {
+  background-color: darkred;
+  color: black;
+}
+
+.bottom-quit:active {
+  background-color: red !important;
+  color: white !important;
+}
